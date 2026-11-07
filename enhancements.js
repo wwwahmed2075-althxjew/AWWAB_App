@@ -31,7 +31,7 @@ const audio=document.createElement("div");audio.className="settings-group audio-
 const qtools=document.createElement("div");qtools.className="settings-group feature-note";qtools.innerHTML='<div class="tool-row"><b>اختبار الحفظ بإخفاء الآيات</b><p>اخفِ الآيات وحاول استرجاعها، ثم اضغط على كل آية للكشف عنها.</p><button class="soft-btn full-btn" id="openMemorization">فتح المصحف واختبار الحفظ</button></div><div class="tool-row"><b>الورد والختمة</b><p>افتح الورد اليومي من الشريط السفلي. خطة الختمة المتقدمة قيد التطوير.</p><button class="soft-btn full-btn" id="openWird">فتح وردي اليومي</button></div><p class="source-note">اختبار الإخفاء والكشف يعمل محليًا. تصحيح التلاوة بالذكاء الاصطناعي ليس متاحًا بعد.</p>';map.quranToolsPanel.appendChild(qtools);
 if(rem)map.reminderPanel.appendChild(rem);if(virtues)map.virtuesPanel.appendChild(virtues);
 const frag=document.createDocumentFragment();if(head)frag.appendChild(head);frag.appendChild(grid);panels.forEach(p=>frag.appendChild(p));if(about)frag.appendChild(about);page.replaceChildren(frag);
-$("#morePage [data-theme]").forEach(b=>b.addEventListener("click",()=>window.applyTheme?.(b.dataset.theme)));
+document.querySelectorAll("#morePage [data-theme]").forEach(b=>b.addEventListener("click",()=>window.applyTheme?.(b.dataset.theme)));
 }
 let appUrl=null;
 function appFont(mode){document.documentElement.style.setProperty("--app-font",mode==="ios"?' -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif':'Roboto,"Noto Sans Arabic",Arial,sans-serif');set("app-font-mode",mode);toast("تم تغيير خط التطبيق")}
