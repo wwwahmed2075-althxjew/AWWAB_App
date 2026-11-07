@@ -35,16 +35,17 @@ function openPage(id){const b=[...document.querySelectorAll(".nav-item")].find(n
 
 function setupQuranReader(){
 const reader=$("#reader"),area=$("#ayahs");if(!reader||!area)return;
-let size=get("quran-reader-size",26),mode=get("quran-reader-theme","auto"),script=get("quran-reader-script","naskh");
-function setMode(v){mode=v;set("quran-reader-theme",v);reader.dataset.readerTheme=v;$("[data-reader-theme]").forEach(b=>b.classList.toggle("selected",b.dataset.readerTheme===v))}
+let size=get("quran-reader-size",26),mode=get("quran-reader-theme","auto"),script=get("quran-font-mode","ios");
+function setMode(v){mode=v;set("quran-reader-theme",v);reader.dataset.readerTheme=v;$$("[data-reader-theme]").forEach(b=>b.classList.toggle("selected",b.dataset.readerTheme===v));syncAuto()}
 function setSize(v){size=Math.max(20,Math.min(40,v));reader.style.setProperty("--reader-font-size",size+"px");$("#quranFontSizeLabel").textContent=size;set("quran-reader-size",size)}
-function setScript(v){script=v;reader.dataset.readerScript=v;set("quran-reader-script",v);$("[data-reader-script]").forEach(b=>b.classList.toggle("selected",b.dataset.readerScript===v))}
-$("[data-reader-theme]").forEach(b=>b.onclick=()=>setMode(b.dataset.readerTheme));
-$("[data-reader-script]").forEach(b=>b.onclick=()=>setScript(b.dataset.readerScript));
+function setScript(v){script=v;set("quran-font-mode",v);const family=v==="ios"?' -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif':'"Noto Naskh Arabic","Noto Sans Arabic",serif';document.documentElement.style.setProperty("--quran-font",family);$$("[data-reader-script]").forEach(b=>b.classList.toggle("selected",b.dataset.readerScript===v))}
+function syncAuto(){if(mode!=="auto")return;const light=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;reader.dataset.readerTheme=light?"light":"dark"}
+$$("[data-reader-theme]").forEach(b=>b.onclick=()=>setMode(b.dataset.readerTheme));
+$$("[data-reader-script]").forEach(b=>b.onclick=()=>setScript(b.dataset.readerScript));
 $("#quranFontDown").onclick=()=>setSize(size-2);$("#quranFontUp").onclick=()=>setSize(size+2);
-function syncAuto(){if(mode!=="auto")return;const t=document.body.dataset.theme||"midnight";const light=["light","glass"].includes(t)||(!t&&matchMedia("(prefers-color-scheme: light)").matches);reader.dataset.readerTheme=light?"light":"dark"}
-new MutationObserver(syncAuto).observe(document.body,{attributes:true,attributeFilter:["data-theme"]});
-setMode(mode);setSize(size);setScript(script);syncAuto();
+window.matchMedia?.("(prefers-color-scheme: light)").addEventListener?.("change",syncAuto);
+new MutationObserver(()=>{if(get("quran-font-mode","ios")!==script)setScript(get("quran-font-mode","ios"))}).observe(document.documentElement,{attributes:true,attributeFilter:["style"]});
+setSize(size);setScript(script);setMode(mode);
 area.addEventListener("click",ev=>{const ay=ev.target.closest(".ayah");if(!ay)return;area.querySelectorAll(".ayah.selected").forEach(x=>x.classList.remove("selected"));ay.classList.add("selected");set("lastAyah",+ay.dataset.ayah)});
 }
 function init(){arrangeMore();setupFonts();setupAudio();recallMode();setupQuranReader();$("#openMemorization").onclick=()=>{openPage("quran");toast("افتح سورة ثم ابدأ اختبار الحفظ")};$("#openWird").onclick=()=>openPage("wird");}
