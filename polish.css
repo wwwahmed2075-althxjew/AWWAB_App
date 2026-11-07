@@ -1,0 +1,64 @@
+/* AWWAB 1.1 — monochrome iOS glass polish */
+:root{--app-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Roboto,"Noto Sans Arabic",Arial,sans-serif;--quran-font:"Noto Naskh Arabic","Geeza Pro","Traditional Arabic",serif;--glass:rgba(18,18,20,.62);--glass-border:rgba(255,255,255,.13);--glass-highlight:rgba(255,255,255,.075);--app-ease:cubic-bezier(.2,.8,.2,1)}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--app-font);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,input{font-family:inherit}
+button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.app-shell{max-width:560px;min-height:100svh;padding-bottom:calc(112px + env(safe-area-inset-bottom));background:radial-gradient(ellipse at 50% -20%,rgba(255,255,255,.075),transparent 52%),var(--bg)}
+.topbar{height:64px;padding-inline:18px;background:rgba(10,10,12,.66);border-bottom:1px solid var(--glass-border);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%)}
+.page{padding:22px 16px 28px;animation:awPageIn .22s var(--app-ease)}
+@keyframes awPageIn{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:none}}
+.hero-card,.next-prayer-card,.stat-card,.quick-card,.verse-card,.continue-card,.surah-item,.zekr-card,.tasbeeh-panel,.location-card,.prayer-row,.wird-summary,.wird-item,.settings-group,.search-wrap,.virtue-card,.reader{border:1px solid var(--glass-border);background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));box-shadow:0 12px 34px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.055);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%)}
+.hero-card{background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.035));border-radius:26px}
+.stat-card,.quick-card,.surah-item,.zekr-card,.prayer-row,.wird-item,.virtue-card{border-radius:17px}
+.bottom-nav{bottom:calc(10px + env(safe-area-inset-bottom));width:min(94%,520px);height:68px;padding:7px;border:1px solid rgba(255,255,255,.16);border-radius:24px;background:rgba(22,22,24,.68);box-shadow:0 18px 50px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.12);backdrop-filter:blur(34px) saturate(185%);-webkit-backdrop-filter:blur(34px) saturate(185%)}
+.nav-item{border-radius:17px;transition:background .18s var(--app-ease),color .18s var(--app-ease),transform .18s var(--app-ease)}
+.nav-item:active,.quick-card:active,.primary-btn:active,.soft-btn:active{transform:scale(.97)}
+.nav-item.active{background:rgba(255,255,255,.12);color:#fff}
+.nav-item.active:before{background:#fff;box-shadow:0 0 12px rgba(255,255,255,.55)}
+.primary-btn,.count-btn{background:linear-gradient(180deg,#fff,#d9d9dc);color:#111;border:1px solid rgba(255,255,255,.65);box-shadow:0 8px 24px rgba(255,255,255,.10),inset 0 1px rgba(255,255,255,.8)}
+.primary-btn{border-radius:14px;font-weight:750}
+.count-btn{width:min(100%,300px);height:62px;border-radius:18px;font-size:15px;letter-spacing:.1px}
+.counter-ring{background:radial-gradient(circle,#111 58%,transparent 60%),conic-gradient(#fff 0deg,#333 0deg);border:1px solid rgba(255,255,255,.12);box-shadow:0 0 45px rgba(255,255,255,.045)}
+.counter-ring span,.eyebrow,.stat-icon,.prayer-row span,.azkar-progress b,.goal-caption{color:#d8d8dc}
+.progress-track i{background:linear-gradient(90deg,#888,#fff)}
+.reader{padding:14px;border-radius:22px}
+.reader-head{position:sticky;top:70px;z-index:3;padding:8px 0;background:rgba(12,12,14,.72);backdrop-filter:blur(18px)}
+.quran-reader-tools{padding:12px;border:1px solid var(--glass-border);border-radius:16px;background:rgba(255,255,255,.045)}
+.quran-tool-line{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0}
+.reader-label{font-size:10px;color:var(--muted)}
+.reader-segments{display:flex;gap:5px;align-items:center}
+.reader-segments button{padding:7px 10px;border:1px solid var(--glass-border);border-radius:10px;background:rgba(255,255,255,.055);font-size:10px}
+.reader-segments button.selected{background:#fff;color:#111;border-color:#fff}
+#readerTitle{text-align:center;font-family:var(--quran-font);font-size:25px;margin:20px 0 10px}
+.bismillah{text-align:center;font-family:var(--quran-font);font-size:23px;line-height:2.1;margin:12px 0 20px}
+.ayahs{font-family:var(--quran-font);font-size:var(--reader-font-size,28px);line-height:2.25;text-align:justify;padding:15px 10px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.035);color:#f7f7f7}
+.ayah{padding:8px 5px;border-bottom:1px solid rgba(255,255,255,.075);border-radius:10px;transition:background .15s}
+.ayah.selected{background:rgba(255,255,255,.10);outline:1px solid rgba(255,255,255,.18)}
+.ayah-text{font-family:var(--quran-font);font-size:1em}
+.ayah-num{font-family:var(--app-font);background:rgba(255,255,255,.1);color:inherit;border:1px solid var(--glass-border);border-radius:50%;width:27px;height:27px;font-size:10px;margin-inline:5px}
+#reader[data-reader-theme="light"] .ayahs{background:#f7f7f5;color:#171719;border-color:#ddd}
+#reader[data-reader-theme="light"] .ayah{border-color:#ddd}
+#reader[data-reader-theme="light"] .ayah.selected{background:#e8e8e8}
+#reader[data-reader-theme="dark"] .ayahs{background:#080809;color:#f7f7f7}
+.audio-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.audio-toolbar button{border:1px solid var(--glass-border);background:rgba(255,255,255,.08);border-radius:12px;padding:9px 13px;font-size:11px}
+.audio-toolbar button.primary-audio{background:#fff;color:#111}
+.audio-toolbar small{color:var(--muted);font-size:10px}
+.more-category-grid{gap:9px}
+.more-category,.more-panel{border:1px solid var(--glass-border);background:rgba(255,255,255,.045);border-radius:17px}
+.more-category{min-height:90px;transition:transform .18s var(--app-ease),background .18s}
+.more-category:active{transform:scale(.97)}
+.more-panel{padding:12px;margin-top:10px}
+.more-panel[open],.more-panel.focused-panel{background:rgba(255,255,255,.06)}
+.theme-option,.soft-btn,.setting-row{border-color:var(--glass-border)}
+.theme-option.selected{background:rgba(255,255,255,.13);border-color:#fff;color:#fff}
+.custom-font-row{display:flex;gap:8px;padding:12px}
+.custom-font-row>*{flex:1}
+.hidden{display:none!important}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(min-width:700px){.app-shell{max-width:560px}}
+body[data-theme="light"]{--bg:#f2f2f4;--surface:rgba(255,255,255,.78);--surface2:#e9e9ec;--text:#171719;--muted:#6f7077;--line:rgba(20,20,24,.12);--glass:rgba(255,255,255,.72);--glass-border:rgba(20,20,24,.12)}
+body[data-theme="light"] .topbar,body[data-theme="light"] .bottom-nav{background:rgba(248,248,250,.72);border-color:rgba(20,20,24,.12)}
+body[data-theme="light"] .nav-item.active{background:rgba(0,0,0,.08);color:#111}
+body[data-theme="light"] .ayahs{background:#fff;color:#171719}
