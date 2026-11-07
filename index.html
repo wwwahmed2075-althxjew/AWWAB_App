@@ -78,8 +78,8 @@
         <div class="tasbeeh-top"><span class="live-dot"></span><span>جلسة التسبيح</span><button id="resetTasbeeh" class="text-btn">إعادة ضبط</button></div>
         <div class="dhikr-select"><button class="selected" data-dhikr="سبحان الله">سبحان الله</button><button data-dhikr="الحمد لله">الحمد لله</button><button data-dhikr="الله أكبر">الله أكبر</button><button data-dhikr="أستغفر الله">أستغفر الله</button></div>
         <div class="counter-ring" id="counterRing"><div><small>عدد التسبيحات</small><strong id="count">0</strong><span id="currentDhikr">سبحان الله</span></div></div>
-        <div class="beads" id="beads" aria-label="حبات السبحة"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <button class="count-btn" id="countBtn" aria-label="سبّح">سَبِّح</button>
+        <button class="count-btn" id="countBtn" aria-label="سبّح">اضغط للتسبيح</button>
+        <p class="tap-hint">يمكنك الضغط على مساحة السبحة كلها للعدّ</p>
         <div class="counter-controls"><button id="undoBtn" class="soft-btn">↶ تراجع</button><label>الهدف <input id="goalInput" type="number" min="1" max="10000" value="100"></label></div>
         <div class="progress-track"><i id="tasbeehProgress"></i></div><small class="goal-caption" id="goalCaption">0 من 100</small>
       </div>
@@ -107,14 +107,24 @@
         <button class="setting-row" id="settingsTheme"><span class="setting-icon">◐</span><span><b>المظهر</b><small>أسود داكن</small></span><strong>داكن</strong></button>
         <div class="setting-row"><span class="setting-icon">♧</span><span><b>عن أوّاب</b><small>رفيقك اليومي للعبادة</small></span><strong>v1.0</strong></div>
       </div>
+      <div class="theme-picker">
+        <div class="section-heading"><div><p class="eyebrow">لمستك الخاصة</p><h2>ألوان أوّاب</h2></div></div>
+        <div class="theme-options">
+          <button class="theme-option selected" data-theme="midnight"><i></i><span>ليلي زجاجي</span></button>
+          <button class="theme-option" data-theme="bronze"><i></i><span>برونزي</span></button>
+          <button class="theme-option" data-theme="champagne"><i></i><span>شامبين</span></button>
+          <button class="theme-option" data-theme="emerald"><i></i><span>زمردي</span></button>
+          <button class="theme-option" data-theme="light"><i></i><span>فاتح</span></button>
+        </div>
+      </div>
       <div class="about-card"><div class="brand-mark">و</div><h2>أوّاب | AWWAB</h2><p>كل يوم أقرب إلى الله</p><small>نسخة تجريبية قيد التطوير — نسأل الله القبول.</small></div>
     </section>
   </main>
 
   <nav class="bottom-nav" aria-label="التنقل الرئيسي">
     <button class="nav-item active" data-page="home"><span>⌂</span><small>الرئيسية</small></button>
-    <button class="nav-item" data-page="quran"><span>▤</span><small>القرآن</small></button>
     <button class="nav-item" data-page="azkar"><span>☁</span><small>الأذكار</small></button>
+    <button class="nav-item" data-page="quran"><span>▤</span><small>القرآن</small></button>
     <button class="nav-item" data-page="tasbeeh"><span>◉</span><small>السبحة</small></button>
     <button class="nav-item" data-page="more"><span>⋯</span><small>المزيد</small></button>
   </nav>
