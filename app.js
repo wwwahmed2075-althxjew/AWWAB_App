@@ -24,8 +24,10 @@ $("#continueBtn").onclick=()=>{let n=store.get("lastSurah",1);navigate("quran");
 function renderAzkar(){let arr=azkar[azKind],done=azDone[azKind]||{};$("#azkarList").innerHTML=arr.map((z,i)=>`<article class="zekr-card"><p>${z[0]}</p><div class="zekr-bottom"><span>التكرار: ${z[1]}</span><button class="zekr-count" data-az="${i}">${done[i]?"✓ تم":"تم الذكر"}</button></div></article>`).join("");let pct=Math.round(arr.filter((_,i)=>done[i]).length/arr.length*100);$("#azkarProgressText").textContent=pct+"%";$("#azkarProgress").style.width=pct+"%";$$("[data-az]").forEach(b=>b.onclick=()=>{azDone[azKind]??={};azDone[azKind][b.dataset.az]=!azDone[azKind][b.dataset.az];store.set("azDone",azDone);renderAzkar()})}
 $$("[data-kind]").forEach(b=>b.onclick=()=>{azKind=b.dataset.kind;$$("[data-kind]").forEach(x=>x.classList.toggle("selected",x===b));renderAzkar()});
 $$("[data-dhikr]").forEach(b=>b.onclick=()=>{dhikr=b.dataset.dhikr;store.set("dhikr",dhikr);$$("[data-dhikr]").forEach(x=>x.classList.toggle("selected",x===b));$("#currentDhikr").textContent=dhikr});
-function updateCount(){count=Math.max(0,count);$("#count").textContent=count;let p=Math.min(100,count/goal*100);$("#tasbeehProgress").style.width=p+"%";$("#goalCaption").textContent=count+" من "+goal;$("#counterRing").style.background=`radial-gradient(circle,#10141d 58%,transparent 60%),conic-gradient(var(--teal) ${p*3.6}deg,#263040 0deg)`;let beads=$$("#beads i");beads.forEach((x,i)=>x.style.opacity=(i<count%12?1:.28));store.set("count",count);updateHome()}
-$("#countBtn").onclick=()=>{count++;updateCount();if(count===goal)toast("ما شاء الله! وصلت إلى هدفك")};
+function updateCount(){count=Math.max(0,count);$("#count").textContent=count;let p=Math.min(100,count/goal*100);$("#tasbeehProgress").style.width=p+"%";$("#goalCaption").textContent=count+" من "+goal;$("#counterRing").style.background=`radial-gradient(circle,#10141d 58%,transparent 60%),conic-gradient(var(--teal) ${p*3.6}deg,#263040 0deg)`;store.set("count",count);updateHome()}
+function addTasbeeh(){count++;updateCount();if(count===goal)toast("ما شاء الله! وصلت إلى هدفك")}
+$("#countBtn").onclick=addTasbeeh;
+$("#tasbeehPage .tasbeeh-panel").addEventListener("click",e=>{if(e.target.closest("button,input,label"))return;addTasbeeh()});
 $("#undoBtn").onclick=()=>{count=Math.max(0,count-1);updateCount()};
 $("#resetTasbeeh").onclick=()=>{count=0;updateCount();toast("تمت إعادة ضبط العداد")};
 $("#goalInput").value=goal;$("#goalInput").onchange=()=>{goal=Math.max(1,Math.min(10000,+$("#goalInput").value||100));store.set("goal",goal);updateCount()};
@@ -33,8 +35,12 @@ function renderWird(){let done=wird.filter(Boolean).length,p=Math.round(done/5*1
 $("#resetWird").onclick=()=>{wird=[false,false,false,false,false];store.set("wird",wird);renderWird();updateHome()};
 async function loadPrayer(){let city=$("#cityInput").value.trim(),country=$("#countryInput").value.trim();if(!city||!country)return toast("اكتب المدينة والدولة");$("#prayerList").innerHTML='<p class="loading">جارٍ تحميل المواقيت...</p>';try{let r=await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=5`);if(!r.ok)throw 0;let j=await r.json(),t=j.data.timings;$("#locationName").textContent=city+", "+country;$("#prayerDate").textContent=j.data.date.readable;$("#prayerList").innerHTML=prayers.map(([k,n])=>`<div class="prayer-row"><b>${n}</b><span>${t[k]}</span></div>`).join("");$("#locationForm").classList.add("hidden")}catch{$("#prayerList").innerHTML='<p class="loading">تعذر تحميل المواقيت. تحقق من المدينة والإنترنت.</p>'}}
 $("#editLocation").onclick=()=>$("#locationForm").classList.toggle("hidden");$("#loadPrayer").onclick=loadPrayer;
-function toggleTheme(){document.body.classList.toggle("light");store.set("light",document.body.classList.contains("light"))}
-$("#themeBtn").onclick=toggleTheme;$("#settingsTheme").onclick=toggleTheme;
+const themeNames={midnight:"ليلي زجاجي",bronze:"برونزي",champagne:"شامبين",emerald:"زمردي",light:"فاتح"};
+function applyTheme(name){if(!themeNames[name])name="midnight";document.body.dataset.theme=name;store.set("theme",name);$("#morePage [data-theme]").forEach(b=>b.classList.toggle("selected",b.dataset.theme===name));$("#settingsTheme").querySelector("strong").textContent=themeNames[name];$("#settingsTheme").querySelector("small").textContent="اختر اللون الذي يناسبك"}
+$("#morePage [data-theme]").forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme));
+$("#themeBtn").onclick=()=>{let names=Object.keys(themeNames),current=document.body.dataset.theme||"midnight";applyTheme(names[(names.indexOf(current)+1)%names.length])};
+$("#settingsTheme").onclick=()=>navigate("more");
+applyTheme(store.get("theme","midnight"));
 function toggleLang(){let en=document.documentElement.lang!=="en";document.documentElement.lang=en?"en":"ar";document.documentElement.dir=en?"ltr":"rtl";$("#langBtn").textContent=en?"عربي":"EN";toast(en?"English interface direction enabled; full translation is coming in a later release":"تمت العودة إلى العربية")}
 $("#langBtn").onclick=toggleLang;$("#settingsLang").onclick=toggleLang;
 if(store.get("light",false))document.body.classList.add("light");
