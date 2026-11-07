@@ -269,3 +269,34 @@ body.more-detail-open{overflow:hidden}
 .primary-btn,.soft-btn,.text-btn,.setting-row,.pill-tabs button{border-radius:14px}
 .setting-row{min-height:62px}
 @media(max-width:390px){.next-prayer-main{gap:8px}.prayer-countdown{min-width:104px;padding:9px}.prayer-countdown b{font-size:15px}.prayer-mini-times{gap:5px}.prayer-mini-times span{font-size:8px}.more-category{min-height:100px}}
+
+
+/* AWWAB BLACK & WHITE iOS GLASS — approved monochrome identity */
+:root{--ios-ease:cubic-bezier(.22,.75,.18,1);--app-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Noto Sans Arabic",Arial,sans-serif}
+body,body[data-theme="dark"]{--bg:#050505;--surface:#101010;--surface2:#191919;--navy:#080808;--teal:#f1f1f1;--gold:#c8c8c8;--text:#f7f7f7;--muted:#a4a4a4;--line:rgba(255,255,255,.12);--glass:rgba(20,20,20,.68);--glass-border:rgba(255,255,255,.16);--shadow:0 18px 48px rgba(0,0,0,.38);color-scheme:dark;background:var(--bg);color:var(--text)}
+body[data-theme="light"]{--bg:#f5f5f5;--surface:#fff;--surface2:#ededed;--navy:#fff;--teal:#171717;--gold:#555;--text:#111;--muted:#686868;--line:rgba(0,0,0,.12);--glass:rgba(255,255,255,.68);--glass-border:rgba(255,255,255,.82);--shadow:0 18px 48px rgba(0,0,0,.09);color-scheme:light;background:var(--bg);color:var(--text)}
+body[data-theme="dark"] .hero-card,body[data-theme="dark"] .next-prayer-card,body[data-theme="dark"] .tasbeeh-panel{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025))!important}
+body[data-theme="light"] .hero-card,body[data-theme="light"] .next-prayer-card,body[data-theme="light"] .tasbeeh-panel{background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(225,225,225,.58))!important}
+body[data-theme="dark"] .nav-item.active,body[data-theme="dark"] .more-category>span,body[data-theme="dark"] .panel-icon,body[data-theme="dark"] .surah-number,body[data-theme="dark"] .prayer-live,body[data-theme="dark"] .reader-segments button.selected{background:rgba(255,255,255,.12)!important;color:#fff!important;border-color:rgba(255,255,255,.2)!important}
+body[data-theme="light"] .nav-item.active,body[data-theme="light"] .more-category>span,body[data-theme="light"] .panel-icon,body[data-theme="light"] .surah-number,body[data-theme="light"] .prayer-live,body[data-theme="light"] .reader-segments button.selected{background:rgba(0,0,0,.07)!important;color:#111!important;border-color:rgba(0,0,0,.16)!important}
+body[data-theme="dark"] .primary-btn,body[data-theme="dark"] .count-btn{background:#f5f5f5!important;color:#080808!important;border:1px solid #fff!important}
+body[data-theme="light"] .primary-btn,body[data-theme="light"] .count-btn{background:#111!important;color:#fff!important;border:1px solid #111!important}
+body[data-theme="dark"] .text-btn,body[data-theme="dark"] .soft-btn{color:#f4f4f4}
+body[data-theme="light"] .text-btn,body[data-theme="light"] .soft-btn{color:#171717}
+.hero-card,.next-prayer-card,.stat-card,.quick-card,.verse-card,.continue-card,.surah-item,.zekr-card,.tasbeeh-panel,.location-card,.prayer-row,.wird-summary,.wird-item,.settings-group,.search-wrap,.virtue-card,.theme-option,.date-chip,.bottom-nav,.topbar{backdrop-filter:blur(28px) saturate(125%)!important;-webkit-backdrop-filter:blur(28px) saturate(125%)!important}
+.bottom-nav{background:rgba(24,24,24,.72)!important;border:1px solid rgba(255,255,255,.2)!important;box-shadow:0 16px 44px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.18)!important}
+body[data-theme="light"] .bottom-nav{background:rgba(255,255,255,.78)!important;border-color:rgba(0,0,0,.1)!important;box-shadow:0 16px 44px rgba(0,0,0,.1),inset 0 1px #fff!important}
+.topbar{background:rgba(12,12,12,.68)!important;border-bottom:1px solid var(--glass-border)!important}
+body[data-theme="light"] .topbar{background:rgba(255,255,255,.76)!important}
+.more-category-grid .more-category,.more-panel,.more-category-close{color:var(--text)}
+.monochrome-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:12px}
+.monochrome-options .theme-option{min-height:58px;border-radius:15px;background:var(--glass);border:1px solid var(--glass-border);color:var(--text)}
+.monochrome-options .theme-option i{width:18px;height:18px;border-radius:50%;display:inline-block;border:1px solid var(--line);background:linear-gradient(135deg,#080808 0 50%,#fff 50% 100%)}
+.monochrome-options [data-theme="dark"] i{background:#080808}.monochrome-options [data-theme="light"] i{background:#fff}.monochrome-options [data-theme="system"] i{background:linear-gradient(90deg,#080808 50%,#fff 50%)}
+.monochrome-options .theme-option.selected{outline:1px solid var(--text);outline-offset:1px}
+/* keep all accent elements neutral, including legacy components */
+:root{--reader-highlight:rgba(255,255,255,.1)}
+body[data-theme="light"]{--reader-highlight:rgba(0,0,0,.07)}
+.prayer-countdown b,.next-prayer-main strong,.prayer-row span,.nav-item.active,.more-category>span,.panel-icon,.surah-number,.zekr-count,.setting-icon{color:var(--text)!important}
+.prayer-countdown,.stat-icon,.zekr-count,.setting-icon{background:var(--surface2)!important;border-color:var(--glass-border)!important}
+body[data-theme="light"] .prayer-countdown,body[data-theme="light"] .stat-icon,body[data-theme="light"] .zekr-count,body[data-theme="light"] .setting-icon{background:#eee!important}
