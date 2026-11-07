@@ -32,6 +32,21 @@ function renderAudio(){const box=$("#adhanTracks");if(!box)return;const list=get
 function setupAudio(){$("#adhanUpload").onchange=async e=>{for(const f of [...e.target.files]){if(!f.type.startsWith("audio/"))continue;const label=prompt("اسم المؤذن أو التسجيل:",f.name.replace(/\.[^.]+$/,""))||f.name;const id="adhan-"+Date.now()+"-"+Math.random().toString(36).slice(2);try{await dbPut(id,{blob:f,name:f.name});const l=get("adhan-list",[]);l.push({id,name:f.name,label});set("adhan-list",l)}catch{toast("تعذر حفظ الملف الصوتي")}}renderAudio();e.target.value=""};renderAudio()}
 function recallMode(){const ayahs=$("#ayahs");if(!ayahs||$("#recallToolbar"))return;const bar=document.createElement("div");bar.id="recallToolbar";bar.className="recall-toolbar";bar.innerHTML='<button class="soft-btn" id="toggleRecall">ابدأ اختبار الحفظ</button><button class="soft-btn" id="revealRecall">إظهار الكل</button><small>اضغط على الآية المخفية لكشفها منفردة</small>';ayahs.parentNode.insertBefore(bar,ayahs);let active=false;function bind(){$$(".ayah").forEach(a=>{if(a.dataset.recallReady)return;a.dataset.recallReady="1";a.addEventListener("click",()=>{if(active)a.classList.remove("recall-hidden")})})}function hide(v){active=v;bind();$$(".ayah").forEach(a=>a.classList.toggle("recall-hidden",v));$("#toggleRecall").textContent=v?"إظهار الآيات":"ابدأ اختبار الحفظ"}$("#toggleRecall").onclick=()=>hide(!active);$("#revealRecall").onclick=()=>hide(false);new MutationObserver(bind).observe(ayahs,{childList:true,subtree:true});bind()}
 function openPage(id){const b=[...document.querySelectorAll(".nav-item")].find(n=>n.dataset.page===id);if(b){b.click();return}document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id+"Page"));document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));window.scrollTo({top:0,behavior:"smooth"})}
-function init(){arrangeMore();setupFonts();setupAudio();recallMode();$("#openMemorization").onclick=()=>{openPage("quran");toast("افتح سورة ثم ابدأ اختبار الحفظ")};$("#openWird").onclick=()=>openPage("wird");}
+
+function setupQuranReader(){
+const reader=$("#reader"),area=$("#ayahs");if(!reader||!area)return;
+let size=get("quran-reader-size",26),mode=get("quran-reader-theme","auto"),script=get("quran-reader-script","naskh");
+function setMode(v){mode=v;set("quran-reader-theme",v);reader.dataset.readerTheme=v;$("[data-reader-theme]").forEach(b=>b.classList.toggle("selected",b.dataset.readerTheme===v))}
+function setSize(v){size=Math.max(20,Math.min(40,v));reader.style.setProperty("--reader-font-size",size+"px");$("#quranFontSizeLabel").textContent=size;set("quran-reader-size",size)}
+function setScript(v){script=v;reader.dataset.readerScript=v;set("quran-reader-script",v);$("[data-reader-script]").forEach(b=>b.classList.toggle("selected",b.dataset.readerScript===v))}
+$("[data-reader-theme]").forEach(b=>b.onclick=()=>setMode(b.dataset.readerTheme));
+$("[data-reader-script]").forEach(b=>b.onclick=()=>setScript(b.dataset.readerScript));
+$("#quranFontDown").onclick=()=>setSize(size-2);$("#quranFontUp").onclick=()=>setSize(size+2);
+function syncAuto(){if(mode!=="auto")return;const t=document.body.dataset.theme||"midnight";const light=["light","glass"].includes(t)||(!t&&matchMedia("(prefers-color-scheme: light)").matches);reader.dataset.readerTheme=light?"light":"dark"}
+new MutationObserver(syncAuto).observe(document.body,{attributes:true,attributeFilter:["data-theme"]});
+setMode(mode);setSize(size);setScript(script);syncAuto();
+area.addEventListener("click",ev=>{const ay=ev.target.closest(".ayah");if(!ay)return;area.querySelectorAll(".ayah.selected").forEach(x=>x.classList.remove("selected"));ay.classList.add("selected");set("lastAyah",+ay.dataset.ayah)});
+}
+function init(){arrangeMore();setupFonts();setupAudio();recallMode();setupQuranReader();$("#openMemorization").onclick=()=>{openPage("quran");toast("افتح سورة ثم ابدأ اختبار الحفظ")};$("#openWird").onclick=()=>openPage("wird");}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
