@@ -161,3 +161,33 @@ body[data-theme="midnight"],body[data-theme="bronze"],body[data-theme="champagne
 .more-panel .tool-row b{font-size:12px}.more-panel .tool-row p{font-size:10px;line-height:1.8;color:var(--muted)}
 .theme-option[data-theme="glass"] i{background:linear-gradient(135deg,#fff 0 48%,#aab9ca 49% 100%)}
 @media(max-width:380px){.more-category-grid{gap:8px}.more-category{padding:11px;min-height:96px}.more-panel>summary{padding:12px}}
+
+/* DIGITAL QURAN READER — independent, adaptive reading canvas */
+#reader{--reader-font-size:26px;margin:12px -2px 0}
+#reader .reader-head{align-items:center;margin-bottom:14px}
+#readerTitle{text-align:center;font-size:23px;font-weight:800;margin:22px 0 12px;color:var(--text)!important;letter-spacing:.02em}
+.quran-reader-tools{padding:12px;margin:12px 0 16px;border:1px solid var(--glass-border);border-radius:18px;background:var(--glass);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);box-shadow:0 10px 28px #0002}
+.quran-tool-line{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0}
+.quran-tool-line+.quran-tool-line{border-top:1px solid var(--glass-border)}
+.reader-label{font-size:10px;color:var(--muted);white-space:nowrap}
+.reader-segments{display:flex;align-items:center;gap:5px}
+.reader-segments button{min-width:34px;padding:7px 10px;border-radius:10px;border:1px solid var(--glass-border);background:var(--surface2);color:var(--text);font-size:10px}
+.reader-segments button.selected{background:color-mix(in srgb,var(--teal) 20%,var(--surface));border-color:var(--teal);color:var(--teal)}
+.reader-segments b{font-size:10px;min-width:22px;text-align:center}
+#reader .hasanat-note{border-radius:14px}
+#reader .bismillah{color:var(--muted);font-size:21px;margin:22px 0;text-align:center}
+#ayahs{display:grid;gap:0;padding:8px 16px;border-radius:22px;background:var(--reader-paper,#10141d);border:1px solid var(--reader-edge,#ffffff12);box-shadow:0 16px 36px #0001;direction:rtl;text-align:right}
+#reader[data-reader-theme="dark"]{--reader-paper:#090b0f;--reader-ink:#f5f2e9;--reader-edge:#ffffff1a;--reader-highlight:#ffffff0c;--reader-muted:#a7a9b0}
+#reader[data-reader-theme="light"]{--reader-paper:#fff;--reader-ink:#17202b;--reader-edge:#dfe5eb;--reader-highlight:#e9f5f3;--reader-muted:#65717e}
+#reader[data-reader-theme="auto"]{--reader-paper:var(--surface);--reader-ink:var(--text);--reader-edge:var(--line);--reader-highlight:color-mix(in srgb,var(--teal) 12%,transparent);--reader-muted:var(--muted)}
+#ayahs .ayah{display:flex;align-items:flex-start;gap:12px;padding:16px 5px;border:0;border-bottom:1px solid var(--reader-edge);border-radius:0;background:transparent;color:var(--reader-ink);font-family:var(--quran-font)!important;font-size:var(--reader-font-size);font-weight:500;line-height:2.15;text-align:right;cursor:pointer;transition:background .18s}
+#ayahs .ayah:last-child{border-bottom:0}
+#ayahs .ayah.selected{background:var(--reader-highlight);border-radius:12px}
+#ayahs .ayah-text{flex:1;min-width:0}
+#ayahs .ayah-num{flex:0 0 28px;width:28px;height:28px;margin-top:7px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--reader-edge);background:color-mix(in srgb,var(--teal) 10%,transparent);color:var(--reader-muted);font-size:10px;font-family:system-ui,sans-serif}
+#reader[data-reader-script="naskh"] #ayahs .ayah-text{font-family:"Noto Naskh Arabic","Amiri",serif!important}
+#reader[data-reader-script="uthmani"] #ayahs .ayah-text{font-family:"KFGQPC Uthmanic Script HAFS","Noto Naskh Arabic",serif!important}
+#reader[data-reader-theme="light"] .bismillah{color:#596879}
+#reader[data-reader-theme="dark"] .bismillah{color:#d7c49a}
+#reader .reader-foot{padding-bottom:12px}
+@media(max-width:390px){#reader{margin-left:-5px;margin-right:-5px}.quran-reader-tools{padding:9px}.reader-label{font-size:9px}.reader-segments button{padding:7px 8px}#ayahs{padding:6px 11px}#ayahs .ayah{gap:8px}}
