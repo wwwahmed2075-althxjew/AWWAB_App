@@ -32,6 +32,7 @@
         <button class="primary-btn" data-go="azkar">ابدأ وردك <span>←</span></button>
         <span class="hero-ornament">۞</span>
       </article>
+      <article class="next-prayer-card" id="homePrayerCard"><div class="next-prayer-top"><span class="eyebrow">موعدك القادم مع الصلاة</span><span class="prayer-live">● مباشر</span></div><div class="next-prayer-main"><div><small id="nextPrayerLabel">الصلاة القادمة</small><h2 id="nextPrayerName">الفجر</h2><strong id="nextPrayerTime">--:--</strong></div><div class="prayer-countdown"><small>متبقي على الصلاة</small><b id="nextPrayerCountdown">--:--:--</b></div></div><div class="prayer-mini-times" id="homePrayerTimes"><span>الفجر --:--</span><span>الظهر --:--</span><span>العصر --:--</span><span>المغرب --:--</span><span>العشاء --:--</span></div><button class="text-btn" data-go="prayer">عرض كل المواقيت ←</button></article>
       <div class="section-heading"><div><p class="eyebrow">مساحتك اليومية</p><h2>ملخص يومك</h2></div><span class="tiny-dot"></span></div>
       <div class="stats-grid">
         <div class="stat-card"><span class="stat-icon">☾</span><strong id="homeTasbeeh">0</strong><small>تسبيحة اليوم</small></div>
@@ -65,7 +66,7 @@
     <section class="page" id="azkarPage">
       <div class="page-head"><p class="eyebrow">حصنك اليومي</p><h1>الأذكار</h1><p>لحظات قصيرة تملأ يومك طمأنينة.</p></div>
       <div class="pill-tabs" id="azkarTabs">
-        <button class="selected" data-kind="morning">الصباح</button><button data-kind="evening">المساء</button><button data-kind="sleep">النوم</button><button data-kind="wake">الاستيقاظ</button>
+        <button class="selected" data-kind="morning">الصباح</button><button data-kind="evening">المساء</button><button data-kind="sleep">النوم</button><button data-kind="wake">الاستيقاظ</button><button data-kind="ruqyah">الرقية</button>
       </div>
       <div class="azkar-progress"><div><span>إنجاز الورد</span><b id="azkarProgressText">0%</b></div><div class="progress-track"><i id="azkarProgress"></i></div></div>
       <div id="azkarList" class="azkar-list"></div>
@@ -116,6 +117,21 @@
           <button class="theme-option" data-theme="emerald"><i></i><span>زمردي</span></button>
           <button class="theme-option" data-theme="light"><i></i><span>فاتح</span></button>
         </div>
+      </div>
+      <div class="settings-group reminder-settings">
+        <div class="setting-row"><span class="setting-icon">☾</span><span><b>تذكير قيام الليل</b><small>تنبيه يومي في الوقت الذي تختاره</small></span><input id="remQiyam" type="checkbox" class="setting-toggle"></div>
+        <div class="setting-row"><span class="setting-icon">☀</span><span><b>تذكير صلاة الضحى</b><small>بعد الشروق بوقت مناسب</small></span><input id="remDuha" type="checkbox" class="setting-toggle"></div>
+        <div class="setting-row"><span class="setting-icon">♡</span><span><b>الصلاة على النبي ﷺ</b><small>تذكير يومي</small></span><input id="remSalawat" type="checkbox" class="setting-toggle"></div>
+        <div class="setting-row"><span class="setting-icon">☽</span><span><b>صيام الاثنين والخميس</b><small>تذكير مساء اليوم السابق</small></span><input id="remFasting" type="checkbox" class="setting-toggle"></div>
+        <div class="reminder-times"><label>قيام الليل <input id="qiyamTime" type="time" value="03:30"></label><label>الضحى <input id="duhaTime" type="time" value="08:00"></label><label>الصلاة على النبي ﷺ <input id="salawatTime" type="time" value="12:00"></label></div>
+        <button class="primary-btn full-btn" id="saveReminders">حفظ التذكيرات وتفعيل الإشعارات</button>
+        <small class="source-note">تعمل التنبيهات في هذه النسخة أثناء فتح التطبيق أو عمله في الخلفية وفق دعم المتصفح؛ التنبيه المضمون عند إغلاق التطبيق يحتاج إصدارًا أصليًا وإشعارات مجدولة.</small>
+      </div>
+      <div class="virtue-grid">
+        <article class="virtue-card"><span>🌙</span><h3>فضل قيام الليل</h3><p>قيام الليل من أعظم القربات، وفيه خلوة ومناجاة ودعاء. ابدأ بركعتين، ولو بالقليل الدائم.</p><small>قال تعالى: ﴿وَمِنَ اللَّيْلِ فَتَهَجَّدْ بِهِ نَافِلَةً لَكَ﴾ [الإسراء: 79]</small></article>
+        <article class="virtue-card"><span>☀️</span><h3>صلاة الضحى</h3><p>صلاة الضحى صدقة عن مفاصل الجسد، وأقلها ركعتان.</p><small>صحيح مسلم: «ويجزئ من ذلك ركعتان يركعهما من الضحى»</small></article>
+        <article class="virtue-card"><span>♡</span><h3>الصلاة على النبي ﷺ</h3><p>أكثر من الصلاة والسلام على النبي ﷺ، واجعلها وردًا يسيرًا ثابتًا.</p><small>قال تعالى: ﴿إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ﴾ [الأحزاب: 56]</small></article>
+        <article class="virtue-card"><span>🌿</span><h3>صيام الاثنين والخميس</h3><p>كان النبي ﷺ يتحرى صيام الاثنين والخميس، وهما من أيام عرض الأعمال.</p><small>سنن الترمذي والنسائي، بألفاظ وروايات متعددة</small></article>
       </div>
       <div class="about-card"><div class="brand-mark">و</div><h2>أوّاب | AWWAB</h2><p>كل يوم أقرب إلى الله</p><small>نسخة تجريبية قيد التطوير — نسأل الله القبول.</small></div>
     </section>
