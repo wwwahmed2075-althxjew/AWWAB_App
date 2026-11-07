@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080a0f">
+<meta name="description" content="أوّاب — رفيقك اليومي للقرآن والأذكار والعبادة">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<title>أوّاب | AWWAB</title>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="#" data-page="home" aria-label="أوّاب الرئيسية">
+      <span class="brand-mark">و</span><span><b>أوّاب</b><small>AWWAB</small></span>
+    </a>
+    <div class="top-actions">
+      <button class="icon-btn" id="langBtn" aria-label="تغيير اللغة">EN</button>
+      <button class="icon-btn" id="themeBtn" aria-label="المظهر">◐</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page active" id="homePage">
+      <div class="greeting-row"><div><p class="eyebrow" id="todayLabel">رحلتك تبدأ بخطوة</p><h1 id="greeting">السلام عليك 👋</h1></div><div class="date-chip" id="dateChip">اليوم</div></div>
+      <article class="hero-card">
+        <div class="hero-glow"></div><p class="eyebrow">محطتك الروحانية</p>
+        <h2>وَاذْكُر رَّبَّكَ كَثِيرًا</h2>
+        <p class="hero-copy">اجعل لقلبك نصيبًا من الذكر، ولروحك وقتًا مع القرآن.</p>
+        <button class="primary-btn" data-go="azkar">ابدأ وردك <span>←</span></button>
+        <span class="hero-ornament">۞</span>
+      </article>
+      <div class="section-heading"><div><p class="eyebrow">مساحتك اليومية</p><h2>ملخص يومك</h2></div><span class="tiny-dot"></span></div>
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-icon">☾</span><strong id="homeTasbeeh">0</strong><small>تسبيحة اليوم</small></div>
+        <div class="stat-card"><span class="stat-icon">▤</span><strong id="homePages">0</strong><small>صفحة قرآن</small></div>
+        <div class="stat-card"><span class="stat-icon">♡</span><strong id="homeWird">0/5</strong><small>مهام الورد</small></div>
+      </div>
+      <div class="section-heading"><div><p class="eyebrow">وصول سريع</p><h2>ماذا تريد أن تفعل؟</h2></div></div>
+      <div class="quick-grid">
+        <button class="quick-card" data-go="quran"><span>📖</span><b>القرآن الكريم</b><small>قراءة وتدبّر</small></button>
+        <button class="quick-card" data-go="azkar"><span>☁</span><b>الأذكار</b><small>صباح ومساء</small></button>
+        <button class="quick-card" data-go="tasbeeh"><span>◉</span><b>السبحة</b><small>اذكر الله</small></button>
+        <button class="quick-card" data-go="prayer"><span>✧</span><b>الصلاة</b><small>مواقيت الصلاة</small></button>
+      </div>
+      <blockquote class="verse-card"><span>آية اليوم</span><p>﴿أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ﴾</p><small>سورة الرعد — ٢٨</small></blockquote>
+    </section>
+
+    <section class="page" id="quranPage">
+      <div class="page-head"><p class="eyebrow">نور يومك</p><h1>القرآن الكريم</h1><p>اختر سورة وابدأ رحلتك مع كلام الله.</p></div>
+      <div class="search-wrap"><span>⌕</span><input id="surahSearch" placeholder="ابحث عن سورة..." autocomplete="off"></div>
+      <div class="continue-card"><div><small>آخر قراءة</small><b id="lastRead">لم تبدأ القراءة بعد</b></div><button class="soft-btn" id="continueBtn">متابعة</button></div>
+      <div class="section-heading"><h2>فهرس السور</h2><small id="surahCount">114 سورة</small></div>
+      <div class="surah-list" id="surahList"><div class="loading">جارٍ تجهيز فهرس السور...</div></div>
+      <div class="reader hidden" id="reader">
+        <div class="reader-head"><button class="soft-btn" id="backSurahs">← السور</button><span id="readerMeta"></span></div>
+        <h2 id="readerTitle"></h2><div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <div id="ayahs" class="ayahs"><p class="loading">جارٍ تحميل الآيات...</p></div>
+        <div class="reader-foot"><button class="primary-btn" id="markRead">حفظ موضع القراءة</button></div>
+      </div>
+    </section>
+
+    <section class="page" id="azkarPage">
+      <div class="page-head"><p class="eyebrow">حصنك اليومي</p><h1>الأذكار</h1><p>لحظات قصيرة تملأ يومك طمأنينة.</p></div>
+      <div class="pill-tabs" id="azkarTabs">
+        <button class="selected" data-kind="morning">الصباح</button><button data-kind="evening">المساء</button><button data-kind="sleep">النوم</button><button data-kind="wake">الاستيقاظ</button>
+      </div>
+      <div class="azkar-progress"><div><span>إنجاز الورد</span><b id="azkarProgressText">0%</b></div><div class="progress-track"><i id="azkarProgress"></i></div></div>
+      <div id="azkarList" class="azkar-list"></div>
+      <p class="source-note">تنبيه: هذه مجموعة أذكار مختارة كبداية، ويجب مراجعة النصوص والتخريج قبل اعتمادها في إصدار النشر النهائي.</p>
+    </section>
+
+    <section class="page" id="tasbeehPage">
+      <div class="page-head"><p class="eyebrow">قلبك يذكر</p><h1>السبحة الإلكترونية</h1><p>اختر ذكرك، وابدأ على مهل.</p></div>
+      <div class="tasbeeh-panel">
+        <div class="tasbeeh-top"><span class="live-dot"></span><span>جلسة التسبيح</span><button id="resetTasbeeh" class="text-btn">إعادة ضبط</button></div>
+        <div class="dhikr-select"><button class="selected" data-dhikr="سبحان الله">سبحان الله</button><button data-dhikr="الحمد لله">الحمد لله</button><button data-dhikr="الله أكبر">الله أكبر</button><button data-dhikr="أستغفر الله">أستغفر الله</button></div>
+        <div class="counter-ring" id="counterRing"><div><small>عدد التسبيحات</small><strong id="count">0</strong><span id="currentDhikr">سبحان الله</span></div></div>
+        <div class="beads" id="beads" aria-label="حبات السبحة"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <button class="count-btn" id="countBtn" aria-label="سبّح">سَبِّح</button>
+        <div class="counter-controls"><button id="undoBtn" class="soft-btn">↶ تراجع</button><label>الهدف <input id="goalInput" type="number" min="1" max="10000" value="100"></label></div>
+        <div class="progress-track"><i id="tasbeehProgress"></i></div><small class="goal-caption" id="goalCaption">0 من 100</small>
+      </div>
+    </section>
+
+    <section class="page" id="prayerPage">
+      <div class="page-head"><p class="eyebrow">على موعد مع الطمأنينة</p><h1>مواقيت الصلاة</h1><p>اعرف مواقيت الصلاة حسب مدينتك.</p></div>
+      <div class="location-card"><div><small>الموقع الحالي</small><b id="locationName">القاهرة، مصر</b></div><button class="soft-btn" id="editLocation">تغيير</button></div>
+      <div class="location-form hidden" id="locationForm"><input id="cityInput" value="Cairo" placeholder="City"><input id="countryInput" value="Egypt" placeholder="Country"><button class="primary-btn" id="loadPrayer">عرض المواقيت</button></div>
+      <div class="prayer-date" id="prayerDate">مواقيت اليوم</div><div class="prayer-list" id="prayerList"><div class="loading">اضغط لعرض المواقيت</div></div>
+      <p class="source-note">تُجلب المواقيت من خدمة AlAdhan، وقد تختلف دقائق قليلة حسب طريقة الحساب والجهة الرسمية في بلدك.</p>
+    </section>
+
+    <section class="page" id="wirdPage">
+      <div class="page-head"><p class="eyebrow">خطوات صغيرة وأثر كبير</p><h1>وردي اليومي</h1><p>ضع علامة عند إتمام كل عبادة.</p></div>
+      <div class="wird-summary"><strong id="wirdPercent">0%</strong><span>من إنجاز وردك اليوم</span><div class="progress-track"><i id="wirdProgress"></i></div></div>
+      <div class="wird-list" id="wirdList"></div>
+      <button class="soft-btn full-btn" id="resetWird">إعادة ضبط ورد اليوم</button>
+    </section>
+
+    <section class="page" id="morePage">
+      <div class="page-head"><p class="eyebrow">تجربتك كما تحب</p><h1>المزيد</h1><p>إعدادات أوّاب ومعلومات التطبيق.</p></div>
+      <div class="settings-group">
+        <button class="setting-row" id="settingsLang"><span class="setting-icon">文</span><span><b>اللغة</b><small>العربية / English</small></span><strong>العربية</strong></button>
+        <button class="setting-row" id="settingsTheme"><span class="setting-icon">◐</span><span><b>المظهر</b><small>أسود داكن</small></span><strong>داكن</strong></button>
+        <div class="setting-row"><span class="setting-icon">♧</span><span><b>عن أوّاب</b><small>رفيقك اليومي للعبادة</small></span><strong>v1.0</strong></div>
+      </div>
+      <div class="about-card"><div class="brand-mark">و</div><h2>أوّاب | AWWAB</h2><p>كل يوم أقرب إلى الله</p><small>نسخة تجريبية قيد التطوير — نسأل الله القبول.</small></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="التنقل الرئيسي">
+    <button class="nav-item active" data-page="home"><span>⌂</span><small>الرئيسية</small></button>
+    <button class="nav-item" data-page="quran"><span>▤</span><small>القرآن</small></button>
+    <button class="nav-item" data-page="azkar"><span>☁</span><small>الأذكار</small></button>
+    <button class="nav-item" data-page="tasbeeh"><span>◉</span><small>السبحة</small></button>
+    <button class="nav-item" data-page="more"><span>⋯</span><small>المزيد</small></button>
+  </nav>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script>
+</body></html>
