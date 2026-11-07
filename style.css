@@ -77,3 +77,35 @@ body[data-theme="light"] .bottom-nav,body[data-theme="light"] .topbar{border-col
 .hasanat-note b{font-size:11px;color:var(--gold)}
 .hasanat-note p{font-size:10px;line-height:1.9;color:var(--muted);margin:7px 0 0}
 @media(min-width:700px){.app-shell{max-width:480px;border-inline:1px solid var(--glass-border);box-shadow:0 0 80px #0005}}
+
+/* AWWAB personalization, readable glass palettes and independent Quran typography */
+:root{--app-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;--quran-font:"Noto Naskh Arabic","Noto Sans Arabic",serif}
+body,button,input,select,textarea{font-family:var(--app-font)}
+.ayahs,.ayah,.bismillah,#readerTitle{font-family:var(--quran-font)!important}
+body[data-theme="midnight"],body[data-theme="bronze"],body[data-theme="champagne"],body[data-theme="emerald"]{color-scheme:dark}
+body[data-theme="glass"]{--bg:#e9edf2;--surface:rgba(255,255,255,.68);--surface2:#e2e8ef;--navy:#dce4ee;--teal:#176f70;--gold:#8b6a35;--text:#101722;--muted:#566273;--line:rgba(31,45,62,.15);--glass:rgba(255,255,255,.64);color-scheme:light}
+body[data-theme="glass"] .topbar,body[data-theme="glass"] .bottom-nav,body[data-theme="glass"] .hero-card,body[data-theme="glass"] .tasbeeh-panel{color:#101722}
+body[data-theme="glass"] .hero-card{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(211,224,238,.72));border:1px solid #ffffffd9}
+body[data-theme="glass"] .hero-card h2,body[data-theme="glass"] .hero-card .eyebrow{color:#172335}
+body[data-theme="glass"] .hero-copy,body[data-theme="glass"] .hero-card p{color:#455367}
+body[data-theme="glass"] .tasbeeh-panel{background:linear-gradient(145deg,#f7f9fc,#dce5ee);border-color:#c8d3df}
+body[data-theme="glass"] .counter-ring{background:radial-gradient(circle,#f7f9fc 58%,transparent 60%),conic-gradient(var(--teal) 0deg,#cbd5df 0deg)}
+body[data-theme="glass"] .count-btn{color:#fff}
+body[data-theme="glass"] .nav-item{color:#596678}
+body[data-theme="glass"] .nav-item.active{color:#176f70}
+body[data-theme="glass"] .prayer-countdown{background:#1723350d}
+.custom-font-row{display:flex;gap:8px;padding:0 12px 12px}
+.custom-font-row button{flex:1}
+.upload-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 12px 12px;padding:12px;border:1px dashed var(--line);border-radius:12px;color:var(--text);font-size:11px}
+.upload-row input{max-width:54%;font-size:10px;color:var(--muted)}
+.adhan-tracks{display:grid;gap:8px;padding:0 12px 12px}
+.adhan-track{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:9px;background:var(--surface2);border-radius:11px;font-size:10px}
+.adhan-track span{flex:1;min-width:100px}
+.audio-library audio{width:calc(100% - 24px);margin:0 12px 14px;height:38px}
+.feature-note{padding:14px}
+.feature-note p{font-size:11px;line-height:1.9;color:var(--muted);margin:0 0 10px}
+.recall-toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:12px 0}
+.recall-toolbar small{width:100%;font-size:9px;color:var(--muted)}
+.ayah{display:inline-block;border-radius:7px;transition:filter .18s,background .18s;cursor:pointer}
+.ayah.recall-hidden{color:transparent!important;background:color-mix(in srgb,var(--accent,var(--teal)) 22%,var(--surface2));text-shadow:0 0 13px var(--text);user-select:none}
+.ayah.recall-hidden .ayah-num{color:var(--gold)}
