@@ -193,3 +193,79 @@ body[data-theme="midnight"],body[data-theme="bronze"],body[data-theme="champagne
 
 /* Reader font follows the independent Quran font setting */
 #ayahs .ayah-text{font-family:var(--quran-font)!important}
+
+/* AWWAB REFINED MATERIAL + iOS DESIGN SYSTEM */
+:root{--ios-radius:24px;--m3-radius:18px;--ios-ease:cubic-bezier(.2,.8,.2,1)}
+html{scroll-behavior:smooth}
+body{font-family:var(--app-font);-webkit-tap-highlight-color:transparent}
+button,.quick-card,.surah-item,.setting-row,.more-category{transition:transform .18s var(--ios-ease),background .2s,border-color .2s,box-shadow .2s}
+button:active,.quick-card:active,.surah-item:active,.more-category:active{transform:scale(.975)}
+.topbar{height:64px;padding-inline:18px;border-radius:0 0 22px 22px}
+.brand-mark{border-radius:14px}
+.page{padding:22px 17px 34px}
+.page-head h1,.greeting-row h1{letter-spacing:-.55px}
+.hero-card{border-radius:28px;padding:24px 21px;min-height:190px}
+.next-prayer-card{position:relative;overflow:hidden;margin:14px 0 20px;padding:19px;border-radius:26px;background:linear-gradient(145deg,color-mix(in srgb,var(--teal) 13%,var(--surface)),var(--glass))!important;border:1px solid var(--glass-border)!important;backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);box-shadow:0 15px 38px #0002,inset 0 1px #ffffff24}
+.next-prayer-top,.next-prayer-main{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.prayer-live{font-size:9px;color:var(--teal);padding:6px 9px;border-radius:20px;background:color-mix(in srgb,var(--teal) 13%,transparent)}
+.next-prayer-main{padding:17px 0 14px}
+.next-prayer-main h2{font-size:28px;margin:5px 0;color:var(--text)}
+.next-prayer-main strong{font-size:17px;color:var(--gold);font-variant-numeric:tabular-nums}
+.next-prayer-main small,.prayer-countdown small{font-size:10px;color:var(--muted)}
+.prayer-countdown{min-width:116px;padding:12px;border-radius:18px;background:color-mix(in srgb,var(--surface) 72%,transparent);border:1px solid var(--glass-border);text-align:center}
+.prayer-countdown b{display:block;font-size:17px;letter-spacing:.5px;font-variant-numeric:tabular-nums;color:var(--teal);margin-top:7px}
+.prayer-mini-times{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:4px 0 12px}
+.prayer-mini-times span{padding:9px 6px;border-radius:12px;background:color-mix(in srgb,var(--surface) 68%,transparent);border:1px solid var(--glass-border);font-size:9px;text-align:center;color:var(--text)}
+.next-prayer-card>.text-btn{background:transparent;border:0;padding:7px 0;color:var(--teal)}
+.stats-grid{gap:10px}
+.stat-card{border-radius:20px;padding:15px 12px;min-height:100px}
+.quick-card{border-radius:20px;padding:16px;min-height:106px}
+.verse-card{border-radius:22px;padding:19px}
+.bottom-nav{height:70px;border-radius:26px!important;padding:8px 12px!important;bottom:calc(9px + env(safe-area-inset-bottom));box-shadow:0 14px 40px #0003,inset 0 1px #ffffff30}
+.nav-item{border-radius:18px;gap:4px;min-width:0}
+.nav-item span{font-size:20px;line-height:1.1}
+.nav-item small{font-size:9px}
+.nav-item.active{background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal)}
+/* More categories open as their own focused settings screen */
+.more-category-grid{gap:11px}
+.more-category{border-radius:22px;min-height:112px;padding:16px;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%)}
+.more-category>span{width:38px;height:38px;border-radius:14px}
+.more-panel{display:none}
+.more-panel.focused-panel{display:block;position:fixed;z-index:40;inset:calc(env(safe-area-inset-top) + 10px) 10px calc(env(safe-area-inset-bottom) + 88px);overflow-y:auto;margin:0;padding:13px;border-radius:27px;background:var(--bg);border:1px solid var(--glass-border);box-shadow:0 22px 70px #0008;backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);animation:moreIn .22s var(--ios-ease)}
+@keyframes moreIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.more-category-close{width:100%;display:block;text-align:right;padding:11px 13px;margin-bottom:13px;border:0;border-radius:15px;background:var(--surface2);color:var(--teal);font-size:12px;font-weight:700}
+.more-panel.focused-panel>summary{display:none}
+.more-panel.focused-panel>.settings-group,.more-panel.focused-panel>.theme-picker,.more-panel.focused-panel>.virtue-grid{display:block;margin:10px 0;padding:12px;border-radius:18px;background:var(--glass)!important;border:1px solid var(--glass-border)!important}
+.more-panel.focused-panel .setting-row{min-height:58px}
+.language-options{display:flex;gap:9px;padding:10px 12px}
+.language-options button{flex:1}
+body.more-detail-open{overflow:hidden}
+#morePage>.more-panel:not(.focused-panel){display:none}
+#morePage .about-card{margin-top:18px}
+.more-panel.focused-panel .theme-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.more-panel.focused-panel .theme-option{border-radius:15px;min-height:64px}
+/* Quran search + surah list */
+#surahSearch{min-width:0;width:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:14px}
+.search-wrap{min-height:52px;border-radius:18px;padding:0 15px}
+.surah-list{display:grid;gap:8px}
+.surah-item{border-radius:17px;min-height:72px;padding:12px 14px;display:flex;align-items:center;gap:13px;text-align:right}
+.surah-number{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;background:color-mix(in srgb,var(--teal) 13%,transparent);color:var(--teal);font-weight:700}
+.surah-info{display:grid;gap:5px}.surah-info b{font-size:13px}.surah-info small{font-size:10px;color:var(--muted)}
+/* Tasbeeh per-dhikr controls */
+.dhikr-select{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 0}
+.dhikr-select button{border-radius:15px;min-height:44px;background:var(--surface2);border:1px solid var(--glass-border);color:var(--text);font-weight:600}
+.dhikr-select button.selected{background:color-mix(in srgb,var(--teal) 18%,var(--surface));border-color:var(--teal);color:var(--teal);box-shadow:0 0 0 2px color-mix(in srgb,var(--teal) 10%,transparent)}
+.tasbeeh-panel{border-radius:28px;padding:19px;background:linear-gradient(155deg,color-mix(in srgb,var(--surface) 92%,var(--teal)),var(--bg))!important}
+.counter-ring{border:1px solid var(--glass-border);box-shadow:0 15px 40px #0002,inset 0 0 20px #ffffff08}
+.count-btn{border-radius:22px;min-height:58px;width:min(100%,270px);font-size:15px;font-weight:750;box-shadow:0 10px 25px color-mix(in srgb,var(--teal) 20%,transparent)}
+/* Prayer list and location settings */
+#prayerPage .location-card,#prayerPage .prayer-row{border-radius:17px;padding:14px 16px}
+#prayerPage .prayer-list{display:grid;gap:8px;margin-top:13px}
+#prayerPage .prayer-row{min-height:55px;display:flex;align-items:center;justify-content:space-between;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+#prayerPage .prayer-row b{font-size:13px}#prayerPage .prayer-row span{font-size:13px;color:var(--teal);font-weight:700;font-variant-numeric:tabular-nums}
+#prayerPage .location-form{display:grid;gap:9px;padding:14px;border-radius:18px;background:var(--glass);border:1px solid var(--glass-border)}
+#prayerPage .location-form input{min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text)}
+/* Material-like consistency */
+.primary-btn,.soft-btn,.text-btn,.setting-row,.pill-tabs button{border-radius:14px}
+.setting-row{min-height:62px}
+@media(max-width:390px){.next-prayer-main{gap:8px}.prayer-countdown{min-width:104px;padding:9px}.prayer-countdown b{font-size:15px}.prayer-mini-times{gap:5px}.prayer-mini-times span{font-size:8px}.more-category{min-height:100px}}
