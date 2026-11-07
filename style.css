@@ -185,9 +185,11 @@ body[data-theme="midnight"],body[data-theme="bronze"],body[data-theme="champagne
 #ayahs .ayah.selected{background:var(--reader-highlight);border-radius:12px}
 #ayahs .ayah-text{flex:1;min-width:0}
 #ayahs .ayah-num{flex:0 0 28px;width:28px;height:28px;margin-top:7px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--reader-edge);background:color-mix(in srgb,var(--teal) 10%,transparent);color:var(--reader-muted);font-size:10px;font-family:system-ui,sans-serif}
-#reader[data-reader-script="naskh"] #ayahs .ayah-text{font-family:"Noto Naskh Arabic","Amiri",serif!important}
-#reader[data-reader-script="uthmani"] #ayahs .ayah-text{font-family:"KFGQPC Uthmanic Script HAFS","Noto Naskh Arabic",serif!important}
+#ayahs .ayah-text{font-family:var(--quran-font)!important}
 #reader[data-reader-theme="light"] .bismillah{color:#596879}
 #reader[data-reader-theme="dark"] .bismillah{color:#d7c49a}
 #reader .reader-foot{padding-bottom:12px}
 @media(max-width:390px){#reader{margin-left:-5px;margin-right:-5px}.quran-reader-tools{padding:9px}.reader-label{font-size:9px}.reader-segments button{padding:7px 8px}#ayahs{padding:6px 11px}#ayahs .ayah{gap:8px}}
+
+/* Reader font follows the independent Quran font setting */
+#ayahs .ayah-text{font-family:var(--quran-font)!important}
