@@ -109,3 +109,24 @@ body[data-theme="glass"] .prayer-countdown{background:#1723350d}
 .ayah{display:inline-block;border-radius:7px;transition:filter .18s,background .18s;cursor:pointer}
 .ayah.recall-hidden{color:transparent!important;background:color-mix(in srgb,var(--accent,var(--teal)) 22%,var(--surface2));text-shadow:0 0 13px var(--text);user-select:none}
 .ayah.recall-hidden .ayah-num{color:var(--gold)}
+
+/* AWWAB GLASS REPAIR */
+:root{--app-font:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;--quran-font:"Noto Naskh Arabic","Noto Sans Arabic",serif}
+body,button,input,select,textarea{font-family:var(--app-font)}
+.ayahs,.ayah,.bismillah,#readerTitle{font-family:var(--quran-font)!important}
+body{background:var(--bg);color:var(--text)}
+.app-shell{background:radial-gradient(ellipse at 15% 0%,color-mix(in srgb,var(--teal) 13%,transparent),transparent 38%),radial-gradient(ellipse at 95% 45%,color-mix(in srgb,var(--gold) 7%,transparent),transparent 35%),var(--bg)}
+.topbar,.bottom-nav{background:var(--glass)!important;border:1px solid var(--glass-border)!important;backdrop-filter:blur(28px) saturate(190%)!important;-webkit-backdrop-filter:blur(28px) saturate(190%)!important;box-shadow:0 12px 38px #0002,inset 0 1px #ffffff25}
+.hero-card,.stat-card,.quick-card,.verse-card,.continue-card,.surah-item,.zekr-card,.tasbeeh-panel,.location-card,.prayer-row,.wird-summary,.wird-item,.settings-group,.search-wrap,.next-prayer-card,.virtue-card,.theme-option,.date-chip{background:var(--glass)!important;border:1px solid var(--glass-border)!important;backdrop-filter:blur(26px) saturate(180%)!important;-webkit-backdrop-filter:blur(26px) saturate(180%)!important;box-shadow:0 12px 35px #0002,inset 0 1px #ffffff20}
+.hero-card{background:linear-gradient(135deg,color-mix(in srgb,var(--surface) 70%,transparent),color-mix(in srgb,var(--teal) 10%,var(--glass)))!important}
+.brand-mark{background:linear-gradient(145deg,#ffffff35,#ffffff08)!important;backdrop-filter:blur(18px);border:1px solid #ffffff66!important;box-shadow:inset 0 1px #ffffff88,0 8px 22px #0002}
+.bottom-nav{width:min(480px,calc(100% - 24px));bottom:calc(10px + env(safe-area-inset-bottom));height:66px;border-radius:24px!important;padding:7px 10px!important}
+.app-shell{padding-bottom:104px}
+body[data-theme="glass"]{--bg:#e7edf4;--surface:rgba(255,255,255,.52);--surface2:rgba(218,228,239,.72);--navy:#dce5ef;--teal:#176f70;--gold:#876633;--text:#101722;--muted:#536174;--line:rgba(25,40,58,.16);--glass:rgba(255,255,255,.48);--glass-border:rgba(255,255,255,.82);--shadow:0 18px 45px #18243a14;color-scheme:light}
+body[data-theme="glass"] .topbar,body[data-theme="glass"] .bottom-nav,body[data-theme="glass"] .hero-card,body[data-theme="glass"] .tasbeeh-panel{color:#101722}
+body[data-theme="glass"] .hero-card{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(203,218,235,.52))!important}
+body[data-theme="glass"] .hero-card h2,body[data-theme="glass"] .hero-card .eyebrow,body[data-theme="glass"] .hero-card p{color:#172335}
+body[data-theme="glass"] .nav-item{color:#536174}body[data-theme="glass"] .nav-item.active{color:#176f70}
+body[data-theme="light"]{color-scheme:light}
+body[data-theme="midnight"],body[data-theme="bronze"],body[data-theme="champagne"],body[data-theme="emerald"]{color-scheme:dark}
+.theme-option[data-theme="glass"] i{background:linear-gradient(135deg,#fff 0 48%,#aab9ca 49% 100%)}
