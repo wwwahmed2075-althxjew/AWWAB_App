@@ -72,3 +72,8 @@ body[data-theme="light"] .bottom-nav,body[data-theme="light"] .topbar{border-col
 .virtue-card p{font-size:10px;color:var(--muted);line-height:1.8;margin:0 0 8px}
 .virtue-card small{font-size:9px;line-height:1.7;color:var(--gold)}
 @media(max-width:380px){.reminder-times{grid-template-columns:1fr}.virtue-grid{grid-template-columns:1fr 1fr}.bottom-nav{width:96%;padding-inline:5px}}
+
+.hasanat-note{margin:14px 0;padding:13px 15px;border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);border-radius:15px;background:color-mix(in srgb,var(--gold) 8%,var(--surface));}
+.hasanat-note b{font-size:11px;color:var(--gold)}
+.hasanat-note p{font-size:10px;line-height:1.9;color:var(--muted);margin:7px 0 0}
+@media(min-width:700px){.app-shell{max-width:480px;border-inline:1px solid var(--glass-border);box-shadow:0 0 80px #0005}}
