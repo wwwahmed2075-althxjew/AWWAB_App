@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -162,24 +164,153 @@ class PrayerMini extends StatelessWidget {
   Widget build(BuildContext context) => Column(children: [Text(name, style: const TextStyle(fontSize: 10, color: muted)), const SizedBox(height: 5), const Text('--:--', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600))]);
 }
 
-class QuranPage extends StatelessWidget {
+class QuranPage extends StatefulWidget {
   const QuranPage({super.key});
-  static const surahs = ['الفاتحة','البقرة','آل عمران','النساء','المائدة','الأنعام','الأعراف','الأنفال','التوبة','يونس','هود','يوسف','الرعد','إبراهيم','الحجر','النحل','الإسراء','الكهف','مريم','طه'];
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'القرآن الكريم', subtitle: 'اقرأ، واستمع، وتابع وردك', child: Column(children: [
-    GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('مصحفي', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
-      const SizedBox(height: 7), const Text('سيُضاف عرض المصحف بالرسم العثماني وأدوات التلاوة والحفظ في المرحلة التالية.', style: TextStyle(color: muted, fontSize: 12, height: 1.8)),
-      const SizedBox(height: 12), const Text('آخر موضع قراءة: لم تبدأ بعد', style: TextStyle(fontSize: 11)),
-    ])),
-    const SizedBox(height: 15),
-    ...List.generate(surahs.length, (i) => Padding(padding: const EdgeInsets.only(bottom: 7), child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12), child: Row(children: [
-      Container(width: 30, height: 30, alignment: Alignment.center, decoration: BoxDecoration(color: Colors.white.withOpacity(.07), borderRadius: BorderRadius.circular(10)), child: Text('${i+1}', style: const TextStyle(fontSize: 11))),
-      const SizedBox(width: 12), Expanded(child: Text(surahs[i], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))), const Icon(Icons.chevron_left, color: muted, size: 19),
-    ])))),
-  ]));
+  State<QuranPage> createState() => _QuranPageState();
 }
-
+class _QuranPageState extends State<QuranPage> {
+  late Future<List<dynamic>> surahsFuture;
+  final searchController = TextEditingController();
+  String search = '';
+  int? lastSurah;
+  int? lastAyah;
+  @override
+  void initState() { super.initState(); surahsFuture = loadSurahs(); loadLastRead(); }
+  @override
+  void dispose() { searchController.dispose(); super.dispose(); }
+  Future<List<dynamic>> loadSurahs() async {
+    final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah')).timeout(const Duration(seconds: 20));
+    if (response.statusCode != 200) throw Exception('تعذر تحميل فهرس السور');
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    if (json['code'] != 200) throw Exception('مصدر القرآن لم يستجب بشكل صحيح');
+    return json['data'] as List<dynamic>;
+  }
+  Future<void> loadLastRead() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() { lastSurah = prefs.getInt('quran_last_surah'); lastAyah = prefs.getInt('quran_last_ayah'); });
+  }
+  Future<void> openSurah(Map<String, dynamic> surah) async {
+    await Navigator.push(context, MaterialPageRoute(builder: (_) => QuranReaderPage(
+      number: surah['number'] as int, name: surah['name'] as String,
+      englishName: surah['englishName'] as String, ayahCount: surah['numberOfAyahs'] as int,
+    )));
+    loadLastRead();
+  }
+  @override
+  Widget build(BuildContext context) => PageFrame(
+    title: 'القرآن الكريم', subtitle: 'فهرس السور والقراءة وحفظ موضع التوقف',
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('مصحفي', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 7),
+        const Text('افتح أي سورة لعرض آياتها، وسيُحفظ آخر موضع قراءة على جهازك.', style: TextStyle(color: muted, fontSize: 12, height: 1.8)),
+        const SizedBox(height: 12),
+        if (lastSurah != null)
+          Text('آخر موضع قراءة: سورة رقم $lastSurah${lastAyah == null ? '' : ' • آية $lastAyah'}', style: const TextStyle(fontSize: 11, color: white))
+        else
+          const Text('آخر موضع قراءة: لم تبدأ بعد', style: TextStyle(fontSize: 11, color: muted)),
+      ])),
+      const SizedBox(height: 13),
+      TextField(controller: searchController, onChanged: (value) => setState(() => search = value.trim()),
+        style: const TextStyle(color: white, fontSize: 13),
+        decoration: InputDecoration(
+          hintText: 'ابحث باسم السورة أو رقمها', hintStyle: const TextStyle(color: muted, fontSize: 12),
+          prefixIcon: const Icon(Icons.search_rounded, color: muted, size: 19),
+          filled: true, fillColor: Colors.white.withOpacity(.045),
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withOpacity(.1))),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Colors.white38)),
+        ),
+      ),
+      const SizedBox(height: 12),
+      FutureBuilder<List<dynamic>>(future: surahsFuture, builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) return const Padding(padding: EdgeInsets.all(35), child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
+        if (snapshot.hasError) return GlassCard(child: Column(children: [
+          const Icon(Icons.wifi_off_rounded, color: muted, size: 25), const SizedBox(height: 9),
+          const Text('تعذر تحميل فهرس القرآن', style: TextStyle(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 5), const Text('تحقق من اتصال الإنترنت ثم حاول مرة أخرى.', style: TextStyle(color: muted, fontSize: 11)),
+          TextButton(onPressed: () => setState(() => surahsFuture = loadSurahs()), child: const Text('إعادة المحاولة')),
+        ]));
+        final all = snapshot.data ?? [];
+        final filtered = all.where((raw) {
+          final item = raw as Map<String, dynamic>;
+          return search.isEmpty || (item['name'] as String).contains(search) ||
+            (item['englishName'] as String).toLowerCase().contains(search.toLowerCase()) || item['number'].toString() == search;
+        }).toList();
+        return Column(children: filtered.map((raw) {
+          final item = raw as Map<String, dynamic>;
+          return Padding(padding: const EdgeInsets.only(bottom: 7), child: InkWell(
+            borderRadius: BorderRadius.circular(20), onTap: () => openSurah(item),
+            child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12), child: Row(children: [
+              Container(width: 34, height: 34, alignment: Alignment.center, decoration: BoxDecoration(color: Colors.white.withOpacity(.07), borderRadius: BorderRadius.circular(11)), child: Text('${item['number']}', style: const TextStyle(fontSize: 11))),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(item['name'] as String, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 3),
+                Text('${item['numberOfAyahs']} آية • ${item['revelationType'] == 'Meccan' ? 'مكية' : 'مدنية'}', style: const TextStyle(fontSize: 10, color: muted)),
+              ])),
+              const Icon(Icons.chevron_left, color: muted, size: 19),
+            ])),
+          ));
+        }).toList());
+      }),
+    ]),
+  );
+}
+class QuranReaderPage extends StatefulWidget {
+  final int number; final String name; final String englishName; final int ayahCount;
+  const QuranReaderPage({super.key, required this.number, required this.name, required this.englishName, required this.ayahCount});
+  @override
+  State<QuranReaderPage> createState() => _QuranReaderPageState();
+}
+class _QuranReaderPageState extends State<QuranReaderPage> {
+  late Future<List<dynamic>> ayahsFuture;
+  @override
+  void initState() { super.initState(); ayahsFuture = loadAyahs(); }
+  Future<List<dynamic>> loadAyahs() async {
+    final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah/${widget.number}')).timeout(const Duration(seconds: 25));
+    if (response.statusCode != 200) throw Exception('تعذر تحميل السورة');
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    if (json['code'] != 200) throw Exception('لم تصل بيانات السورة');
+    return json['data']['ayahs'] as List<dynamic>;
+  }
+  Future<void> savePosition(int ayah) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('quran_last_surah', widget.number);
+    await prefs.setInt('quran_last_ayah', ayah);
+  }
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(backgroundColor: ink, title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(widget.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+      Text('${widget.englishName} • ${widget.ayahCount} آية', style: const TextStyle(fontSize: 10, color: muted)),
+    ])),
+    body: FutureBuilder<List<dynamic>>(future: ayahsFuture, builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+      if (snapshot.hasError) return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+        const Icon(Icons.wifi_off_rounded, color: muted, size: 28), const SizedBox(height: 10), const Text('تعذر تحميل الآيات'),
+        TextButton(onPressed: () => setState(() => ayahsFuture = loadAyahs()), child: const Text('إعادة المحاولة')),
+      ]));
+      final ayahs = snapshot.data ?? [];
+      return ListView.builder(padding: const EdgeInsets.fromLTRB(18, 18, 18, 35), itemCount: ayahs.length, itemBuilder: (context, index) {
+        final ayah = ayahs[index] as Map<String, dynamic>;
+        final number = ayah['numberInSurah'] as int;
+        return InkWell(onTap: () => savePosition(number), child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 7),
+          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(.09)))),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Text(ayah['text'] as String, textAlign: TextAlign.justify, textDirection: TextDirection.rtl, style: const TextStyle(fontSize: 23, height: 2.05, color: white, fontFamily: 'serif')),
+            const SizedBox(height: 12),
+            Align(alignment: Alignment.centerLeft, child: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity(.07), borderRadius: BorderRadius.circular(20)), child: Text('۞ $number  •  حفظ موضع القراءة', style: const TextStyle(fontSize: 9, color: muted)))),
+          ]),
+        ));
+      });
+    }),
+  );
+}
 class AzkarPage extends StatelessWidget {
   const AzkarPage({super.key});
   @override
