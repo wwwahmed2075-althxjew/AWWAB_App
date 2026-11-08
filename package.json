@@ -1,0 +1,16 @@
+{
+  "name": "awwb-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AWWAB Android wrapper",
+  "scripts": {
+    "build:android": "cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/android": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  }
+}
