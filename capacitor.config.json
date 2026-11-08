@@ -1,0 +1,9 @@
+{
+  "appId": "com.awwab.app",
+  "appName": "أوّاب",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "backgroundColor": "#050505"
+  }
+}
