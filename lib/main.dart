@@ -10,6 +10,7 @@ import 'awwab_feature_pages.dart';
 import 'adhan_audio_page.dart';
 import 'awwab_notification_service.dart';
 import 'app_theme.dart';
+import 'quran_audio_library_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -301,6 +302,21 @@ class _QuranPageState extends State<QuranPage> {
             Text('مصحف المدينة النبوية', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
             SizedBox(height: 4),
             Text('رواية حفص • 604 صفحة • تنزيل للعمل دون إنترنت', style: TextStyle(color: muted, fontSize: 10)),
+          ])),
+          Icon(Icons.chevron_left, color: muted),
+        ])),
+      ),
+      const SizedBox(height: 10),
+      InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranAudioLibraryPage())),
+        child: GlassCard(child: Row(children: [
+          Icon(Icons.headphones_rounded, size: 23),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('المكتبة الصوتية للقرآن', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
+            const SizedBox(height: 4),
+            Text('اختر القارئ والسورة واستمع للتلاوة', style: TextStyle(color: muted, fontSize: 10)),
           ])),
           Icon(Icons.chevron_left, color: muted),
         ])),
