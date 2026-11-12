@@ -1,6 +1,6 @@
 {
-  "appId": "com.awwab.app",
-  "appName": "أوّاب",
+  "appId": "com.malaz.app",
+  "appName": "ملاذ",
   "webDir": "www",
   "bundledWebRuntime": false,
   "android": {
