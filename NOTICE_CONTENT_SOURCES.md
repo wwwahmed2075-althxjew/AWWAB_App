@@ -62,7 +62,7 @@ This register records the primary references for the starter content currently e
 - The Madinah Mushaf V4 page set is separately verified using the SHA-1 manifest in `assets/mushaf/madinah_hafs_v4_manifest.json`.
 
 
-The app's offline reminder scheduler uses the device timezone and refreshes prayer-based Ayat al-Kursi alerts from the cached device coordinates. Audio recordings are not bundled until each recording's redistribution permission and attribution are verified.
+The app's offline reminder scheduler uses the device timezone and refreshes prayer-based Ayat al-Kursi alerts from the cached device coordinates. Adhan audio files are not bundled in the APK; the user downloads a selected recording on request, and the app verifies its file digest before saving it for offline playback.
 
 
 ## Adhan audio
@@ -71,3 +71,12 @@ The app's offline reminder scheduler uses the device timezone and refreshes pray
 - `Beautiful_adhan.ogg` by Adam-synagda, Wikimedia Commons, CC0 1.0 Universal Public Domain Dedication. File page: https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg. Original Ogg Vorbis recording is approximately 154 seconds; SHA-1 `a1fa4fd942401922c5c3301816384aae86956522`. The uploader name is credited as the file author, not asserted to be the caller's identity.
 
 - `33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg` — recorded at Al-Masjid an-Nabawi, Madinah; source/author credited on Wikimedia Commons as ejaz215 (original Freesound source). Licensed CC BY 3.0. Attribution required: credit ejaz215, link the source file page and CC BY 3.0 licence, and note any changes. Original length 3:07; SHA-1 `4aa432b9e44804e7d72af4429bd743aa5fa9e3a4`. Source: https://commons.wikimedia.org/wiki/File:33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg
+
+
+- `The Adhan – Muslim Call to Prayer – Aaqib Azeez` — original recording by the copyright holder Atcovi, Wikimedia Commons, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:The_Adhan_-_Muslim_Call_to_Prayer_-_Aaqib_Azeez.mp3. The app downloads the full edited Ogg preview distributed by the Taqwa project at commit `29fba6b08c9af3b6aac264b58095afff1799d786`; it was trimmed and loudness-normalised by that project. The adapted audio remains under CC BY-SA 4.0. Credit Atcovi, link the source and licence, and identify the audio as adapted.
+
+- `Adhan, Great Mosque of Mecca – Jan 21, 2013` — recording by Seyfula Islam, Wikimedia Commons, CC BY 3.0. Source: https://commons.wikimedia.org/wiki/File:Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm. The app downloads an Ogg audio-only edit distributed by the Taqwa project at commit `29fba6b08c9af3b6aac264b58095afff1799d786`; the edit removes the lead-in and normalises the audio. Credit Seyfula Islam, link the source and CC BY 3.0 licence, and indicate the edit.
+
+- `Eid al-Fitr Fajr azan at Malmö Mosque – 19 August 2012` — recording published by Islamic Center Malmö; the source description names muezzin Besim Azemi. Wikimedia Commons confirms CC BY 3.0. Source: https://commons.wikimedia.org/wiki/File:Eid_al-Fitr_Fajr_azan_at_Malm%C3%B6_Mosque_-_19_August_2012.webm. The app downloads an Ogg edit distributed by the Taqwa project at commit `29fba6b08c9af3b6aac264b58095afff1799d786`; the edit removes the two Fajr-specific phrases so it can be used as a general adhan, and removes the post-adhan salawat. Credit Islamic Center Malmö and Besim Azemi, link the source and CC BY 3.0 licence, and identify the edits.
+
+- Audio edit distribution source for the three preceding entries: MohamedAbulgasem/Taqwa, `assets/audio/README.md`, pinned commit `29fba6b08c9af3b6aac264b58095afff1799d786`: https://github.com/MohamedAbulgasem/Taqwa/blob/29fba6b08c9af3b6aac264b58095afff1799d786/assets/audio/README.md. Taqwa documents the source rights, processing and applicable share-alike terms. Its source code licence does not replace the separate audio licences.
