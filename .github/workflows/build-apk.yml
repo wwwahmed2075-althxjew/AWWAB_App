@@ -61,7 +61,7 @@ jobs:
               request = urllib.request.Request(url, headers={"User-Agent": "Malaz-Offline-Mushaf-Builder"})
               with urllib.request.urlopen(request, timeout=90) as response:
                   data = response.read()
-              git_blob = hashlib.sha1(f"blob {len(data)}\\0".encode() + data).hexdigest()
+              git_blob = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
               if git_blob != hashes[str(page)]:
                   raise RuntimeError(f"SHA-1 mismatch for Madinah page {page}")
               if b"<svg" not in data[:500]:
