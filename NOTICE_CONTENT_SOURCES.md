@@ -83,3 +83,6 @@ The app's offline reminder scheduler uses the device timezone and refreshes pray
 
 
 - `Call to prayer by Sabah Fakhry` — recording attributed by Wikimedia Commons to Sabah Fakhri (صباح فخري), dated 1985. The Commons file page marks the recording Public Domain Mark 1.0 and states it is free of known copyright restrictions; it also includes a public-domain status tag for the country of origin. Source: https://commons.wikimedia.org/wiki/File:Call_to_prayer_by_Sabah_Fakhry.mp3. Original MP3 is used unchanged. SHA-1: `a76718d98e7495a930ce9c024d94dba98f490a1f`.
+
+
+- `Azan.ogg` — original adhan recording by Andrewler, Wikimedia Commons, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:Azan.ogg. The original Ogg Vorbis file is used unchanged. Credit Andrewler, link the source and licence. SHA-1: `ada13592b01c12b0128af40035ed7a803e08b563`. If this recording is adapted, the adaptation must be shared under CC BY-SA 4.0 or a compatible licence.
