@@ -539,7 +539,6 @@ class MorePage extends StatelessWidget {
   Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات أوّاب', child: Column(children: [
     _MoreTile(icon: Icons.volume_up_rounded, title: 'الأذان واختيار الصوت', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdhanAudioPage()))),
     _MoreTile(icon: Icons.touch_app_rounded, title: 'السبحة الإلكترونية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbeehPage()))),
-    _MoreTile(icon: Icons.flag_outlined, title: 'الختمة والورد اليومي'),
     _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AwwabQiblaPage()))),
     _MoreTile(icon: Icons.favorite_outline, title: 'أسماء الله الحسنى', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AllahNamesPage()))),
     _MoreTile(icon: Icons.nightlight_round, title: 'فضل الضحى وقيام الليل', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerVirtuesPage()))),
@@ -555,8 +554,6 @@ class MorePage extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تعذر فتح تطبيق البريد الإلكتروني.')));
       }
     }),
-    _MoreTile(icon: Icons.language_rounded, title: 'اللغة'),
-    _MoreTile(icon: Icons.text_fields_rounded, title: 'الخط والمظهر'),
     _MoreTile(icon: Icons.info_outline_rounded, title: 'عن أوّاب'),
   ]));
 }
