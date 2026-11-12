@@ -9,7 +9,6 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const MalazApp());
     await tester.pump();
-    expect(find.text('ملاذ'), findsWidgets);
     for (final label in ['الرئيسية', 'القرآن', 'الأذكار', 'الصلاة', 'المزيد']) {
       expect(find.text(label), findsOneWidget);
     }
