@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:crypto/crypto.dart';
@@ -7,11 +8,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _AdhanRecording {
-  final String id, title, creator, duration, url, sha1, filename, licenseUrl;
+  final String id, title, creator, duration, url, sha1, filename, licenseUrl, licenseLabel;
+  final String? gitBlobSha1;
   const _AdhanRecording({
     required this.id, required this.title, required this.creator,
     required this.duration, required this.url, required this.sha1,
-    required this.filename, required this.licenseUrl,
+    required this.filename, required this.licenseUrl, required this.licenseLabel,
+    this.gitBlobSha1,
   });
 }
 
@@ -32,6 +35,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
       sha1: 'b86432f1581e11f898de1dc3402af0d541af110e',
       filename: 'adhan_aishatu98.ogg',
       licenseUrl: 'https://commons.wikimedia.org/wiki/File:Adhan.ogg',
+      licenseLabel: 'CC0 1.0 — حر الاستخدام وإعادة التوزيع',
     ),
     _AdhanRecording(
       id: 'ejaz215_madinah',
@@ -42,6 +46,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
       sha1: '4aa432b9e44804e7d72af4429bd743aa5fa9e3a4',
       filename: 'adhan_madinah_ejaz215.ogg',
       licenseUrl: 'https://commons.wikimedia.org/wiki/File:33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg',
+      licenseLabel: 'CC BY 3.0 — يلزم ذكر المصدر وصاحب التسجيل',
     ),
     _AdhanRecording(
       id: 'adam_synagda',
@@ -52,6 +57,43 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
       sha1: 'a1fa4fd942401922c5c3301816384aae86956522',
       filename: 'beautiful_adhan_adam.ogg',
       licenseUrl: 'https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg',
+      licenseLabel: 'CC0 1.0 — حر الاستخدام وإعادة التوزيع',
+    ),
+    _AdhanRecording(
+      id: 'aaqib_azeez',
+      title: 'أذان عاقب عزيز',
+      creator: 'Aaqib Azeez — Wikimedia Commons (معالجة صوتية من Taqwa)',
+      duration: 'دقيقة و26 ثانية',
+      url: 'https://raw.githubusercontent.com/MohamedAbulgasem/Taqwa/29fba6b08c9af3b6aac264b58095afff1799d786/shared/src/androidMain/res/raw/adhan_azeez_full.ogg',
+      sha1: '',
+      gitBlobSha1: '3793b9da12af6cd2f0ce0970c0341efe75ef83df',
+      filename: 'adhan_aaqib_azeez.ogg',
+      licenseUrl: 'https://commons.wikimedia.org/wiki/File:The_Adhan_-_Muslim_Call_to_Prayer_-_Aaqib_Azeez.mp3',
+      licenseLabel: 'CC BY-SA 4.0 — مع ذكر المصدر وإتاحة التعديلات بنفس الترخيص',
+    ),
+    _AdhanRecording(
+      id: 'makkah_haram',
+      title: 'أذان المسجد الحرام – مكة',
+      creator: 'Seyfula Islam — Wikimedia Commons (معالجة صوتية من Taqwa)',
+      duration: '3 دقائق و9 ثوانٍ',
+      url: 'https://raw.githubusercontent.com/MohamedAbulgasem/Taqwa/29fba6b08c9af3b6aac264b58095afff1799d786/shared/src/androidMain/res/raw/adhan_makkah_full.ogg',
+      sha1: '',
+      gitBlobSha1: '87b65a2a445aec4e65c9de89b5280555a90e3972',
+      filename: 'adhan_makkah_haram.ogg',
+      licenseUrl: 'https://commons.wikimedia.org/wiki/File:Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm',
+      licenseLabel: 'CC BY 3.0 — يلزم ذكر المصدر وصاحب التسجيل',
+    ),
+    _AdhanRecording(
+      id: 'besim_azemi',
+      title: 'أذان بسيم عظمي – تسجيل الفجر',
+      creator: 'Besim Azemi / Islamic Center Malmö (معالجة صوتية من Taqwa)',
+      duration: '3 دقائق و31 ثانية',
+      url: 'https://raw.githubusercontent.com/MohamedAbulgasem/Taqwa/29fba6b08c9af3b6aac264b58095afff1799d786/shared/src/androidMain/res/raw/adhan_azemi_full.ogg',
+      sha1: '',
+      gitBlobSha1: '822070bf72818d9d52390b715ac412f242577c2a',
+      filename: 'adhan_besim_azemi.ogg',
+      licenseUrl: 'https://commons.wikimedia.org/wiki/File:Eid_al-Fitr_Fajr_azan_at_Malm%C3%B6_Mosque_-_19_August_2012.webm',
+      licenseLabel: 'CC BY 3.0 — يلزم ذكر المصدر وصاحب التسجيل؛ تمت إزالة صيغة الفجر الخاصة ليصلح كأذان عام',
     ),
   ];
 
@@ -127,7 +169,14 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
         throw Exception('تعذر تنزيل الملف (HTTP ${response.statusCode}).');
       }
       final digest = sha1.convert(response.bodyBytes).toString();
-      if (digest != recording.sha1) {
+      final gitBlobDigest = sha1.convert(<int>[
+        ...utf8.encode('blob ${response.bodyBytes.length}\\u0000'),
+        ...response.bodyBytes,
+      ]).toString();
+      final validDigest = recording.gitBlobSha1 == null
+          ? digest == recording.sha1
+          : gitBlobDigest == recording.gitBlobSha1;
+      if (!validDigest) {
         throw Exception('فشل التحقق من بصمة الملف؛ لم يتم حفظه.');
       }
       final file = await _fileFor(recording);
@@ -216,9 +265,9 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(selected.title, style: const TextStyle(color: Color(0xFFF5F5F7), fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
-              const Text(
-                'التسجيلات المنشورة هنا مرخصة CC0 1.0، ويمكن إعادة استخدامها وتوزيعها. أسماء الحسابات هي أسماء رافعي الملفات وليست تأكيدًا لهوية المؤذّن أو الشيخ.',
-                style: TextStyle(color: Color(0xFF9A9CA5), fontSize: 11, height: 1.8),
+              Text(
+                'الترخيص: ${selected.licenseLabel}. راجع رابط المصدر لمعرفة شروط النسب وإعادة الاستخدام. أسماء رافعي الملفات لا تعني بالضرورة أنهم المؤذنون؛ لا نذكر اسم مؤذن إلا إذا وثّقه مصدر التسجيل.',
+                style: const TextStyle(color: Color(0xFF9A9CA5), fontSize: 11, height: 1.8),
               ),
               const SizedBox(height: 13),
               if (_audioFile == null)
