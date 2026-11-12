@@ -555,8 +555,46 @@ class MorePage extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تعذر فتح تطبيق البريد الإلكتروني.')));
       }
     }),
-    _MoreTile(icon: Icons.info_outline_rounded, title: 'عن أوّاب'),
+    _MoreTile(icon: Icons.info_outline_rounded, title: 'نبذة عن التطبيق', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AwwabAboutPage()))),
   ]));
+}
+
+class AwwabAboutPage extends StatelessWidget {
+  const AwwabAboutPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(backgroundColor: ink, title: const Text('نبذة عن أوّاب')),
+    body: ListView(padding: const EdgeInsets.all(18), children: [
+      GlassCard(child: Column(children: [
+        const Icon(Icons.auto_awesome_rounded, size: 42, color: white),
+        const SizedBox(height: 12),
+        const Text('أوّاب', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 5),
+        const Text('كل يوم أقرب إلى الله', style: TextStyle(color: muted, fontSize: 12)),
+      ])),
+      const SizedBox(height: 12),
+      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+        Text('عن التطبيق', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
+        SizedBox(height: 8),
+        Text('أوّاب رفيقك للقرآن والأذكار والصلاة والتذكيرات اليومية، مع أدوات تساعدك على المحافظة على عباداتك.',
+          style: TextStyle(color: muted, height: 1.9, fontSize: 12)),
+      ])),
+      const SizedBox(height: 12),
+      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+        Text('المطوّر', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+        SizedBox(height: 6),
+        Text('Ahmed Khalil', textDirection: TextDirection.ltr, style: TextStyle(color: muted, fontSize: 13)),
+      ])),
+      const SizedBox(height: 12),
+      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+        Text('التحديثات القادمة', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+        SizedBox(height: 7),
+        Text('سيظهر هنا سجل الإصدارات ومميزات كل تحديث بعد نشره واعتماده. لا يتوفر حاليًا ملف تحديث منشور للتنزيل من داخل التطبيق.',
+          style: TextStyle(color: muted, height: 1.8, fontSize: 11)),
+      ])),
+    ]),
+  );
 }
 
 class _MoreTile extends StatelessWidget {
