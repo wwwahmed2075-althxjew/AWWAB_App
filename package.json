@@ -1,8 +1,8 @@
 {
-  "name": "awwb-app",
+  "name": "malaz-web",
   "version": "1.0.0",
   "private": true,
-  "description": "AWWAB Android wrapper",
+  "description": "Malaz Arabic Islamic app",
   "scripts": {
     "build:android": "cap sync android"
   },
