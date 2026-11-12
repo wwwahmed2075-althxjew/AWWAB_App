@@ -371,30 +371,37 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
   late Future<List<dynamic>> ayahsFuture;
   @override
   void initState() { super.initState(); ayahsFuture = loadAyahs(); }
+  bool _validAyahs(dynamic value) {
+    if (value is! List || value.length != widget.ayahCount) return false;
+    for (var i = 0; i < value.length; i++) {
+      final ayah = value[i];
+      if (ayah is! Map || ayah['numberInSurah'] != i + 1 || ayah['text'] is! String || (ayah['text'] as String).trim().isEmpty) return false;
+    }
+    return true;
+  }
   Future<List<dynamic>> loadAyahs() async {
     final root = await getApplicationDocumentsDirectory();
     final file = File('${root.path}/malaz_quran_text_v1/${widget.number}.json');
-    try {
-      final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah/${widget.number}')).timeout(const Duration(seconds: 25));
-      if (response.statusCode != 200) throw Exception('تعذر تحميل السورة');
-      final json = jsonDecode(response.body) as Map<String, dynamic>;
-      final ayahs = json['data']?['ayahs'];
-      if (json['code'] != 200 || ayahs is! List || ayahs.length != widget.ayahCount) {
-        throw Exception('بيانات السورة غير مكتملة أو غير مطابقة لعدد آياتها');
-      }
-      await file.parent.create(recursive: true);
-      final temp = File('${file.path}.tmp');
-      await temp.writeAsString(jsonEncode(ayahs), flush: true);
-      if (await file.exists()) await file.delete();
-      await temp.rename(file.path);
-      return ayahs;
-    } catch (networkError) {
-      if (await file.exists()) {
-        final local = jsonDecode(await file.readAsString()) as List<dynamic>;
-        if (local.length == widget.ayahCount) return local;
-      }
-      rethrow;
+    if (await file.exists()) {
+      try {
+        final local = jsonDecode(await file.readAsString());
+        if (_validAyahs(local)) return local as List<dynamic>;
+        await file.delete();
+      } catch (_) { await file.delete(); }
     }
+    final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah/${widget.number}')).timeout(const Duration(seconds: 25));
+    if (response.statusCode != 200) throw Exception('تعذر تحميل السورة، ولا توجد نسخة محلية سليمة.');
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    final ayahs = json['data']?['ayahs'];
+    if (json['code'] != 200 || !_validAyahs(ayahs)) {
+      throw Exception('بيانات السورة غير مكتملة أو غير مطابقة لترتيب وعدد الآيات');
+    }
+    await file.parent.create(recursive: true);
+    final temp = File('${file.path}.tmp');
+    await temp.writeAsString(jsonEncode(ayahs), flush: true);
+    if (await file.exists()) await file.delete();
+    await temp.rename(file.path);
+    return ayahs as List<dynamic>;
   }
   Future<void> savePosition(int ayah) async {
     final prefs = await SharedPreferences.getInstance();
