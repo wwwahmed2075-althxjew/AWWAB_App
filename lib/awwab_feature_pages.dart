@@ -743,6 +743,9 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
     'آية اليوم',
     'حديث اليوم',
     'دعاء اليوم',
+    'صيام الإثنين',
+    'صيام الخميس',
+    'الصلاة على النبي ﷺ',
   ];
 
   final Map<String, bool> enabled = {for (final item in _items) item: false};
@@ -762,6 +765,11 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
         return const TimeOfDay(hour: 7, minute: 0);
       case 'أذكار المساء':
         return const TimeOfDay(hour: 17, minute: 0);
+      case 'صيام الإثنين':
+      case 'صيام الخميس':
+        return const TimeOfDay(hour: 7, minute: 0);
+      case 'الصلاة على النبي ﷺ':
+        return const TimeOfDay(hour: 18, minute: 0);
       case 'أذكار النوم':
       case 'قيام الليل':
         return const TimeOfDay(hour: 22, minute: 0);
@@ -787,6 +795,11 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
         return 'حان وقت وردك من القرآن الكريم.';
       case 'أذكار بعد الصلاة':
         return 'لا تنس أذكارك بعد الصلاة.';
+      case 'صيام الإثنين':
+      case 'صيام الخميس':
+        return 'تذكير بصيام يوم من الأيام المستحبة، إن تيسر لك.';
+      case 'الصلاة على النبي ﷺ':
+        return 'لا تنس الصلاة والسلام على رسول الله ﷺ.';
       case 'الرقية الشرعية':
         return 'تذكير بقراءة الرقية الشرعية والأذكار الواردة.';
       case 'آية اليوم':
@@ -829,6 +842,19 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
     await prefs.setBool('reminder_item_$id', enabled[item] ?? false);
     await prefs.setInt('reminder_item_${id}_hour', time.hour);
     await prefs.setInt('reminder_item_${id}_minute', time.minute);
+
+    if (item == 'صيام الإثنين' || item == 'صيام الخميس') {
+      final weekdays = item == 'صيام الإثنين' ? [DateTime.monday] : [DateTime.thursday];
+      await AwwabNotificationService.instance.scheduleWeekly(
+        id: id,
+        weekdays: enabled[item] == true ? weekdays : const [],
+        title: 'تذكير أوّاب: $item',
+        body: _bodyFor(item),
+        hour: time.hour,
+        minute: time.minute,
+      );
+      return;
+    }
 
     if (item == 'آية الكرسي بعد الصلاة') {
       const baseId = 5000;
@@ -921,6 +947,15 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
                   },
                   icon: const Icon(Icons.schedule, size: 16),
                   label: Text('موعد التنبيه: ${(times[item] ?? _defaultTime(item)).format(context)}'),
+                ),
+              ),
+            if ((item == 'صيام الإثنين' || item == 'صيام الخميس') && (enabled[item] ?? false))
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12, bottom: 8),
+                  child: Text(item == 'صيام الإثنين' ? 'يتكرر كل يوم إثنين في الموعد المحدد' : 'يتكرر كل يوم خميس في الموعد المحدد',
+                    style: const TextStyle(color: _muted, fontSize: 10)),
                 ),
               ),
             if (item == 'آية الكرسي بعد الصلاة' && (enabled[item] ?? false))
