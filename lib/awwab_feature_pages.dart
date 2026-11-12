@@ -664,7 +664,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: enabled[item]!,
-              activeColor: _fg,
+              activeThumbColor: _fg,
               title: Text(item, style: const TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700)),
               onChanged: (v) {
                 setState(() => enabled[item] = v);
@@ -696,7 +696,6 @@ class AwwabQiblaPage extends StatefulWidget {
 class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
   final _location = AwwabLocationService();
   Position? _position;
-  double? _bearing;
   double? _heading;
   @override
   void initState() {
