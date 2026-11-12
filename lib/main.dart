@@ -564,6 +564,7 @@ class MorePage extends StatelessWidget {
     _MoreTile(icon: Icons.nightlight_round, title: 'فضل الضحى وقيام الليل', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerVirtuesPage()))),
     _MoreTile(icon: Icons.menu_book_rounded, title: 'فضل القرآن والذكر', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranDhikrVirtuesPage()))),
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'متابعة التذكيرات', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage()))),
+    _MoreTile(icon: Icons.calendar_month_rounded, title: 'المناسبات الهجرية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HijriOccasionsPage()))),
     _MoreTile(icon: Icons.share_outlined, title: 'مشاركة التطبيق', onTap: () async {
       await Share.share('جرّب تطبيق أوّاب للقرآن والأذكار والصلاة.\nhttps://github.com/wwwahmed2075-althxjew/AWWAB_App', subject: 'تطبيق أوّاب');
     }),
@@ -966,6 +967,140 @@ class _QuranAudioLibraryPageState extends State<QuranAudioLibraryPage> {
               const SizedBox(height: 10),
               GlassCard(child: Text(_error!, style: const TextStyle(color: Colors.orangeAccent, fontSize: 11))),
             ],
+          ]),
+  );
+}
+
+
+class _HijriOccasion {
+  final String title;
+  final String hijriDate;
+  final int day;
+  final int month;
+  final String note;
+  const _HijriOccasion(this.title, this.hijriDate, this.day, this.month, this.note);
+}
+
+class HijriOccasionsPage extends StatefulWidget {
+  const HijriOccasionsPage({super.key});
+  @override
+  State<HijriOccasionsPage> createState() => _HijriOccasionsPageState();
+}
+
+class _HijriOccasionsPageState extends State<HijriOccasionsPage> {
+  List<Map<String, String>> _events = [];
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() { super.initState(); _loadEvents(); }
+
+  String _dateString(DateTime date) =>
+      '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
+
+  Future<Map<String, dynamic>> _request(String url) async {
+    final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 20));
+    if (response.statusCode != 200) throw Exception('HTTP ${response.statusCode}');
+    final decoded = jsonDecode(response.body) as Map<String, dynamic>;
+    if (decoded['code'] != 200) throw Exception('تعذر تحويل التاريخ الهجري');
+    return decoded['data'] as Map<String, dynamic>;
+  }
+
+  Future<String> _toGregorian(int day, int month, int year) async {
+    final date = '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year';
+    final data = await _request('https://api.aladhan.com/v1/hToG/$date?calendarMethod=HJCoSA');
+    return (data['gregorian'] as Map<String, dynamic>)['date'] as String;
+  }
+
+  DateTime _parseGregorian(String value) {
+    final parts = value.split('-').map(int.parse).toList();
+    return DateTime(parts[2], parts[1], parts[0]);
+  }
+
+  Future<void> _loadEvents() async {
+    try {
+      final today = DateTime.now();
+      final hijri = await _request('https://api.aladhan.com/v1/gToH/${_dateString(today)}?calendarMethod=HJCoSA');
+      final currentYear = int.parse((hijri['hijri'] as Map<String, dynamic>)['year'].toString());
+      const definitions = [
+        _HijriOccasion('رأس السنة الهجرية', '1 محرّم', 1, 1, 'بداية العام الهجري الجديد.'),
+        _HijriOccasion('يوم عاشوراء', '10 محرّم', 10, 1, 'يوافق اليوم العاشر من شهر محرّم.'),
+        _HijriOccasion('المولد النبوي الشريف', '12 ربيع الأول', 12, 3, 'هذا هو التاريخ المتداول في بعض التقاويم، وتوجد أقوال أخرى في تحديد يوم المولد.'),
+      ];
+      final events = <Map<String, String>>[];
+      for (final event in definitions) {
+        var year = currentYear;
+        var gregorian = await _toGregorian(event.day, event.month, year);
+        if (_parseGregorian(gregorian).isBefore(DateTime(today.year, today.month, today.day))) {
+          year++;
+          gregorian = await _toGregorian(event.day, event.month, year);
+        }
+        events.add({
+          'title': event.title,
+          'hijri': '${event.hijriDate} ${year} هـ',
+          'gregorian': gregorian,
+          'note': event.note,
+        });
+      }
+      events.sort((a, b) => _parseGregorian(a['gregorian']!).compareTo(_parseGregorian(b['gregorian']!)));
+      if (mounted) setState(() { _events = events; _loading = false; });
+    } catch (e) {
+      if (mounted) setState(() { _loading = false; _error = 'تعذر جلب تواريخ المناسبات الآن. تحقق من اتصال الإنترنت وحاول مجددًا.'; });
+    }
+  }
+
+  String _formatDate(String date) {
+    final d = _parseGregorian(date);
+    return '${d.day.toString().padLeft(2, '0')}-${d.month.toString().padLeft(2, '0')}-${d.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(backgroundColor: ink, title: const Text('المناسبات الهجرية')),
+    body: _loading
+      ? const Center(child: CircularProgressIndicator())
+      : _events.isEmpty
+        ? Center(child: Padding(padding: const EdgeInsets.all(22), child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(_error ?? 'لا توجد بيانات متاحة', textAlign: TextAlign.center, style: const TextStyle(color: muted)),
+            TextButton.icon(onPressed: () { setState(() { _loading = true; _error = null; }); _loadEvents(); },
+              icon: const Icon(Icons.refresh), label: const Text('إعادة المحاولة')),
+          ])))
+        : ListView(padding: const EdgeInsets.all(18), children: [
+            for (final event in _events) Padding(
+              padding: const EdgeInsets.only(bottom: 11),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(22),
+                onTap: () => showModalBottomSheet(
+                  context: context, backgroundColor: panel,
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                  builder: (sheetContext) => SafeArea(child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                      Text(event['title']!, style: const TextStyle(color: white, fontSize: 17, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 12),
+                      Text('التاريخ الهجري المتوقع: ${event['hijri']}', style: const TextStyle(color: white)),
+                      const SizedBox(height: 6),
+                      Text('التاريخ الميلادي المتوقع: ${_formatDate(event['gregorian']!)}', style: const TextStyle(color: white)),
+                      const SizedBox(height: 10),
+                      Text(event['note']!, style: const TextStyle(color: muted, height: 1.8, fontSize: 11)),
+                    ]),
+                  )),
+                ),
+                child: GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(event['title']!, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 8),
+                  Text('هجري: ${event['hijri']}', style: const TextStyle(color: white, fontSize: 12)),
+                  const SizedBox(height: 4),
+                  Text('ميلادي متوقع: ${_formatDate(event['gregorian']!)}', style: const TextStyle(color: muted, fontSize: 11)),
+                  const SizedBox(height: 7),
+                  const Text('اضغط لعرض التفاصيل', style: TextStyle(color: muted, fontSize: 10)),
+                ])),
+              ),
+            ),
+            const SizedBox(height: 4),
+            const GlassCard(child: Text('تنبيه: التواريخ المعروضة تقديرية وفق تقويم حسابي، وقد تتقدم أو تتأخر يومًا بحسب ثبوت الهلال والرؤية الشرعية في بلدك.',
+              style: TextStyle(color: muted, fontSize: 11, height: 1.8))),
           ]),
   );
 }
