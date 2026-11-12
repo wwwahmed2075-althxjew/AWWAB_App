@@ -141,7 +141,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 120),
       children: [
         Row(children: [
-          const Expanded(child: Text('أوّاب', style: TextStyle(color: _fg, fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: .3))),
+          const Expanded(child: Text('ملاذ', style: TextStyle(color: _fg, fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: .3))),
           _FeatureCard(child: Column(children: [
             Text(date, style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
             const Text('التاريخ الميلادي', style: TextStyle(color: _muted, fontSize: 9)),
@@ -149,8 +149,6 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
             const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted, fontSize: 8)),
           ])),
         ]),
-        const SizedBox(height: 6),
-        const Text('كل يوم أقرب إلى الله', style: TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: .1)),
         const SizedBox(height: 18),
         InkWell(
           borderRadius: BorderRadius.circular(22),
@@ -829,11 +827,11 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
       case 'الرقية الشرعية':
         return 'تذكير بقراءة الرقية الشرعية والأذكار الواردة.';
       case 'آية اليوم':
-        return 'افتح أوّاب واقرأ آية اليوم وتدبرها.';
+        return 'افتح ملاذ واقرأ آية اليوم وتدبرها.';
       case 'حديث اليوم':
-        return 'افتح أوّاب واطّلع على حديث اليوم.';
+        return 'افتح ملاذ واطّلع على حديث اليوم.';
       case 'دعاء اليوم':
-        return 'افتح أوّاب وادعُ بدعاء اليوم.';
+        return 'افتح ملاذ وادعُ بدعاء اليوم.';
       default:
         return 'حان وقت $item.';
     }
@@ -874,7 +872,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
       await AwwabNotificationService.instance.scheduleWeekly(
         id: id,
         weekdays: enabled[item] == true ? weekdays : const [],
-        title: 'تذكير أوّاب: $item',
+        title: 'تذكير ملاذ: $item',
         body: _bodyFor(item),
         hour: time.hour,
         minute: time.minute,
@@ -912,7 +910,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
     if (enabled[item] ?? false) {
       await AwwabNotificationService.instance.scheduleDaily(
         id: id,
-        title: 'تذكير أوّاب: $item',
+        title: 'تذكير ملاذ: $item',
         body: _bodyFor(item),
         hour: time.hour,
         minute: time.minute,
