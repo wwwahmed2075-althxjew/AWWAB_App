@@ -55,15 +55,13 @@ jobs:
           if gradle.exists():
               s = gradle.read_text(encoding="utf-8")
               s = re.sub(r'applicationId = "[^"]+"', 'applicationId = "com.malaz.app"', s)
-              s = re.sub(r'namespace = "[^"]+"', 'namespace = "com.malaz.app"', s)
-              gradle.write_text(s, encoding="utf-8")
+                            gradle.write_text(s, encoding="utf-8")
           else:
               gradle = Path("android/app/build.gradle")
               if gradle.exists():
                   s = gradle.read_text(encoding="utf-8")
                   s = re.sub(r'applicationId "[^"]+"', 'applicationId "com.malaz.app"', s)
-                  s = re.sub(r'namespace "[^"]+"', 'namespace "com.malaz.app"', s)
-                  gradle.write_text(s, encoding="utf-8")
+                                    gradle.write_text(s, encoding="utf-8")
           PY
       - name: Install dependencies
         run: flutter pub get
