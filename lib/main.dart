@@ -564,42 +564,114 @@ class MorePage extends StatelessWidget {
   ]));
 }
 
-class AwwabAboutPage extends StatelessWidget {
+class AwwabAboutPage extends StatefulWidget {
   const AwwabAboutPage({super.key});
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: ink,
-    appBar: AppBar(backgroundColor: ink, title: const Text('نبذة عن أوّاب')),
-    body: ListView(padding: const EdgeInsets.all(18), children: [
-      GlassCard(child: Column(children: [
-        const Icon(Icons.auto_awesome_rounded, size: 42, color: white),
+  State<AwwabAboutPage> createState() => _AwwabAboutPageState();
+}
+
+class _AwwabAboutPageState extends State<AwwabAboutPage> {
+  Map<String, dynamic>? _release;
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() { super.initState(); _loadRelease(); }
+
+  Future<void> _loadRelease() async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.github.com/repos/wwwahmed2075-althxjew/AWWAB_App/releases/latest'),
+        headers: {'Accept': 'application/vnd.github+json'},
+      ).timeout(const Duration(seconds: 20));
+      if (response.statusCode == 404) {
+        if (mounted) setState(() { _release = null; _loading = false; });
+        return;
+      }
+      if (response.statusCode != 200) throw Exception('HTTP ${response.statusCode}');
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      if (mounted) setState(() { _release = data; _loading = false; });
+    } catch (_) {
+      if (mounted) setState(() { _loading = false; _error = 'تعذر تحميل سجل الإصدارات الآن. حاول مرة أخرى لاحقًا.'; });
+    }
+  }
+
+  String _formatPublished(dynamic value) {
+    if (value is! String) return '';
+    final date = DateTime.tryParse(value)?.toLocal();
+    if (date == null) return '';
+    return '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final assets = (_release?['assets'] as List<dynamic>?) ?? [];
+    final apk = assets.cast<Map<String, dynamic>?>().whereType<Map<String, dynamic>>()
+        .where((asset) => (asset['name'] as String? ?? '').toLowerCase().endsWith('.apk')).toList();
+    return Scaffold(
+      backgroundColor: ink,
+      appBar: AppBar(backgroundColor: ink, title: const Text('نبذة عن أوّاب')),
+      body: ListView(padding: const EdgeInsets.all(18), children: [
+        GlassCard(child: Column(children: [
+          const Icon(Icons.auto_awesome_rounded, size: 42, color: white),
+          const SizedBox(height: 12),
+          const Text('أوّاب', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 5),
+          const Text('كل يوم أقرب إلى الله', style: TextStyle(color: muted, fontSize: 12)),
+        ])),
         const SizedBox(height: 12),
-        const Text('أوّاب', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 5),
-        const Text('كل يوم أقرب إلى الله', style: TextStyle(color: muted, fontSize: 12)),
-      ])),
-      const SizedBox(height: 12),
-      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-        Text('عن التطبيق', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
-        SizedBox(height: 8),
-        Text('أوّاب رفيقك للقرآن والأذكار والصلاة والتذكيرات اليومية، مع أدوات تساعدك على المحافظة على عباداتك.',
-          style: TextStyle(color: muted, height: 1.9, fontSize: 12)),
-      ])),
-      const SizedBox(height: 12),
-      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-        Text('المطوّر', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
-        SizedBox(height: 6),
-        Text('Ahmed Khalil', textDirection: TextDirection.ltr, style: TextStyle(color: muted, fontSize: 13)),
-      ])),
-      const SizedBox(height: 12),
-      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-        Text('التحديثات القادمة', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
-        SizedBox(height: 7),
-        Text('سيظهر هنا سجل الإصدارات ومميزات كل تحديث بعد نشره واعتماده. لا يتوفر حاليًا ملف تحديث منشور للتنزيل من داخل التطبيق.',
-          style: TextStyle(color: muted, height: 1.8, fontSize: 11)),
-      ])),
-    ]),
-  );
+        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+          Text('عن التطبيق', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
+          SizedBox(height: 8),
+          Text('أوّاب رفيقك للقرآن والأذكار والصلاة والتذكيرات اليومية، مع أدوات تساعدك على المحافظة على عباداتك.',
+            style: TextStyle(color: muted, height: 1.9, fontSize: 12)),
+        ])),
+        const SizedBox(height: 12),
+        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+          Text('المطوّر', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+          SizedBox(height: 6),
+          Text('Ahmed Khalil', textDirection: TextDirection.ltr, style: TextStyle(color: muted, fontSize: 13)),
+        ])),
+        const SizedBox(height: 12),
+        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text('سجل التحديثات', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          if (_loading) const LinearProgressIndicator(minHeight: 2)
+          else if (_error != null) ...[
+            Text(_error!, style: const TextStyle(color: muted, fontSize: 11)),
+            TextButton(onPressed: _loadRelease, child: const Text('إعادة المحاولة')),
+          ] else if (_release == null)
+            const Text('لا يوجد إصدار رسمي منشور حتى الآن. ستظهر ملاحظات التحديث هنا بعد نشر إصدار من مستودع أوّاب.',
+              style: TextStyle(color: muted, height: 1.8, fontSize: 11))
+          else ...[
+            Text('الإصدار ${_release!['tag_name'] ?? ''}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+            if (_formatPublished(_release!['published_at']).isNotEmpty)
+              Padding(padding: const EdgeInsets.only(top: 4), child: Text('تاريخ النشر: ${_formatPublished(_release!['published_at'])}', style: const TextStyle(color: muted, fontSize: 10))),
+            const SizedBox(height: 8),
+            Text((_release!['body'] as String?)?.trim().isNotEmpty == true ? (_release!['body'] as String).trim() : 'لم تُضف ملاحظات لهذا الإصدار.',
+              style: const TextStyle(color: muted, height: 1.8, fontSize: 11)),
+            if (apk.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              for (final asset in apk)
+                Align(alignment: Alignment.centerRight, child: TextButton.icon(
+                  onPressed: () async {
+                    final url = asset['browser_download_url'] as String?;
+                    if (url != null) await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                  },
+                  icon: const Icon(Icons.download_rounded),
+                  label: Text('تنزيل ${asset['name']}'),
+                )),
+            ] else
+              const Padding(padding: EdgeInsets.only(top: 10), child: Text('لا يوجد ملف APK مرفق بهذا الإصدار حتى الآن.',
+                style: TextStyle(color: muted, fontSize: 10))),
+            if (_release!['html_url'] is String)
+              TextButton(onPressed: () => launchUrl(Uri.parse(_release!['html_url'] as String), mode: LaunchMode.externalApplication),
+                child: const Text('عرض صفحة الإصدار على GitHub')),
+          ],
+        ])),
+      ]),
+    );
+  }
 }
 
 class _MoreTile extends StatelessWidget {
