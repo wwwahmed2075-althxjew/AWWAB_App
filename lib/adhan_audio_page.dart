@@ -85,7 +85,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
     ),
     _AdhanRecording(
       id: 'besim_azemi',
-      title: 'أذان بسيم عظمي – تسجيل الفجر',
+      title: 'أذان بسيم أزيمي – تسجيل الفجر',
       creator: 'Besim Azemi / Islamic Center Malmö (معالجة صوتية من Taqwa)',
       duration: '3 دقائق و31 ثانية',
       url: 'https://raw.githubusercontent.com/MohamedAbulgasem/Taqwa/29fba6b08c9af3b6aac264b58095afff1799d786/shared/src/androidMain/res/raw/adhan_azemi_full.ogg',
@@ -170,7 +170,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
       }
       final digest = sha1.convert(response.bodyBytes).toString();
       final gitBlobDigest = sha1.convert(<int>[
-        ...utf8.encode('blob ${response.bodyBytes.length}\\u0000'),
+        ...utf8.encode('blob ${response.bodyBytes.length}\u0000'),
         ...response.bodyBytes,
       ]).toString();
       final validDigest = recording.gitBlobSha1 == null
