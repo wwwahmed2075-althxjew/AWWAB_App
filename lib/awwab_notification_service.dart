@@ -14,7 +14,7 @@ class AwwabNotificationService {
     tzdata.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('Africa/Cairo'));
     await _plugin.initialize(
-      settings: const InitializationSettings(
+      const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       ),
     );
