@@ -128,7 +128,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
           throw FormatException('ملف المصحف المضمن لا يحتوي على صفحة سليمة رقم $page.');
         }
       }
-      if (mounted) setState(() => _downloaded = end);
+      _downloaded = end;
     }
   }
 
