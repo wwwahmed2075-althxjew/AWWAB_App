@@ -671,14 +671,81 @@ class ReminderSettingsPage extends StatefulWidget {
   @override
   State<ReminderSettingsPage> createState() => _ReminderSettingsPageState();
 }
+
 class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
-  final Map<String, bool> enabled = {
-    'أذكار الاستيقاظ': false, 'أذكار الصباح': false, 'أذكار المساء': false,
-    'أذكار النوم': false, 'آية الكرسي بعد الصلاة': false,
-    'الضحى': false, 'قيام الليل': false, 'الورد اليومي': false,
-  };
+  // Keep the original IDs stable: saved preferences and existing Ayat al-Kursi
+  // schedules depend on reminder_item_405.
+  static const List<String> _items = [
+    'أذكار الاستيقاظ',
+    'أذكار الصباح',
+    'أذكار المساء',
+    'أذكار النوم',
+    'آية الكرسي بعد الصلاة',
+    'الضحى',
+    'قيام الليل',
+    'الورد اليومي',
+    'أذكار بعد الصلاة',
+    'الرقية الشرعية',
+    'قراءة القرآن',
+    'آية اليوم',
+    'حديث اليوم',
+    'دعاء اليوم',
+  ];
+
+  final Map<String, bool> enabled = {for (final item in _items) item: false};
   final Map<String, TimeOfDay> times = {};
   bool _loading = true;
+  bool _saving = false;
+
+  int _idFor(String item) => _items.indexOf(item) + 401;
+
+  TimeOfDay _defaultTime(String item) {
+    switch (item) {
+      case 'أذكار الاستيقاظ':
+      case 'أذكار الصباح':
+      case 'آية اليوم':
+      case 'حديث اليوم':
+      case 'دعاء اليوم':
+        return const TimeOfDay(hour: 7, minute: 0);
+      case 'أذكار المساء':
+        return const TimeOfDay(hour: 17, minute: 0);
+      case 'أذكار النوم':
+      case 'قيام الليل':
+        return const TimeOfDay(hour: 22, minute: 0);
+      case 'الضحى':
+        return const TimeOfDay(hour: 9, minute: 0);
+      case 'أذكار بعد الصلاة':
+        return const TimeOfDay(hour: 13, minute: 0);
+      case 'الرقية الشرعية':
+        return const TimeOfDay(hour: 8, minute: 0);
+      default:
+        return const TimeOfDay(hour: 10, minute: 0);
+    }
+  }
+
+  String _bodyFor(String item) {
+    switch (item) {
+      case 'الضحى':
+        return 'تذكير بصلاة الضحى واغتنام وقتها.';
+      case 'قيام الليل':
+        return 'اجعل لك نصيبًا من صلاة الليل ولو بركعتين.';
+      case 'الورد اليومي':
+      case 'قراءة القرآن':
+        return 'حان وقت وردك من القرآن الكريم.';
+      case 'أذكار بعد الصلاة':
+        return 'لا تنس أذكارك بعد الصلاة.';
+      case 'الرقية الشرعية':
+        return 'تذكير بقراءة الرقية الشرعية والأذكار الواردة.';
+      case 'آية اليوم':
+        return 'افتح أوّاب واقرأ آية اليوم وتدبرها.';
+      case 'حديث اليوم':
+        return 'افتح أوّاب واطّلع على حديث اليوم.';
+      case 'دعاء اليوم':
+        return 'افتح أوّاب وادعُ بدعاء اليوم.';
+      default:
+        return 'حان وقت $item.';
+    }
+  }
 
   @override
   void initState() {
@@ -690,11 +757,12 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
     final prefs = await SharedPreferences.getInstance();
     if (!mounted) return;
     setState(() {
-      for (final item in enabled.keys) {
-        final id = enabled.keys.toList().indexOf(item) + 401;
+      for (final item in _items) {
+        final id = _idFor(item);
         enabled[item] = prefs.getBool('reminder_item_$id') ?? false;
-        final hour = prefs.getInt('reminder_item_${id}_hour') ?? 8;
-        final minute = prefs.getInt('reminder_item_${id}_minute') ?? 0;
+        final fallback = _defaultTime(item);
+        final hour = prefs.getInt('reminder_item_${id}_hour') ?? fallback.hour;
+        final minute = prefs.getInt('reminder_item_${id}_minute') ?? fallback.minute;
         times[item] = TimeOfDay(hour: hour, minute: minute);
       }
       _loading = false;
@@ -702,17 +770,16 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
   }
 
   Future<void> _saveItem(String item) async {
-    final index = enabled.keys.toList().indexOf(item);
-    final id = index + 401;
-    final time = times[item] ?? const TimeOfDay(hour: 8, minute: 0);
+    final id = _idFor(item);
+    final time = times[item] ?? _defaultTime(item);
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('reminder_item_$id', enabled[item]!);
+    await prefs.setBool('reminder_item_$id', enabled[item] ?? false);
     await prefs.setInt('reminder_item_${id}_hour', time.hour);
     await prefs.setInt('reminder_item_${id}_minute', time.minute);
 
     if (item == 'آية الكرسي بعد الصلاة') {
       const baseId = 5000;
-      if (!enabled[item]!) {
+      if (!(enabled[item] ?? false)) {
         for (var day = 0; day < 30; day++) {
           for (var prayer = 0; prayer < 5; prayer++) {
             await AwwabNotificationService.instance.cancel(baseId + day * 5 + prayer);
@@ -721,7 +788,14 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
         return;
       }
       final position = await AwwabLocationService().getLocation(askPermission: true);
-      if (position == null) return;
+      if (position == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('اسمح بالموقع لتحديد موعد التنبيه بعد كل صلاة.')),
+          );
+        }
+        return;
+      }
       await AwwabNotificationService.instance.refreshPrayerAyatReminders(
         latitude: position.latitude,
         longitude: position.longitude,
@@ -730,17 +804,28 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
       return;
     }
 
-    final dailyId = 401 + index;
-    if (enabled[item]!) {
+    if (enabled[item] ?? false) {
       await AwwabNotificationService.instance.scheduleDaily(
-        id: dailyId,
+        id: id,
         title: 'تذكير أوّاب: $item',
-        body: item == 'قيام الليل' ? 'اجعل لك نصيبًا من صلاة الليل.' : 'حان وقت $item.',
+        body: _bodyFor(item),
         hour: time.hour,
         minute: time.minute,
       );
     } else {
-      await AwwabNotificationService.instance.cancel(dailyId);
+      await AwwabNotificationService.instance.cancel(id);
+    }
+  }
+
+  Future<void> _toggle(String item, bool value) async {
+    setState(() {
+      enabled[item] = value;
+      _saving = true;
+    });
+    try {
+      await _saveItem(item);
+    } finally {
+      if (mounted) setState(() => _saving = false);
     }
   }
 
@@ -751,32 +836,48 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
     body: _loading
       ? const Center(child: CircularProgressIndicator())
       : ListView(padding: const EdgeInsets.all(18), children: [
-        const Text('فعّل ما تريد، واضبط وقت كل تذكير بشكل مستقل. تعمل التذكيرات محليًا دون إنترنت.', style: TextStyle(color: _muted, fontSize: 11)),
+        const Text(
+          'فعّل كل تذكير على حدة، واضبط وقتًا مناسبًا له. تعمل التنبيهات محليًا دون إنترنت بعد منح إذن الإشعارات.',
+          style: TextStyle(color: _muted, fontSize: 11, height: 1.8),
+        ),
+        if (_saving) const LinearProgressIndicator(minHeight: 2),
         const SizedBox(height: 12),
-        for (final item in enabled.keys) Padding(
+        for (final item in _items) Padding(
           padding: const EdgeInsets.only(bottom: 9),
           child: _FeatureCard(child: Column(children: [
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              value: enabled[item]!,
+              value: enabled[item] ?? false,
               activeThumbColor: _fg,
               title: Text(item, style: const TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700)),
-              onChanged: (v) {
-                setState(() => enabled[item] = v);
-                _saveItem(item);
-              },
+              onChanged: (value) => _toggle(item, value),
             ),
-            if (enabled[item]!) Align(alignment: Alignment.centerLeft, child: TextButton.icon(
-              onPressed: () async {
-                final picked = await showTimePicker(context: context, initialTime: times[item] ?? const TimeOfDay(hour: 8, minute: 0));
-                if (picked != null) {
-                  setState(() => times[item] = picked);
-                  _saveItem(item);
-                }
-              },
-              icon: const Icon(Icons.schedule, size: 16),
-              label: Text(item == 'آية الكرسي بعد الصلاة' ? 'بعد كل صلاة بوقت قصير' : (times[item]?.format(context) ?? 'اختيار وقت التذكير')),
-            )),
+            if ((enabled[item] ?? false) && item != 'آية الكرسي بعد الصلاة')
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () async {
+                    final picked = await showTimePicker(
+                      context: context,
+                      initialTime: times[item] ?? _defaultTime(item),
+                    );
+                    if (picked != null) {
+                      setState(() => times[item] = picked);
+                      await _saveItem(item);
+                    }
+                  },
+                  icon: const Icon(Icons.schedule, size: 16),
+                  label: Text('موعد التنبيه: ${(times[item] ?? _defaultTime(item)).format(context)}'),
+                ),
+              ),
+            if (item == 'آية الكرسي بعد الصلاة' && (enabled[item] ?? false))
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12, bottom: 8),
+                  child: Text('بعد كل صلاة بدقيقتين تقريبًا', style: TextStyle(color: _muted, fontSize: 10)),
+                ),
+              ),
           ])),
         ),
       ]),
