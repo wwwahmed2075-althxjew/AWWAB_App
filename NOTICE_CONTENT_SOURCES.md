@@ -3,10 +3,13 @@
 This register records the primary references for the starter content currently embedded in the app. Hadith numbering may vary between editions; the Arabic text and grading should be checked against a verified edition before a public release.
 
 ## Quran
-- Al-Baqarah 2:152, 2:201
+- Al-Baqarah 2:152, 2:186, 2:201
 - Ar-Ra'd 13:28
+- Al-Ankabut 29:45
+- Al-Hijr 15:9
 - Al-Isra 17:9, 17:82
 - Al-Muzzammil 73:4
+- Ta-Ha 20:114
 - Al-Ahzab 33:41
 - Fatir 35:29
 - Adh-Dhariyat 51:17
@@ -23,9 +26,17 @@ This register records the primary references for the starter content currently e
 - Sahih Muslim 1163 — the best prayer after obligatory prayers is night prayer.
 - Sahih al-Bukhari 1145 and Sahih Muslim 758 — the last third of the night.
 - Sahih Muslim 2676 — the virtue of those who remember Allah often.
+- Sahih al-Bukhari 6406 and Sahih Muslim 2694 — the two phrases beloved to the Most Merciful.
+- Sahih al-Bukhari 6405 and Sahih Muslim 2691 — the virtue of saying Subhan Allah wa bihamdihi one hundred times.
+- Sahih Muslim 2137 — the four phrases most beloved to Allah.
+- Jami' at-Tirmidhi 3375 — keeping the tongue moist with remembrance of Allah.
 - Sahih Muslim 2699 — seeking knowledge.
 - Sahih Muslim 2700 — gatherings of remembrance.
 - Sahih Muslim 2721 — supplication asking for guidance, piety, chastity, and sufficiency.
+- Sahih Muslim 2720 — supplication asking for well-being in religion, worldly life, and the Hereafter.
+- Sahih al-Bukhari 6369 — seeking refuge from worry, grief, incapacity, and laziness.
+- Jami' at-Tirmidhi 2140 — supplication asking Allah to keep the heart firm.
+- Sunan Abi Dawud 5074 and Jami' at-Tirmidhi 3512 — asking for pardon and well-being.
 - Sahih Muslim 2723 — morning/evening remembrance.
 - Sahih al-Bukhari 6306 — Sayyid al-Istighfar.
 - Sahih al-Bukhari 6312 — supplication on waking.
