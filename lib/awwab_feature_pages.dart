@@ -269,12 +269,25 @@ class AwwabPrayerPage extends StatefulWidget {
   @override
   State<AwwabPrayerPage> createState() => _AwwabPrayerPageState();
 }
-class _AwwabPrayerPageState extends State<AwwabPrayerPage> {
+class _AwwabPrayerPageState extends State<AwwabPrayerPage> with WidgetsBindingObserver {
   final _location = AwwabLocationService();
   AwwabPrayerSchedule? _schedule;
   bool _loading = true;
   @override
-  void initState() { super.initState(); _load(); }
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _load();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _load();
+  }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
   Future<void> _load() async {
     final p = await _location.getLocation();
     if (!mounted) return;
