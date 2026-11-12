@@ -331,23 +331,69 @@ class AwwabAzkarPage extends StatelessWidget {
   );
 }
 
+List<Map<String, String>> _itemsForAzkar(String title) {
+  if (title == 'أذكار الاستيقاظ') {
+    return [
+      {'text': 'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ.', 'count': 'مرة واحدة', 'source': 'صحيح البخاري: 6312'},
+    ];
+  }
+  if (title == 'أذكار النوم') {
+    return [
+      {'text': 'بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ، فَإِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ.', 'count': 'مرة واحدة', 'source': 'صحيح البخاري: 6320'},
+      {'text': 'قراءة آية الكرسي.', 'count': 'مرة واحدة', 'source': 'صحيح البخاري: 2311'},
+      {'text': 'قراءة آخر آيتين من سورة البقرة.', 'count': 'مرة واحدة', 'source': 'صحيح البخاري: 5009'},
+      {'text': 'جمع الكفين والنفث فيهما وقراءة الإخلاص والفلق والناس، ثم مسح ما استطاع من الجسد، وتكرار ذلك ثلاث مرات.', 'count': 'ثلاث مرات', 'source': 'صحيح البخاري: 5017'},
+      {'text': 'سبحان الله 33، والحمد لله 33، والله أكبر 34.', 'count': 'قبل النوم', 'source': 'صحيح البخاري: 6318، وصحيح مسلم: 2727'},
+    ];
+  }
+  if (title == 'أذكار بعد الصلاة') {
+    return [
+      {'text': 'أَسْتَغْفِرُ اللَّهَ.', 'count': 'ثلاث مرات', 'source': 'صحيح مسلم: 591'},
+      {'text': 'اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ.', 'count': 'مرة واحدة', 'source': 'صحيح مسلم: 591'},
+      {'text': 'سبحان الله 33، والحمد لله 33، والله أكبر 33، ثم تمام المائة: لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.', 'count': 'بعد كل صلاة مكتوبة', 'source': 'صحيح مسلم: 597'},
+    ];
+  }
+  if (title == 'الرقية الشرعية') {
+    return [
+      {'text': 'قراءة سورة الفاتحة.', 'count': 'تُقرأ على المريض مع النفث', 'source': 'صحيح البخاري: 5736'},
+      {'text': 'قراءة سورة الإخلاص وسورتي الفلق والناس.', 'count': 'مع النفث والمسح على الجسد بحسب الوارد', 'source': 'صحيح البخاري: 5017'},
+    ];
+  }
+  final morning = title == 'أذكار الصباح';
+  return [
+    {'text': morning ? 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ...' : 'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ...', 'count': 'مرة واحدة صباحًا أو مساءً', 'source': 'صحيح مسلم: 2723'},
+    {'text': 'قراءة سورة الإخلاص وسورة الفلق وسورة الناس.', 'count': 'ثلاث مرات صباحًا ومساءً', 'source': 'سنن أبي داود: 5082، وجامع الترمذي: 3575'},
+    {'text': 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ.', 'count': 'ثلاث مرات صباحًا ومساءً', 'source': 'سنن أبي داود: 5088، وجامع الترمذي: 3388'},
+    {'text': 'سَيِّدُ الِاسْتِغْفَار: اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ...', 'count': 'مرة صباحًا ومرة مساءً', 'source': 'صحيح البخاري: 6306'},
+  ];
+}
+
 class AzkarDetailsPage extends StatelessWidget {
   final String title;
   const AzkarDetailsPage({super.key, required this.title});
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: _bg,
-    appBar: AppBar(backgroundColor: _bg, title: Text(title)),
-    body: ListView(padding: const EdgeInsets.all(18), children: [
-      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('أذكار ثابتة من السنة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 12),
-        const Text('أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ...', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 2, fontSize: 17)),
-        const SizedBox(height: 7),
-        const Text('يُستكمل إدراج النصوص والأعداد والأسانيد بعد مراجعتها من مصادر الأذكار المعتمدة.', style: TextStyle(color: _muted, fontSize: 10)),
-      ])),
-    ]),
-  );
+  Widget build(BuildContext context) {
+    final items = _itemsForAzkar(title);
+    return Scaffold(
+      backgroundColor: _bg,
+      appBar: AppBar(backgroundColor: _bg, title: Text(title)),
+      body: ListView(padding: const EdgeInsets.all(18), children: [
+        for (var i = 0; i < items.length; i++) Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('${i + 1}.', style: const TextStyle(color: _muted, fontSize: 10)),
+            const SizedBox(height: 5),
+            Text(items[i]['text']!, textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: const TextStyle(color: _fg, fontSize: 16, height: 2)),
+            const SizedBox(height: 8),
+            Text(items[i]['count']!, style: const TextStyle(color: _fg, fontSize: 10, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 3),
+            Text(items[i]['source']!, style: const TextStyle(color: _muted, fontSize: 10)),
+          ])),
+        ),
+        const Text('المحتوى المعروض مجموعة أولية مختصرة، ويجب استكمال مراجعة النصوص والأعداد والتخريج قبل اعتمادها كورد شامل.', textDirection: TextDirection.rtl, style: TextStyle(color: _muted, fontSize: 10, height: 1.8)),
+      ]),
+    );
+  }
 }
 
 class AllahNamesPage extends StatelessWidget {
