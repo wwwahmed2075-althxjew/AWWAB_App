@@ -65,7 +65,9 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
         _page = savedPage.clamp(1, pageCount).toInt();
         _downloaded = downloaded;
       });
-      _pageController.jumpToPage(_page - 1);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _pageController.hasClients) _pageController.jumpToPage(_page - 1);
+      });
     } catch (e) {
       if (mounted) setState(() => _error = 'تعذر تهيئة المصحف: $e');
     }
