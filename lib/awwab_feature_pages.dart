@@ -419,8 +419,8 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
       for (final item in enabled.keys) {
         final id = enabled.keys.toList().indexOf(item) + 401;
         enabled[item] = prefs.getBool('reminder_item_$id') ?? false;
-        final hour = prefs.getInt('reminder_item_$id\_hour') ?? 8;
-        final minute = prefs.getInt('reminder_item_$id\_minute') ?? 0;
+        final hour = prefs.getInt('reminder_item_${id}_hour') ?? 8;
+        final minute = prefs.getInt('reminder_item_${id}_minute') ?? 0;
         times[item] = TimeOfDay(hour: hour, minute: minute);
       }
       _loading = false;
@@ -433,8 +433,8 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
     final time = times[item] ?? const TimeOfDay(hour: 8, minute: 0);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('reminder_item_$id', enabled[item]!);
-    await prefs.setInt('reminder_item_$id\_hour', time.hour);
-    await prefs.setInt('reminder_item_$id\_minute', time.minute);
+    await prefs.setInt('reminder_item_${id}_hour', time.hour);
+    await prefs.setInt('reminder_item_${id}_minute', time.minute);
 
     if (item == 'آية الكرسي بعد الصلاة') {
       const baseId = 5000;
