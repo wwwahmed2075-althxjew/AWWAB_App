@@ -948,15 +948,14 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
         ),
         if (_saving) const LinearProgressIndicator(minHeight: 2),
         const SizedBox(height: 12),
-        for (final item in _items)
-          if (item != 'الورد اليومي') Padding(
+        for (final item in _items) Padding(
           padding: const EdgeInsets.only(bottom: 9),
           child: _FeatureCard(child: Column(children: [
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: enabled[item] ?? false,
               activeThumbColor: _fg,
-              title: Text(item, style: const TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700)),
+              title: Text(item == 'الورد اليومي' ? 'تذكير الورد القرآني اليومي' : item, style: const TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700)),
               onChanged: (value) => _toggle(item, value),
             ),
             if ((enabled[item] ?? false) && item != 'آية الكرسي بعد الصلاة')
