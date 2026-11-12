@@ -35,6 +35,28 @@ class AwwabNotificationService {
     }
   }
 
+  Future<void> showNow({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    await initialise();
+    await _plugin.show(
+      id,
+      title,
+      body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'awwab_updates',
+          'تحديثات أوّاب',
+          channelDescription: 'إشعارات الإصدارات الجديدة للتطبيق',
+          importance: Importance.defaultImportance,
+          priority: Priority.defaultPriority,
+        ),
+      ),
+    );
+  }
+
   Future<void> scheduleDaily({
     required int id,
     required String title,
