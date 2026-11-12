@@ -67,3 +67,5 @@ The app's offline reminder scheduler uses the device timezone and refreshes pray
 
 ## Adhan audio
 - `Adhan.ogg` by Aishatu98, Wikimedia Commons, dedicated under Creative Commons CC0 1.0 Universal. File page: https://commons.wikimedia.org/wiki/File:Adhan.ogg. Original recording is approximately 42 seconds; the app downloads it on request, verifies SHA-1 `b86432f1581e11f898de1dc3402af0d541af110e`, and stores it for offline playback. This recording is not attributed to a named sheikh or muezzin.
+
+- `Beautiful_adhan.ogg` by Adam-synagda, Wikimedia Commons, CC0 1.0 Universal Public Domain Dedication. File page: https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg. Original Ogg Vorbis recording is approximately 154 seconds; SHA-1 `a1fa4fd942401922c5c3301816384aae86956522`. The uploader name is credited as the file author, not asserted to be the caller's identity.
