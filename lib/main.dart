@@ -8,8 +8,38 @@ import 'package:url_launcher/url_launcher.dart';
 import 'madinah_mushaf_reader_page.dart';
 import 'awwab_feature_pages.dart';
 import 'adhan_audio_page.dart';
+import 'awwab_notification_service.dart';
 
-void main() => runApp(const AwwabApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const AwwabApp());
+  _checkForPublishedRelease();
+}
+
+Future<void> _checkForPublishedRelease() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse('https://api.github.com/repos/wwwahmed2075-althxjew/AWWAB_App/releases/latest'),
+      headers: {'Accept': 'application/vnd.github+json'},
+    ).timeout(const Duration(seconds: 15));
+    if (response.statusCode != 200) return;
+    final release = jsonDecode(response.body) as Map<String, dynamic>;
+    final tag = release['tag_name'] as String?;
+    if (tag == null || tag.isEmpty) return;
+    final previous = prefs.getString('awwab_last_notified_release');
+    if (previous != null && previous != tag) {
+      await AwwabNotificationService.instance.showNow(
+        id: 9100,
+        title: 'تحديث جديد لتطبيق أوّاب',
+        body: 'الإصدار $tag متاح الآن. افتح نبذة عن التطبيق للاطلاع على المميزات.',
+      );
+    }
+    await prefs.setString('awwab_last_notified_release', tag);
+  } catch (_) {
+    // Release checks are best-effort and must never block app startup.
+  }
+}
 
 const ink = Color(0xFF07080B);
 const panel = Color(0xFF15171C);
