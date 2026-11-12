@@ -302,7 +302,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
                   label: Text(_downloading ? 'جارٍ التنزيل والتحقق...' : 'تنزيل التسجيل للاستخدام دون إنترنت'),
                 ))
               else ...[
-                const Row(children: [
+                Row(children: [
                   Icon(Icons.offline_pin_rounded, color: Color(0xFFB7D8C4)),
                   SizedBox(width: 8),
                   Text('التسجيل محفوظ على الجهاز', style: TextStyle(color: AppPalette.foreground, fontSize: 12)),
