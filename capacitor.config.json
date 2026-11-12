@@ -1,9 +1,0 @@
-{
-  "appId": "com.malaz.app",
-  "appName": "ملاذ",
-  "webDir": "www",
-  "bundledWebRuntime": false,
-  "android": {
-    "backgroundColor": "#050505"
-  }
-}
