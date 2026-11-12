@@ -7,6 +7,21 @@ class AwwabPrayerEntry {
 }
 
 class AwwabPrayerSchedule {
+  static List<DateTime> obligatoryPrayerTimesForDate({
+    required double latitude,
+    required double longitude,
+    required DateTime date,
+  }) {
+    final coordinates = Coordinates(latitude, longitude, validate: true);
+    final parameters = CalculationMethod.egyptian.getParameters();
+    final times = PrayerTimes(
+      coordinates,
+      DateComponents(date.year, date.month, date.day),
+      parameters,
+    );
+    return [times.fajr, times.dhuhr, times.asr, times.maghrib, times.isha];
+  }
+
   final List<AwwabPrayerEntry> entries;
   final AwwabPrayerEntry? next;
   final Duration? remaining;
