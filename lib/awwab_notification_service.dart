@@ -65,6 +65,45 @@ class AwwabNotificationService {
     );
   }
 
+  Future<void> scheduleWeekly({
+    required int id,
+    required List<int> weekdays,
+    required String title,
+    required String body,
+    required int hour,
+    required int minute,
+  }) async {
+    await initialise(requestPermission: true);
+    for (var weekday = 1; weekday <= 7; weekday++) {
+      await _plugin.cancel(id * 10 + weekday);
+    }
+    final now = tz.TZDateTime.now(tz.local);
+    for (final weekday in weekdays.toSet()) {
+      if (weekday < 1 || weekday > 7) continue;
+      var daysAhead = (weekday - now.weekday + 7) % 7;
+      var next = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute)
+          .add(Duration(days: daysAhead));
+      if (!next.isAfter(now)) next = next.add(const Duration(days: 7));
+      await _plugin.zonedSchedule(
+        id * 10 + weekday,
+        title,
+        body,
+        next,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'awwab_reminders',
+            'تذكيرات أوّاب',
+            channelDescription: 'تذكيرات الأذكار والعبادات',
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      );
+    }
+  }
+
   Future<void> scheduleAt({
     required int id,
     required DateTime time,
