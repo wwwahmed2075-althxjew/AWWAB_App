@@ -34,6 +34,16 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
       licenseUrl: 'https://commons.wikimedia.org/wiki/File:Adhan.ogg',
     ),
     _AdhanRecording(
+      id: 'ejaz215_madinah',
+      title: 'أذان المسجد النبوي – المدينة',
+      creator: 'ejaz215 — Wikimedia Commons',
+      duration: '3 دقائق و7 ثوانٍ',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg',
+      sha1: '4aa432b9e44804e7d72af4429bd743aa5fa9e3a4',
+      filename: 'adhan_madinah_ejaz215.ogg',
+      licenseUrl: 'https://commons.wikimedia.org/wiki/File:33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg',
+    ),
+    _AdhanRecording(
       id: 'adam_synagda',
       title: 'تسجيل أذان طويل',
       creator: 'Adam-synagda — Wikimedia Commons',
