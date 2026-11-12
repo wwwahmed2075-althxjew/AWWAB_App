@@ -424,32 +424,78 @@ List<Map<String, String>> _itemsForAzkar(String title) {
   ];
 }
 
-class AzkarDetailsPage extends StatelessWidget {
+class AzkarDetailsPage extends StatefulWidget {
   final String title;
   const AzkarDetailsPage({super.key, required this.title});
   @override
-  Widget build(BuildContext context) {
-    final items = _itemsForAzkar(title);
-    return Scaffold(
-      backgroundColor: _bg,
-      appBar: AppBar(backgroundColor: _bg, title: Text(title)),
-      body: ListView(padding: const EdgeInsets.all(18), children: [
-        for (var i = 0; i < items.length; i++) Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('${i + 1}.', style: const TextStyle(color: _muted, fontSize: 10)),
-            const SizedBox(height: 5),
-            Text(items[i]['text']!, textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: const TextStyle(color: _fg, fontSize: 16, height: 2)),
-            const SizedBox(height: 8),
-            Text(items[i]['count']!, style: const TextStyle(color: _fg, fontSize: 10, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 3),
-            Text(items[i]['source']!, style: const TextStyle(color: _muted, fontSize: 10)),
-          ])),
-        ),
-        const Text('المحتوى المعروض مجموعة أولية مختصرة، ويجب استكمال مراجعة النصوص والأعداد والتخريج قبل اعتمادها كورد شامل.', textDirection: TextDirection.rtl, style: TextStyle(color: _muted, fontSize: 10, height: 1.8)),
-      ]),
-    );
+  State<AzkarDetailsPage> createState() => _AzkarDetailsPageState();
+}
+
+class _AzkarDetailsPageState extends State<AzkarDetailsPage> {
+  late final List<Map<String, String>> items = _itemsForAzkar(widget.title);
+  late List<int> counts = List<int>.filled(items.length, 0);
+
+  int _targetFor(String label) {
+    if (label.contains('ثلاث')) return 3;
+    if (label.contains('33')) return 33;
+    if (label.contains('34')) return 34;
+    if (label.contains('100')) return 100;
+    return 1;
   }
+
+  void _increment(int index) => setState(() => counts[index]++);
+  void _reset() => setState(() => counts = List<int>.filled(items.length, 0));
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: _bg,
+    appBar: AppBar(
+      backgroundColor: _bg,
+      title: Text(widget.title),
+      actions: [
+        IconButton(tooltip: 'إعادة العدادات', onPressed: _reset, icon: const Icon(Icons.refresh_rounded)),
+      ],
+    ),
+    body: ListView(padding: const EdgeInsets.fromLTRB(16, 12, 16, 24), children: [
+      for (var i = 0; i < items.length; i++)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(22),
+              onTap: () => _increment(i),
+              child: _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Row(children: [
+                  Text('${i + 1}', style: const TextStyle(color: _muted, fontSize: 11, fontWeight: FontWeight.w700)),
+                  const Spacer(),
+                  const Text('اضغط للعد', style: TextStyle(color: _muted, fontSize: 10)),
+                  const SizedBox(width: 7),
+                  const Icon(Icons.touch_app_rounded, color: _muted, size: 16),
+                ]),
+                const SizedBox(height: 9),
+                Text(items[i]['text']!, textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                  style: const TextStyle(color: _fg, fontSize: 17, height: 2)),
+                const SizedBox(height: 12),
+                Row(children: [
+                  Expanded(child: Text(items[i]['count']!, style: const TextStyle(color: _fg, fontSize: 10, fontWeight: FontWeight.w700))),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(.09), borderRadius: BorderRadius.circular(18)),
+                    child: Text('${counts[i]} / ${_targetFor(items[i]['count']!)}',
+                      style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w800)),
+                  ),
+                ]),
+                const SizedBox(height: 4),
+                Text(items[i]['source']!, style: const TextStyle(color: _muted, fontSize: 10)),
+              ])),
+            ),
+          ),
+        ),
+      const Text('اضغط على بطاقة الذكر نفسها لزيادة العداد، واستخدم زر الإعادة أعلى الصفحة لتصفير جميع العدادات.',
+        textDirection: TextDirection.rtl, style: TextStyle(color: _muted, fontSize: 10, height: 1.8)),
+    ]),
+  );
 }
 
 class AllahNamesPage extends StatelessWidget {
