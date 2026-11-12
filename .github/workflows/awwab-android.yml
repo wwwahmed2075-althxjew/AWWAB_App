@@ -38,14 +38,11 @@ jobs:
           gradle = Path("android/app/build.gradle.kts")
           if gradle.exists():
               g = gradle.read_text()
-              g = g.replace('compileSdk = flutter.compileSdkVersion', 'compileSdk = 35')
+              g = g.replace('compileSdk = flutter.compileSdkVersion', 'compileSdk = 36')
               if 'isCoreLibraryDesugaringEnabled = true' not in g:
                   g = re.sub(r'compileOptions \{', 'compileOptions {\n        isCoreLibraryDesugaringEnabled = true', g, count=1)
               if 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")' not in g:
-                  if re.search(r'dependencies \{', g):
-                      g = re.sub(r'dependencies \{', 'dependencies {\n    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")', g, count=1)
-                  else:
-                      g += '\ndependencies {\n    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")\n}\n'
+                  g += '\ndependencies {\n    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")\n}\n'
               gradle.write_text(g)
           PY
       - name: Install Flutter dependencies
