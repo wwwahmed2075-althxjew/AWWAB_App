@@ -68,7 +68,7 @@ class AwwabHomePage extends StatefulWidget {
   State<AwwabHomePage> createState() => _AwwabHomePageState();
 }
 
-class _AwwabHomePageState extends State<AwwabHomePage> {
+class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserver {
   final _location = AwwabLocationService();
   Position? _position;
   AwwabPrayerSchedule? _schedule;
@@ -78,6 +78,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _refreshLocation();
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && _position != null) {
@@ -90,7 +91,13 @@ class _AwwabHomePageState extends State<AwwabHomePage> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refreshLocation();
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
     super.dispose();
   }
@@ -131,6 +138,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> {
             Text(date, style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
             const Text('التاريخ الميلادي', style: TextStyle(color: _muted, fontSize: 9)),
             Text(_hijriDate(now), style: const TextStyle(color: _fg, fontSize: 10)),
+            const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted, fontSize: 8)),
           ])),
         ]),
         const SizedBox(height: 6),
@@ -153,7 +161,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> {
         _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Row(children: [Icon(Icons.mosque_outlined, size: 19), SizedBox(width: 8), Text('مواقيت الصلاة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800))]),
           const SizedBox(height: 13),
-          if (_loading) const Center(child: Padding(padding: EdgeInsets.all(12), child: CircularProgressIndicator(strokeWidth: 2)))
+          if (_loading) const Padding(padding: EdgeInsets.all(12), child: Center(child: Text('جارٍ تحديد الموقع تلقائيًا…', style: TextStyle(color: _muted, fontSize: 11))))
           else if (_schedule == null) ...[
             const Text('اسمح للتطبيق بالوصول إلى موقعك ليحسب المواقيت تلقائيًا، ويمكنه استخدام آخر موقع محفوظ دون إنترنت.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
             TextButton.icon(onPressed: _refreshLocation, icon: const Icon(Icons.my_location), label: const Text('السماح وتحديد موقعي')),
