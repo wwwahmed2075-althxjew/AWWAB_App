@@ -173,7 +173,7 @@ class PageFrame extends StatelessWidget {
     SliverPadding(padding: const EdgeInsets.fromLTRB(20, 18, 20, 120), sliver: SliverList(delegate: SliverChildListDelegate([
       Row(children: [Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(title, style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: white)),
-        if (subtitle != null) ...[const SizedBox(height: 5), Text(subtitle!, style: const TextStyle(fontSize: 12, color: muted))],
+        if (subtitle != null) ...[const SizedBox(height: 5), Text(subtitle!, style: TextStyle(fontSize: 12, color: muted))],
       ])), const GlassIcon(icon: Icons.notifications_none_rounded)]),
       const SizedBox(height: 22),
       child,
@@ -215,9 +215,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PageFrame(title: 'السلام عليك', subtitle: 'اجعل يومك عامرًا بذكر الله', child: Column(children: [
     GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('وَاذْكُر رَّبَّكَ كَثِيرًا', style: TextStyle(fontSize: 25, height: 1.8, fontWeight: FontWeight.w700)),
+      Text('وَاذْكُر رَّبَّكَ كَثِيرًا', style: TextStyle(fontSize: 25, height: 1.8, fontWeight: FontWeight.w700)),
       const SizedBox(height: 5),
-      const Text('خطوة صغيرة كل يوم… وأثر يبقى في القلب.', style: TextStyle(color: muted, fontSize: 12)),
+      Text('خطوة صغيرة كل يوم… وأثر يبقى في القلب.', style: TextStyle(color: muted, fontSize: 12)),
       const SizedBox(height: 18),
       const Row(children: [Icon(Icons.auto_awesome, size: 15, color: muted), SizedBox(width: 7), Text('وردك اليومي يبدأ من هنا', style: TextStyle(fontSize: 11, color: muted))]),
     ])),
@@ -225,12 +225,12 @@ class HomePage extends StatelessWidget {
     GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Row(children: [Icon(Icons.mosque_outlined, size: 18), SizedBox(width: 8), Text('مواقيت الصلاة', style: TextStyle(fontWeight: FontWeight.w700))]),
       const SizedBox(height: 13),
-      const Text('اضبط موقعك وطريقة الحساب لعرض مواقيت دقيقة', style: TextStyle(color: muted, fontSize: 12)),
+      Text('اضبط موقعك وطريقة الحساب لعرض مواقيت دقيقة', style: TextStyle(color: muted, fontSize: 12)),
       const SizedBox(height: 12),
       const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [PrayerMini(name: 'الفجر'), PrayerMini(name: 'الظهر'), PrayerMini(name: 'العصر'), PrayerMini(name: 'المغرب'), PrayerMini(name: 'العشاء')]),
     ])),
     const SizedBox(height: 14),
-    GlassCard(child: Row(children: [const Icon(Icons.menu_book_rounded, size: 22), const SizedBox(width: 12), const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('متابعة القرآن', style: TextStyle(fontWeight: FontWeight.w700)), SizedBox(height: 4), Text('ابدأ القراءة وسنحفظ موضعك على جهازك', style: TextStyle(color: muted, fontSize: 11))])), const Icon(Icons.chevron_left, color: muted)])),
+    GlassCard(child: Row(children: [Icon(Icons.menu_book_rounded, size: 22), const SizedBox(width: 12), const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('متابعة القرآن', style: TextStyle(fontWeight: FontWeight.w700)), SizedBox(height: 4), Text('ابدأ القراءة وسنحفظ موضعك على جهازك', style: TextStyle(color: muted, fontSize: 11))])), Icon(Icons.chevron_left, color: muted)])),
   ]));
 }
 
@@ -238,7 +238,7 @@ class PrayerMini extends StatelessWidget {
   final String name;
   const PrayerMini({super.key, required this.name});
   @override
-  Widget build(BuildContext context) => Column(children: [Text(name, style: const TextStyle(fontSize: 10, color: muted)), const SizedBox(height: 5), const Text('--:--', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600))]);
+  Widget build(BuildContext context) => Column(children: [Text(name, style: TextStyle(fontSize: 10, color: muted)), const SizedBox(height: 5), Text('--:--', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600))]);
 }
 
 class QuranPage extends StatefulWidget {
@@ -281,36 +281,36 @@ class _QuranPageState extends State<QuranPage> {
     title: 'القرآن الكريم', subtitle: 'فهرس السور والقراءة وحفظ موضع التوقف',
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('مصحفي', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+        Text('مصحفي', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
         const SizedBox(height: 7),
-        const Text('افتح أي سورة لعرض آياتها، وسيُحفظ آخر موضع قراءة على جهازك.', style: TextStyle(color: muted, fontSize: 12, height: 1.8)),
+        Text('افتح أي سورة لعرض آياتها، وسيُحفظ آخر موضع قراءة على جهازك.', style: TextStyle(color: muted, fontSize: 12, height: 1.8)),
         const SizedBox(height: 12),
         if (lastSurah != null)
-          Text('آخر موضع قراءة: سورة رقم $lastSurah${lastAyah == null ? '' : ' • آية $lastAyah'}', style: const TextStyle(fontSize: 11, color: white))
+          Text('آخر موضع قراءة: سورة رقم $lastSurah${lastAyah == null ? '' : ' • آية $lastAyah'}', style: TextStyle(fontSize: 11, color: white))
         else
-          const Text('آخر موضع قراءة: لم تبدأ بعد', style: TextStyle(fontSize: 11, color: muted)),
+          Text('آخر موضع قراءة: لم تبدأ بعد', style: TextStyle(fontSize: 11, color: muted)),
       ])),
       const SizedBox(height: 13),
       InkWell(
         borderRadius: BorderRadius.circular(22),
         onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MadinahMushafReaderPage())),
         child: GlassCard(child: Row(children: [
-          const Icon(Icons.menu_book_rounded, size: 23),
+          Icon(Icons.menu_book_rounded, size: 23),
           const SizedBox(width: 12),
           const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('مصحف المدينة النبوية', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
             SizedBox(height: 4),
             Text('رواية حفص • 604 صفحة • تنزيل للعمل دون إنترنت', style: TextStyle(color: muted, fontSize: 10)),
           ])),
-          const Icon(Icons.chevron_left, color: muted),
+          Icon(Icons.chevron_left, color: muted),
         ])),
       ),
       const SizedBox(height: 13),
       TextField(controller: searchController, onChanged: (value) => setState(() => search = value.trim()),
-        style: const TextStyle(color: white, fontSize: 13),
+        style: TextStyle(color: white, fontSize: 13),
         decoration: InputDecoration(
-          hintText: 'ابحث باسم السورة أو رقمها', hintStyle: const TextStyle(color: muted, fontSize: 12),
-          prefixIcon: const Icon(Icons.search_rounded, color: muted, size: 19),
+          hintText: 'ابحث باسم السورة أو رقمها', hintStyle: TextStyle(color: muted, fontSize: 12),
+          prefixIcon: Icon(Icons.search_rounded, color: muted, size: 19),
           filled: true, fillColor: Colors.white.withOpacity(.045),
           contentPadding: const EdgeInsets.symmetric(vertical: 12),
           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withOpacity(.1))),
@@ -321,10 +321,10 @@ class _QuranPageState extends State<QuranPage> {
       FutureBuilder<List<dynamic>>(future: surahsFuture, builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) return const Padding(padding: EdgeInsets.all(35), child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
         if (snapshot.hasError) return GlassCard(child: Column(children: [
-          const Icon(Icons.wifi_off_rounded, color: muted, size: 25), const SizedBox(height: 9),
-          const Text('تعذر تحميل فهرس القرآن', style: TextStyle(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 5), const Text('تحقق من اتصال الإنترنت ثم حاول مرة أخرى.', style: TextStyle(color: muted, fontSize: 11)),
-          TextButton(onPressed: () => setState(() => surahsFuture = loadSurahs()), child: const Text('إعادة المحاولة')),
+          Icon(Icons.wifi_off_rounded, color: muted, size: 25), const SizedBox(height: 9),
+          Text('تعذر تحميل فهرس القرآن', style: TextStyle(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 5), Text('تحقق من اتصال الإنترنت ثم حاول مرة أخرى.', style: TextStyle(color: muted, fontSize: 11)),
+          TextButton(onPressed: () => setState(() => surahsFuture = loadSurahs()), child: Text('إعادة المحاولة')),
         ]));
         final all = snapshot.data ?? [];
         final filtered = all.where((raw) {
@@ -337,14 +337,14 @@ class _QuranPageState extends State<QuranPage> {
           return Padding(padding: const EdgeInsets.only(bottom: 7), child: InkWell(
             borderRadius: BorderRadius.circular(20), onTap: () => openSurah(item),
             child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12), child: Row(children: [
-              Container(width: 34, height: 34, alignment: Alignment.center, decoration: BoxDecoration(color: AppPalette.cardOverlay, borderRadius: BorderRadius.circular(11)), child: Text('${item['number']}', style: const TextStyle(fontSize: 11))),
+              Container(width: 34, height: 34, alignment: Alignment.center, decoration: BoxDecoration(color: AppPalette.cardOverlay, borderRadius: BorderRadius.circular(11)), child: Text('${item['number']}', style: TextStyle(fontSize: 11))),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(item['name'] as String, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                Text(item['name'] as String, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 3),
-                Text('${item['numberOfAyahs']} آية • ${item['revelationType'] == 'Meccan' ? 'مكية' : 'مدنية'}', style: const TextStyle(fontSize: 10, color: muted)),
+                Text('${item['numberOfAyahs']} آية • ${item['revelationType'] == 'Meccan' ? 'مكية' : 'مدنية'}', style: TextStyle(fontSize: 10, color: muted)),
               ])),
-              const Icon(Icons.chevron_left, color: muted, size: 19),
+              Icon(Icons.chevron_left, color: muted, size: 19),
             ])),
           ));
         }).toList());
@@ -444,16 +444,16 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(width: 38, height: 4, decoration: BoxDecoration(color: muted.withOpacity(.6), borderRadius: BorderRadius.circular(8))),
           const SizedBox(height: 16),
-          Text('سورة ${widget.name} • الآية $number', style: const TextStyle(color: white, fontWeight: FontWeight.w800)),
+          Text('سورة ${widget.name} • الآية $number', style: TextStyle(color: white, fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           ListTile(
             leading: Icon(_favorites.contains(number) ? Icons.favorite : Icons.favorite_border, color: white),
-            title: Text(_favorites.contains(number) ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة', style: const TextStyle(color: white)),
+            title: Text(_favorites.contains(number) ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة', style: TextStyle(color: white)),
             onTap: () { Navigator.pop(sheetContext); _toggleFavorite(ayah); },
           ),
           ListTile(
-            leading: const Icon(Icons.bookmark_outline_rounded, color: white),
-            title: const Text('حفظ كآخر موضع قراءة', style: TextStyle(color: white)),
+            leading: Icon(Icons.bookmark_outline_rounded, color: white),
+            title: Text('حفظ كآخر موضع قراءة', style: TextStyle(color: white)),
             onTap: () { Navigator.pop(sheetContext); savePosition(number); },
           ),
         ]),
@@ -479,19 +479,19 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
     appBar: AppBar(
       backgroundColor: ink,
       title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(widget.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-        Text('${widget.englishName} • ${widget.ayahCount} آية', style: const TextStyle(fontSize: 10, color: muted)),
+        Text(widget.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+        Text('${widget.englishName} • ${widget.ayahCount} آية', style: TextStyle(fontSize: 10, color: muted)),
       ]),
       actions: [
         IconButton(tooltip: 'الآيات المفضلة', onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranFavoritesPage())),
-          icon: const Icon(Icons.favorite_border_rounded)),
+          icon: Icon(Icons.favorite_border_rounded)),
       ],
     ),
     body: FutureBuilder<List<dynamic>>(future: ayahsFuture, builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator(strokeWidth: 2));
       if (snapshot.hasError) return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(Icons.wifi_off_rounded, color: muted, size: 28), const SizedBox(height: 10), const Text('تعذر تحميل الآيات'),
-        TextButton(onPressed: () => setState(() { _initialScrollDone = false; ayahsFuture = loadAyahs(); }), child: const Text('إعادة المحاولة')),
+        Icon(Icons.wifi_off_rounded, color: muted, size: 28), const SizedBox(height: 10), Text('تعذر تحميل الآيات'),
+        TextButton(onPressed: () => setState(() { _initialScrollDone = false; ayahsFuture = loadAyahs(); }), child: Text('إعادة المحاولة')),
       ]));
       final ayahs = snapshot.data ?? [];
       _scrollToInitialAyah(ayahs);
@@ -512,16 +512,16 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
               decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(.09)))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 Text(ayah['text'] as String, textAlign: TextAlign.justify, textDirection: TextDirection.rtl,
-                  style: const TextStyle(fontSize: 23, height: 2.05, color: white, fontFamily: 'serif')),
+                  style: TextStyle(fontSize: 23, height: 2.05, color: white, fontFamily: 'serif')),
                 const SizedBox(height: 12),
                 Align(alignment: Alignment.centerLeft, child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(color: Colors.white.withOpacity(.07), borderRadius: BorderRadius.circular(20)),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Text('۞ $number', style: const TextStyle(fontSize: 9, color: muted)),
+                    Text('۞ $number', style: TextStyle(fontSize: 9, color: muted)),
                     if (_favorites.contains(number)) ...[
                       const SizedBox(width: 6),
-                      const Icon(Icons.favorite, size: 11, color: white),
+                      Icon(Icons.favorite, size: 11, color: white),
                     ],
                   ]),
                 )),
@@ -563,7 +563,7 @@ class _QuranFavoritesPageState extends State<QuranFavoritesPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: ink,
-    appBar: AppBar(backgroundColor: ink, title: const Text('الآيات المفضلة')),
+    appBar: AppBar(backgroundColor: ink, title: Text('الآيات المفضلة')),
     body: _items.isEmpty
       ? const Center(child: Text('لم تضف آيات إلى المفضلة بعد', style: TextStyle(color: muted)))
       : ListView.builder(
@@ -574,13 +574,13 @@ class _QuranFavoritesPageState extends State<QuranFavoritesPage> {
           return Padding(
             padding: const EdgeInsets.only(bottom: 9),
             child: GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Text('${item['surahName']} • الآية ${item['ayah']}', style: const TextStyle(color: muted, fontSize: 11, fontWeight: FontWeight.w700)),
+              Text('${item['surahName']} • الآية ${item['ayah']}', style: TextStyle(color: muted, fontSize: 11, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
               Text(item['text'] as String, textDirection: TextDirection.rtl, textAlign: TextAlign.right,
-                style: const TextStyle(color: white, fontSize: 19, height: 2)),
+                style: TextStyle(color: white, fontSize: 19, height: 2)),
               Row(children: [
                 const Spacer(),
-                TextButton.icon(onPressed: () => _remove(index), icon: const Icon(Icons.delete_outline, size: 16), label: const Text('إزالة')),
+                TextButton.icon(onPressed: () => _remove(index), icon: Icon(Icons.delete_outline, size: 16), label: Text('إزالة')),
               ]),
             ])),
           );
@@ -593,7 +593,7 @@ class AzkarPage extends StatelessWidget {
   const AzkarPage({super.key});
   @override
   Widget build(BuildContext context) => PageFrame(title: 'الأذكار', subtitle: 'أذكارك اليومية في مكان واحد', child: Column(children: [
-    for (final item in ['أذكار الصباح','أذكار المساء','أذكار النوم','أذكار الاستيقاظ','الرقية الشرعية','أذكار بعد الصلاة']) Padding(padding: const EdgeInsets.only(bottom: 10), child: GlassCard(child: Row(children: [const Icon(Icons.spa_outlined, size: 20), const SizedBox(width: 12), Expanded(child: Text(item, style: const TextStyle(fontWeight: FontWeight.w600))), const Icon(Icons.chevron_left, color: muted)]))),
+    for (final item in ['أذكار الصباح','أذكار المساء','أذكار النوم','أذكار الاستيقاظ','الرقية الشرعية','أذكار بعد الصلاة']) Padding(padding: const EdgeInsets.only(bottom: 10), child: GlassCard(child: Row(children: [Icon(Icons.spa_outlined, size: 20), const SizedBox(width: 12), Expanded(child: Text(item, style: TextStyle(fontWeight: FontWeight.w600))), Icon(Icons.chevron_left, color: muted)]))),
   ]));
 }
 
@@ -603,7 +603,7 @@ class PrayerPage extends StatelessWidget {
   Widget build(BuildContext context) => PageFrame(title: 'الصلاة', subtitle: 'مواقيت الصلاة والأذان والقبلة', child: Column(children: [
     GlassCard(child: Column(children: const [Icon(Icons.location_on_outlined, size: 25), SizedBox(height: 9), Text('حدد موقعك لعرض المواقيت الصحيحة', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)), SizedBox(height: 5), Text('لن نعرض أوقاتًا تقديرية غير موثوقة', style: TextStyle(fontSize: 11, color: muted))])),
     const SizedBox(height: 12),
-    for (final p in ['الفجر','الشروق','الظهر','العصر','المغرب','العشاء']) Padding(padding: const EdgeInsets.only(bottom: 8), child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14), child: Row(children: [const Icon(Icons.access_time_rounded, size: 18, color: muted), const SizedBox(width: 12), Expanded(child: Text(p)), const Text('--:--', style: TextStyle(color: muted))]))),
+    for (final p in ['الفجر','الشروق','الظهر','العصر','المغرب','العشاء']) Padding(padding: const EdgeInsets.only(bottom: 8), child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14), child: Row(children: [Icon(Icons.access_time_rounded, size: 18, color: muted), const SizedBox(width: 12), Expanded(child: Text(p)), Text('--:--', style: TextStyle(color: muted))]))),
   ]));
 }
 
@@ -683,14 +683,14 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
         .where((asset) => (asset['name'] as String? ?? '').toLowerCase().endsWith('.apk')).toList();
     return Scaffold(
       backgroundColor: ink,
-      appBar: AppBar(backgroundColor: ink, title: const Text('نبذة عن ملاذ')),
+      appBar: AppBar(backgroundColor: ink, title: Text('نبذة عن ملاذ')),
       body: ListView(padding: const EdgeInsets.all(18), children: [
         GlassCard(child: Column(children: [
-          const Icon(Icons.auto_awesome_rounded, size: 42, color: white),
+          Icon(Icons.auto_awesome_rounded, size: 42, color: white),
           const SizedBox(height: 12),
-          const Text('ملاذ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+          Text('ملاذ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
           const SizedBox(height: 5),
-          const Text('رفيقك للقرآن والأذكار والصلاة', style: TextStyle(color: muted, fontSize: 12)),
+          Text('رفيقك للقرآن والأذكار والصلاة', style: TextStyle(color: muted, fontSize: 12)),
         ])),
         const SizedBox(height: 12),
         GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
@@ -707,22 +707,22 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
         ])),
         const SizedBox(height: 12),
         GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('سجل التحديثات', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+          Text('سجل التحديثات', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
           const SizedBox(height: 8),
           if (_loading) const LinearProgressIndicator(minHeight: 2)
           else if (_error != null) ...[
-            Text(_error!, style: const TextStyle(color: muted, fontSize: 11)),
-            TextButton(onPressed: _loadRelease, child: const Text('إعادة المحاولة')),
+            Text(_error!, style: TextStyle(color: muted, fontSize: 11)),
+            TextButton(onPressed: _loadRelease, child: Text('إعادة المحاولة')),
           ] else if (_release == null)
-            const Text('لا يوجد إصدار رسمي منشور حتى الآن. ستظهر ملاحظات التحديث هنا بعد نشر إصدار من مستودع ملاذ.',
+            Text('لا يوجد إصدار رسمي منشور حتى الآن. ستظهر ملاحظات التحديث هنا بعد نشر إصدار من مستودع ملاذ.',
               style: TextStyle(color: muted, height: 1.8, fontSize: 11))
           else ...[
-            Text('الإصدار ${_release!['tag_name'] ?? ''}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+            Text('الإصدار ${_release!['tag_name'] ?? ''}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
             if (_formatPublished(_release!['published_at']).isNotEmpty)
-              Padding(padding: const EdgeInsets.only(top: 4), child: Text('تاريخ النشر: ${_formatPublished(_release!['published_at'])}', style: const TextStyle(color: muted, fontSize: 10))),
+              Padding(padding: const EdgeInsets.only(top: 4), child: Text('تاريخ النشر: ${_formatPublished(_release!['published_at'])}', style: TextStyle(color: muted, fontSize: 10))),
             const SizedBox(height: 8),
             Text((_release!['body'] as String?)?.trim().isNotEmpty == true ? (_release!['body'] as String).trim() : 'لم تُضف ملاحظات لهذا الإصدار.',
-              style: const TextStyle(color: muted, height: 1.8, fontSize: 11)),
+              style: TextStyle(color: muted, height: 1.8, fontSize: 11)),
             if (apk.isNotEmpty) ...[
               const SizedBox(height: 12),
               for (final asset in apk)
@@ -731,7 +731,7 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
                     final url = asset['browser_download_url'] as String?;
                     if (url != null) await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
                   },
-                  icon: const Icon(Icons.download_rounded),
+                  icon: Icon(Icons.download_rounded),
                   label: Text('تنزيل ${asset['name']}'),
                 )),
             ] else
@@ -739,7 +739,7 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
                 style: TextStyle(color: muted, fontSize: 10))),
             if (_release!['html_url'] is String)
               TextButton(onPressed: () => launchUrl(Uri.parse(_release!['html_url'] as String), mode: LaunchMode.externalApplication),
-                child: const Text('عرض صفحة الإصدار على GitHub')),
+                child: Text('عرض صفحة الإصدار على GitHub')),
           ],
         ])),
       ]),
@@ -764,14 +764,14 @@ class ThemeSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: ink,
-    appBar: AppBar(backgroundColor: ink, title: const Text('المظهر')),
+    appBar: AppBar(backgroundColor: ink, title: Text('المظهر')),
     body: ValueListenableBuilder<ThemeMode>(
       valueListenable: appThemeMode,
       builder: (context, selected, _) => ListView(padding: const EdgeInsets.all(18), children: [
         GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          const Text('اختر مظهر ملاذ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+          Text('اختر مظهر ملاذ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
           const SizedBox(height: 6),
-          const Text('يمكنك تغيير المظهر في أي وقت، أو تركه مطابقًا لإعدادات جهازك.', style: TextStyle(color: muted, fontSize: 11, height: 1.7)),
+          Text('يمكنك تغيير المظهر في أي وقت، أو تركه مطابقًا لإعدادات جهازك.', style: TextStyle(color: muted, fontSize: 11, height: 1.7)),
           const SizedBox(height: 12),
           for (final option in [
             (ThemeMode.light, 'فاتح', Icons.light_mode_outlined),
@@ -783,7 +783,7 @@ class ThemeSettingsPage extends StatelessWidget {
               value: option.$1,
               groupValue: selected,
               onChanged: (value) { if (value != null) _select(value); },
-              title: Text(option.$2, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              title: Text(option.$2, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
               secondary: Icon(option.$3, color: muted, size: 20),
               dense: true,
             ),
@@ -798,7 +798,7 @@ class _MoreTile extends StatelessWidget {
   final IconData icon; final String title; final VoidCallback? onTap;
   const _MoreTile({required this.icon, required this.title, this.onTap});
   @override
-  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 9), child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(22), child: GlassCard(child: Row(children: [Icon(icon, size: 20, color: muted), const SizedBox(width: 13), Expanded(child: Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600))), const Icon(Icons.chevron_left, color: muted, size: 18)]))));
+  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 9), child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(22), child: GlassCard(child: Row(children: [Icon(icon, size: 20, color: muted), const SizedBox(width: 13), Expanded(child: Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600))), Icon(Icons.chevron_left, color: muted, size: 18)]))));
 }
 
 class TasbeehPage extends StatefulWidget {
@@ -852,18 +852,18 @@ class _TasbeehPageState extends State<TasbeehPage> {
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: ink,
     appBar: AppBar(
-      title: const Text('السبحة الإلكترونية'),
+      title: Text('السبحة الإلكترونية'),
       backgroundColor: ink,
-      actions: [IconButton(tooltip: 'تصفير جميع العدادات', onPressed: _reset, icon: const Icon(Icons.refresh_rounded))],
+      actions: [IconButton(tooltip: 'تصفير جميع العدادات', onPressed: _reset, icon: Icon(Icons.refresh_rounded))],
     ),
     body: !loaded ? const Center(child: CircularProgressIndicator()) : ListView(
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 28),
       children: [
         GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('تسبيحك اليوم', style: TextStyle(color: muted, fontSize: 11)),
+          Text('تسبيحك اليوم', style: TextStyle(color: muted, fontSize: 11)),
           const SizedBox(height: 5),
-          Text('${counts.values.fold<int>(0, (sum, value) => sum + value)}', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800)),
-          const Text('إجمالي التسبيحات', style: TextStyle(color: muted, fontSize: 10)),
+          Text('${counts.values.fold<int>(0, (sum, value) => sum + value)}', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800)),
+          Text('إجمالي التسبيحات', style: TextStyle(color: muted, fontSize: 10)),
         ])),
         const SizedBox(height: 14),
         for (final phrase in phrases) Padding(
@@ -875,15 +875,15 @@ class _TasbeehPageState extends State<TasbeehPage> {
               onTap: () => _increment(phrase),
               child: GlassCard(child: Row(children: [
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(phrase, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+                  Text(phrase, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 5),
-                  Text('اضغط على الذكر لزيادة عداده • الهدف $goal', style: const TextStyle(color: muted, fontSize: 10)),
+                  Text('اضغط على الذكر لزيادة عداده • الهدف $goal', style: TextStyle(color: muted, fontSize: 10)),
                 ])),
                 Container(
                   constraints: const BoxConstraints(minWidth: 58),
                   padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
                   decoration: BoxDecoration(color: Colors.white.withOpacity(.09), borderRadius: BorderRadius.circular(15)),
-                  child: Text('${counts[phrase]}', textAlign: TextAlign.center, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
+                  child: Text('${counts[phrase]}', textAlign: TextAlign.center, style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
                 ),
               ])),
             ),
@@ -894,18 +894,18 @@ class _TasbeehPageState extends State<TasbeehPage> {
             final controller = TextEditingController(text: goal.toString());
             final picked = await showDialog<int>(context: context, builder: (dialogContext) => AlertDialog(
               backgroundColor: panel,
-              title: const Text('هدف التكرار'),
+              title: Text('هدف التكرار'),
               content: TextField(controller: controller, keyboardType: TextInputType.number, autofocus: true,
                 decoration: const InputDecoration(hintText: 'مثلاً 33')),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('إلغاء')),
-                TextButton(onPressed: () => Navigator.pop(dialogContext, int.tryParse(controller.text)), child: const Text('حفظ')),
+                TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text('إلغاء')),
+                TextButton(onPressed: () => Navigator.pop(dialogContext, int.tryParse(controller.text)), child: Text('حفظ')),
               ],
             ));
             controller.dispose();
             if (picked != null && picked > 0) { setState(() => goal = picked); await _save(); }
           },
-          icon: const Icon(Icons.flag_outlined),
+          icon: Icon(Icons.flag_outlined),
           label: Text('تغيير الهدف الحالي: $goal'),
         ),
       ],
@@ -1000,14 +1000,14 @@ class _HijriOccasionsPageState extends State<HijriOccasionsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: ink,
-    appBar: AppBar(backgroundColor: ink, title: const Text('المناسبات الهجرية')),
+    appBar: AppBar(backgroundColor: ink, title: Text('المناسبات الهجرية')),
     body: _loading
       ? const Center(child: CircularProgressIndicator())
       : _events.isEmpty
         ? Center(child: Padding(padding: const EdgeInsets.all(22), child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Text(_error ?? 'لا توجد بيانات متاحة', textAlign: TextAlign.center, style: const TextStyle(color: muted)),
+            Text(_error ?? 'لا توجد بيانات متاحة', textAlign: TextAlign.center, style: TextStyle(color: muted)),
             TextButton.icon(onPressed: () { setState(() { _loading = true; _error = null; }); _loadEvents(); },
-              icon: const Icon(Icons.refresh), label: const Text('إعادة المحاولة')),
+              icon: Icon(Icons.refresh), label: Text('إعادة المحاولة')),
           ])))
         : ListView(padding: const EdgeInsets.all(18), children: [
             for (final event in _events) Padding(
@@ -1020,24 +1020,24 @@ class _HijriOccasionsPageState extends State<HijriOccasionsPage> {
                   builder: (sheetContext) => SafeArea(child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      Text(event['title']!, style: const TextStyle(color: white, fontSize: 17, fontWeight: FontWeight.w800)),
+                      Text(event['title']!, style: TextStyle(color: white, fontSize: 17, fontWeight: FontWeight.w800)),
                       const SizedBox(height: 12),
-                      Text('التاريخ الهجري المتوقع: ${event['hijri']}', style: const TextStyle(color: white)),
+                      Text('التاريخ الهجري المتوقع: ${event['hijri']}', style: TextStyle(color: white)),
                       const SizedBox(height: 6),
-                      Text('التاريخ الميلادي المتوقع: ${_formatDate(event['gregorian']!)}', style: const TextStyle(color: white)),
+                      Text('التاريخ الميلادي المتوقع: ${_formatDate(event['gregorian']!)}', style: TextStyle(color: white)),
                       const SizedBox(height: 10),
-                      Text(event['note']!, style: const TextStyle(color: muted, height: 1.8, fontSize: 11)),
+                      Text(event['note']!, style: TextStyle(color: muted, height: 1.8, fontSize: 11)),
                     ]),
                   )),
                 ),
                 child: GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(event['title']!, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
+                  Text(event['title']!, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 8),
-                  Text('هجري: ${event['hijri']}', style: const TextStyle(color: white, fontSize: 12)),
+                  Text('هجري: ${event['hijri']}', style: TextStyle(color: white, fontSize: 12)),
                   const SizedBox(height: 4),
-                  Text('ميلادي متوقع: ${_formatDate(event['gregorian']!)}', style: const TextStyle(color: muted, fontSize: 11)),
+                  Text('ميلادي متوقع: ${_formatDate(event['gregorian']!)}', style: TextStyle(color: muted, fontSize: 11)),
                   const SizedBox(height: 7),
-                  const Text('اضغط لعرض التفاصيل', style: TextStyle(color: muted, fontSize: 10)),
+                  Text('اضغط لعرض التفاصيل', style: TextStyle(color: muted, fontSize: 10)),
                 ])),
               ),
             ),
