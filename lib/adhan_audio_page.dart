@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'app_theme.dart';
 
 class _AdhanRecording {
   final String id, title, creator, duration, url, sha1, filename, licenseUrl, licenseLabel;
@@ -235,7 +236,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
   Widget build(BuildContext context) {
     final selected = _selected;
     return Scaffold(
-      backgroundColor: const Color(0xFF07080B),
+      backgroundColor: AppPalette.background,
       appBar: AppBar(
         backgroundColor: const Color(0xFF07080B),
         title: const Text('الأذان واختيار الصوت'),
@@ -244,7 +245,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
         padding: const EdgeInsets.all(20),
         children: [
           const Text('اختر تسجيلًا للمعاينة', style: TextStyle(
-            color: Color(0xFFF5F5F7), fontWeight: FontWeight.w800, fontSize: 16,
+            color: AppPalette.foreground, fontWeight: FontWeight.w800, fontSize: 16,
           )),
           const SizedBox(height: 10),
           for (final recording in _recordings)
@@ -256,19 +257,19 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
                 child: Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(_selectedId == recording.id ? .11 : .045),
+                    color: AppPalette.isDark ? Colors.white.withOpacity(_selectedId == recording.id ? .11 : .045) : Colors.black.withOpacity(_selectedId == recording.id ? .08 : .025),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.white.withOpacity(_selectedId == recording.id ? .25 : .08)),
+                    border: Border.all(color: AppPalette.isDark ? Colors.white.withOpacity(_selectedId == recording.id ? .25 : .08) : Colors.black.withOpacity(_selectedId == recording.id ? .18 : .06)),
                   ),
                   child: Row(children: [
                     Icon(_selectedId == recording.id ? Icons.radio_button_checked : Icons.radio_button_off,
-                      color: const Color(0xFFF5F5F7), size: 19),
+                      color: AppPalette.foreground, size: 19),
                     const SizedBox(width: 10),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(recording.title, style: const TextStyle(color: Color(0xFFF5F5F7), fontWeight: FontWeight.w700)),
+                      Text(recording.title, style: TextStyle(color: Color(0xFFF5F5F7), fontWeight: FontWeight.w700)),
                       const SizedBox(height: 3),
                       Text('${recording.creator} • ${recording.duration}',
-                        style: const TextStyle(color: Color(0xFF9A9CA5), fontSize: 10)),
+                        style: const TextStyle(color: AppPalette.muted, fontSize: 10)),
                     ])),
                     if (_downloadedId == recording.id)
                       const Icon(Icons.offline_pin_rounded, color: Color(0xFFB7D8C4), size: 19),
@@ -280,9 +281,9 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
           Container(
             padding: const EdgeInsets.all(17),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.055),
+              color: AppPalette.cardOverlay,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(.1)),
+              border: Border.all(color: AppPalette.cardBorder),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(selected.title, style: const TextStyle(color: Color(0xFFF5F5F7), fontSize: 16, fontWeight: FontWeight.w800)),
