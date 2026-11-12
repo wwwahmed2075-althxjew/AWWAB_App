@@ -229,7 +229,11 @@ class _QuranPageState extends State<QuranPage> {
         if (await file.exists()) {
           try {
             final local = jsonDecode(await file.readAsString()) as List<dynamic>;
-            if (local.length == surah['numberOfAyahs']) {
+            final valid = local.length == surah['numberOfAyahs'] &&
+                local.asMap().entries.every((entry) => entry.value is Map &&
+                    entry.value['numberInSurah'] == entry.key + 1 &&
+                    entry.value['text'] is String && (entry.value['text'] as String).trim().isNotEmpty);
+            if (valid) {
               if (mounted) setState(() => downloadedSurahs++);
               continue;
             }
