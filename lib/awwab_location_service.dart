@@ -24,6 +24,7 @@ class AwwabLocationService {
         headingAccuracy: 0,
         speed: 0,
         speedAccuracy: 0,
+      isMocked: false,
       );
     }
 
