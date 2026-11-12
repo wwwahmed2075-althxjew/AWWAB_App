@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -573,13 +574,77 @@ class _PrayerPageState extends State<PrayerPage> {
   ]));
 }
 
+
+class QiblaPage extends StatefulWidget {
+  const QiblaPage({super.key});
+  @override
+  State<QiblaPage> createState() => _QiblaPageState();
+}
+class _QiblaPageState extends State<QiblaPage> {
+  double? _bearing;
+  String? _error;
+  bool _loading = false;
+  @override
+  void initState() { super.initState(); _locate(); }
+  Future<void> _locate() async {
+    setState(() { _loading = true; _error = null; });
+    try {
+      if (!await Geolocator.isLocationServiceEnabled()) throw Exception('فعّل خدمة الموقع أولًا.');
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) throw Exception('اسمح بالوصول للموقع لحساب اتجاه القبلة.');
+      final pos = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.best, timeLimit: Duration(seconds: 20)));
+      const kaabaLat = 21.422487;
+      const kaabaLon = 39.826206;
+      final lat1 = pos.latitude * math.pi / 180;
+      final lat2 = kaabaLat * math.pi / 180;
+      final dLon = (kaabaLon - pos.longitude) * math.pi / 180;
+      final y = math.sin(dLon);
+      final x = math.cos(lat1) * math.tan(lat2) - math.sin(lat1) * math.cos(dLon);
+      final bearing = (math.atan2(y, x) * 180 / math.pi + 360) % 360;
+      if (mounted) setState(() => _bearing = bearing);
+    } catch (e) { if (mounted) setState(() => _error = e.toString().replaceFirst('Exception: ', '')); }
+    finally { if (mounted) setState(() => _loading = false); }
+  }
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(backgroundColor: ink, title: const Text('اتجاه القبلة')),
+    body: Center(child: Padding(padding: const EdgeInsets.all(24), child: Column(mainAxisSize: MainAxisSize.min, children: [
+      const Icon(Icons.explore_outlined, size: 30, color: muted),
+      const SizedBox(height: 14),
+      if (_loading) const CircularProgressIndicator(),
+      if (_bearing != null) ...[
+        StreamBuilder<CompassEvent>(
+          stream: FlutterCompass.events,
+          builder: (context, snapshot) {
+            final heading = snapshot.data?.heading;
+            if (heading == null) return const Text('حساس البوصلة غير متاح أو يحتاج معايرة الهاتف.', textAlign: TextAlign.center, style: TextStyle(color: muted));
+            final angle = (_bearing! - heading) * math.pi / 180;
+            return Column(children: [
+              Transform.rotate(angle: angle, child: const Icon(Icons.navigation_rounded, size: 150, color: white)),
+              const SizedBox(height: 18),
+              Text('اتجه نحو القبلة • ${_bearing!.toStringAsFixed(0)}°', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+              Text('اتجاه الهاتف: ${heading.toStringAsFixed(0)}°', style: const TextStyle(color: muted, fontSize: 12)),
+            ]);
+          },
+        ),
+      ],
+      if (_error != null) Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: Colors.orangeAccent)),
+      const SizedBox(height: 18),
+      OutlinedButton.icon(onPressed: _loading ? null : _locate, icon: const Icon(Icons.my_location), label: const Text('تحديث موقعي')),
+      const Padding(padding: EdgeInsets.only(top:14), child: Text('ضع الهاتف أفقيًا بعيدًا عن المعادن ومصادر التشويش، وحرّكه على شكل رقم 8 لمعايرة البوصلة. الاتجاه يتأثر بحساس جهازك.', textAlign: TextAlign.center, style: TextStyle(color: muted,fontSize:11,height:1.7))),
+    ]))),
+  );
+}
+
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
   @override
   Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات ملاذ', child: Column(children: [
     _MoreTile(icon: Icons.touch_app_rounded, title: 'السبحة الإلكترونية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbeehPage()))),
     _MoreTile(icon: Icons.flag_outlined, title: 'الختمة والورد اليومي', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const KhatmaPage()))),
-    _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة'),
+    _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QiblaPage()))),
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'التنبيهات والأذان'),
     _MoreTile(icon: Icons.language_rounded, title: 'اللغة'),
     _MoreTile(icon: Icons.text_fields_rounded, title: 'الخط والمظهر'),
