@@ -40,6 +40,10 @@ This register records the primary references for the starter content currently e
 - Sahih Muslim 2723 — morning/evening remembrance.
 - Sahih al-Bukhari 6306 — Sayyid al-Istighfar.
 - Sahih al-Bukhari 6312 — supplication on waking.
+- Jami' at-Tirmidhi 3401 — wording reported when waking; verify grading against the chosen edition before release.
+- Sahih al-Bukhari 6324 — supplication when going to sleep.
+- Sunan Abi Dawud 5068 and Jami' at-Tirmidhi 3391 — morning/evening supplication beginning “Allahumma bika asbahna”.
+- Sunan Abi Dawud 5072 and Jami' at-Tirmidhi 3389 — saying “Raditu billahi rabban...” morning and evening.
 - Sahih al-Bukhari 6318 and Sahih Muslim 2727 — tasbih before sleep.
 - Sahih al-Bukhari 6320 — supplication when lying down.
 - Sahih al-Bukhari 2311 — Ayat al-Kursi before sleep.
