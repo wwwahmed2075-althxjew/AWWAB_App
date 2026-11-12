@@ -147,7 +147,10 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
         const SizedBox(height: 18),
         InkWell(
           borderRadius: BorderRadius.circular(22),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AwwabAzkarPage())),
+          onTap: () {
+            final selected = _dailyAdhkar().replaceFirst('ابدأ ', '');
+            Navigator.push(context, MaterialPageRoute(builder: (_) => AzkarDetailsPage(title: selected)));
+          },
           child: _FeatureCard(child: Row(children: [
             const Icon(Icons.auto_awesome_rounded, color: _fg, size: 25),
             const SizedBox(width: 12),
