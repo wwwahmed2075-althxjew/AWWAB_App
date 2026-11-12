@@ -521,13 +521,13 @@ class _PrayerPageState extends State<PrayerPage> {
   String? _locationLabel;
   String? _error;
   bool _loading = false;
-  int _method = 5;
+  int _method = 0;
   @override
   void initState() { super.initState(); _restore(); }
   Future<void> _restore() async {
     final p = await SharedPreferences.getInstance();
     if (!mounted) return;
-    setState(() { _method = p.getInt('malaz_prayer_method') ?? 5; _locationLabel = p.getString('malaz_prayer_location_label'); });
+    setState(() { _method = p.getInt('malaz_prayer_method') ?? 0; _locationLabel = p.getString('malaz_prayer_location_label'); });
     final saved = p.getString('malaz_prayer_times');
     if (saved != null) {
       try { final decoded = jsonDecode(saved) as Map<String, dynamic>; if (mounted) setState(() => _times = decoded.map((k,v) => MapEntry(k, v.toString()))); } catch (_) {}
