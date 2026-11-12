@@ -12,7 +12,6 @@ dependencies:
   flutter_svg: ^2.0.10+1
   path_provider: ^2.1.4
   crypto: ^3.0.6
-  archive: ^3.6.1
   geolocator: ^13.0.2
   adhan: ^2.0.0
   flutter_compass: ^0.8.1
@@ -25,7 +24,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/mushaf/madinah_hafs_v4_manifest.json
-    - assets/mushaf/offline/
     - assets/branding/malaz_icon.jpg
 
 flutter_launcher_icons:
