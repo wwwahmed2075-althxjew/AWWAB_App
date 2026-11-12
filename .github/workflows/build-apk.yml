@@ -13,7 +13,7 @@ on:
       - ".github/workflows/build-apk.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -100,3 +100,14 @@ jobs:
           path: build/app/outputs/flutter-apk/Malaz.apk
           if-no-files-found: error
           retention-days: 14
+      - name: Publish direct APK download for browser
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view malaz-latest >/dev/null 2>&1; then
+            gh release upload malaz-latest build/app/outputs/flutter-apk/Malaz.apk --clobber
+          else
+            gh release create malaz-latest build/app/outputs/flutter-apk/Malaz.apk \\
+              --title "ملاذ - أحدث نسخة" \\
+              --notes "ملف APK مباشر لتطبيق ملاذ (ARM64)."
+          fi
