@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'madinah_mushaf_reader_page.dart';
 import 'awwab_feature_pages.dart';
+import 'adhan_audio_page.dart';
 
 void main() => runApp(const AwwabApp());
 
@@ -350,6 +351,7 @@ class MorePage extends StatelessWidget {
   const MorePage({super.key});
   @override
   Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات أوّاب', child: Column(children: [
+    _MoreTile(icon: Icons.volume_up_rounded, title: 'الأذان واختيار الصوت', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdhanAudioPage()))),
     _MoreTile(icon: Icons.touch_app_rounded, title: 'السبحة الإلكترونية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbeehPage()))),
     _MoreTile(icon: Icons.flag_outlined, title: 'الختمة والورد اليومي'),
     _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AwwabQiblaPage()))),
