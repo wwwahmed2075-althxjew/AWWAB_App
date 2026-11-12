@@ -1,7 +1,7 @@
 name: Miladh Android APK
 concurrency:
-  group: awwab-android-${{ github.ref }}
-  cancel-in-progress: true
+  group: miladh-android-${{ github.sha }}
+  cancel-in-progress: false
 on:
   push:
     branches: ["main", "feature/**"]
