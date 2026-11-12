@@ -617,7 +617,7 @@ class PrayerPage extends StatelessWidget {
   const PrayerPage({super.key});
   @override
   Widget build(BuildContext context) => PageFrame(title: 'الصلاة', subtitle: 'مواقيت الصلاة والأذان والقبلة', child: Column(children: [
-    GlassCard(child: Column(children: const [Icon(Icons.location_on_outlined, size: 25), SizedBox(height: 9), Text('حدد موقعك لعرض المواقيت الصحيحة', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)), SizedBox(height: 5), Text('لن نعرض أوقاتًا تقديرية غير موثوقة', style: TextStyle(fontSize: 11, color: muted))])),
+    GlassCard(child: Column(children: [Icon(Icons.location_on_outlined, size: 25), SizedBox(height: 9), Text('حدد موقعك لعرض المواقيت الصحيحة', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)), SizedBox(height: 5), Text('لن نعرض أوقاتًا تقديرية غير موثوقة', style: TextStyle(fontSize: 11, color: muted))])),
     const SizedBox(height: 12),
     for (final p in ['الفجر','الشروق','الظهر','العصر','المغرب','العشاء']) Padding(padding: const EdgeInsets.only(bottom: 8), child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14), child: Row(children: [Icon(Icons.access_time_rounded, size: 18, color: muted), const SizedBox(width: 12), Expanded(child: Text(p)), Text('--:--', style: TextStyle(color: muted))]))),
   ]));
@@ -709,14 +709,14 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
           Text('رفيقك للقرآن والأذكار والصلاة', style: TextStyle(color: muted, fontSize: 12)),
         ])),
         const SizedBox(height: 12),
-        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('عن التطبيق', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
           SizedBox(height: 8),
           Text('ملاذ رفيقك للقرآن والأذكار والصلاة والتذكيرات اليومية، مع أدوات تساعدك على المحافظة على عباداتك.',
             style: TextStyle(color: muted, height: 1.9, fontSize: 12)),
         ])),
         const SizedBox(height: 12),
-        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('المطوّر', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
           SizedBox(height: 6),
           Text('Ahmed Khalil', textDirection: TextDirection.ltr, style: TextStyle(color: muted, fontSize: 13)),
