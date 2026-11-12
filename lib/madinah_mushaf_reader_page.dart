@@ -57,7 +57,10 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
       }
       for (var page = 1; page <= pageCount; page++) {
         final hash = hashes['$page'];
-        if (hash is! String || !RegExp(r'^[a-f0-9]{40}
+        if (hash is! String || !RegExp(r'^[a-f0-9]{40}$').hasMatch(hash)) {
+          throw Exception('بصمة الصفحة $page مفقودة أو غير صالحة.');
+        }
+      }
       final docs = await getApplicationDocumentsDirectory();
       final directory = Directory('${docs.path}/madinah_hafs_v4');
       await directory.create(recursive: true);
