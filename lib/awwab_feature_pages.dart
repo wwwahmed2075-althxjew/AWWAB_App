@@ -457,7 +457,9 @@ class AllahNamesPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: _bg,
     appBar: AppBar(backgroundColor: _bg, title: const Text('أسماء الله الحسنى')),
-    body: ListView.builder(padding: const EdgeInsets.all(18), itemCount: names.length, itemBuilder: (context, i) => Padding(
+    body: ListView.builder(padding: const EdgeInsets.all(18), itemCount: names.length + 1, itemBuilder: (context, i) {
+      if (i == names.length) return const Padding(padding: EdgeInsets.only(top: 10), child: Text('هذه قائمة مشهورة متداولة للأسماء التسعة والتسعين. وقد اختلف أهل العلم في تعيين القائمة كاملة؛ والمعاني هنا موجزة للتقريب وليست بديلًا عن كتب العقيدة وشروح الأسماء الحسنى.', textDirection: TextDirection.rtl, style: TextStyle(color: _muted, fontSize: 10, height: 1.8)));
+      return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(color: Colors.transparent, child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 15),
@@ -469,7 +471,8 @@ class AllahNamesPage extends StatelessWidget {
         title: Text(names[i].$1, style: const TextStyle(color: _fg, fontWeight: FontWeight.w800)),
         children: [Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 14), child: Align(alignment: Alignment.centerRight, child: Text(names[i].$2, textAlign: TextAlign.right, style: const TextStyle(color: _fg, height: 1.8))))],
       )),
-    )),
+    ));
+    }),
   );
 }
 
