@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
@@ -13,7 +14,12 @@ class AwwabNotificationService {
   Future<void> initialise({bool requestPermission = false}) async {
     if (!_ready) {
       tzdata.initializeTimeZones();
-      tz.setLocalLocation(tz.getLocation('Africa/Cairo'));
+      try {
+        final localTimezone = await FlutterTimezone.getLocalTimezone();
+        tz.setLocalLocation(tz.getLocation(localTimezone.identifier));
+      } catch (_) {
+        tz.setLocalLocation(tz.getLocation('Africa/Cairo'));
+      }
       await _plugin.initialize(
         const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
