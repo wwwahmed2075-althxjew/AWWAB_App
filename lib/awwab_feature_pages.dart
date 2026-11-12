@@ -300,7 +300,7 @@ class _AwwabPrayerPageState extends State<AwwabPrayerPage> {
       _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('التذكير بآية الكرسي بعد الصلاة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
         const SizedBox(height: 6),
-        const Text('سيكون التنبيه اختياريًا من إعدادات التذكيرات. جدولة الإشعارات المحلية ستُفعّل ضمن خطوة إعداد أذونات أندرويد.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
+        const Text('يمكن تفعيل تنبيه محلي بعد كل صلاة من إعدادات التذكيرات. يعمل بعد منح إذن الإشعارات.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
       ])),
     ],
     const SizedBox(height: 12),
@@ -612,7 +612,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
         }
       }
       if (!enabled[item]!) return;
-      final position = await AwwabLocationService().getLocation(askPermission: false);
+      final position = await AwwabLocationService().getLocation(askPermission: true);
       if (position == null) return;
       final now = DateTime.now();
       for (var day = 0; day < 7; day++) {
@@ -697,11 +697,19 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
   final _location = AwwabLocationService();
   Position? _position;
   double? _heading;
+  StreamSubscription<CompassEvent>? _compassSubscription;
   @override
   void initState() {
     super.initState();
     _location.getLocation().then((p) { if (mounted) setState(() => _position = p); });
-    FlutterCompass.events?.listen((event) { if (mounted) setState(() => _heading = event.heading); });
+    _compassSubscription = FlutterCompass.events?.listen((event) {
+      if (mounted) setState(() => _heading = event.heading);
+    });
+  }
+  @override
+  void dispose() {
+    _compassSubscription?.cancel();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
