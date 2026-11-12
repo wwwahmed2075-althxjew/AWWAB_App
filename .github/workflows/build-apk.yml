@@ -51,6 +51,13 @@ jobs:
           content, count = re.subn(r'android:label="[^"]*"', 'android:label="ملاذ"', content, count=1)
           if count != 1:
               raise SystemExit("Could not set Arabic app label")
+          permissions = [
+              '    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />',
+              '    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />',
+          ]
+          for permission in permissions:
+              if permission not in content:
+                  content = content.replace('<application', permission + '\\n    <application', 1)
           manifest.write_text(content, encoding="utf-8")
 
           gradle = Path("android/app/build.gradle.kts")
