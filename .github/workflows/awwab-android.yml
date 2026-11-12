@@ -1,4 +1,7 @@
 name: AWWAB Android APK
+concurrency:
+  group: awwab-android-${{ github.ref }}
+  cancel-in-progress: true
 on:
   push:
     branches: ["main", "feature/**"]
