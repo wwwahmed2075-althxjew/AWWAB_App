@@ -95,6 +95,17 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
       licenseUrl: 'https://commons.wikimedia.org/wiki/File:Eid_al-Fitr_Fajr_azan_at_Malm%C3%B6_Mosque_-_19_August_2012.webm',
       licenseLabel: 'CC BY 3.0 — يلزم ذكر المصدر وصاحب التسجيل؛ تمت إزالة صيغة الفجر الخاصة ليصلح كأذان عام',
     ),
+    _AdhanRecording(
+      id: 'sabah_fakhri',
+      title: 'أذان صباح فخري',
+      creator: 'صباح فخري — تسجيل مؤرخ بعام 1985، عبر Wikimedia Commons',
+      duration: 'دقيقتان و38 ثانية',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Call_to_prayer_by_Sabah_Fakhry.mp3',
+      sha1: 'a76718d98e7495a930ce9c024d94dba98f490a1f',
+      filename: 'adhan_sabah_fakhri.mp3',
+      licenseUrl: 'https://commons.wikimedia.org/wiki/File:Call_to_prayer_by_Sabah_Fakhry.mp3',
+      licenseLabel: 'Public Domain Mark 1.0 — مصنف كملكية عامة وفق صفحة المصدر',
+    ),
   ];
 
   final AudioPlayer _player = AudioPlayer();
