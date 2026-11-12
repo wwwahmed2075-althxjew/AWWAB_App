@@ -6,8 +6,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AwwabLocationService {
   static const _latKey = 'awwab_location_lat';
   static const _lonKey = 'awwab_location_lon';
+  static Future<Position?>? _pendingRequest;
 
-  Future<Position?> getLocation({bool askPermission = true}) async {
+  Future<Position?> getLocation({bool askPermission = true}) {
+    final pending = _pendingRequest;
+    if (pending != null) return pending;
+    final request = _getLocation(askPermission: askPermission);
+    _pendingRequest = request;
+    return request.whenComplete(() => _pendingRequest = null);
+  }
+
+  Future<Position?> _getLocation({required bool askPermission}) async {
     final prefs = await SharedPreferences.getInstance();
     Position? cached;
     final lat = prefs.getDouble(_latKey);
