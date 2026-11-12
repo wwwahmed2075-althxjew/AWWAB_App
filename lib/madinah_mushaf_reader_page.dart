@@ -50,13 +50,13 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
         throw Exception('ملف التحقق من صفحات المصحف غير مطابق للإصدار المعتمد.');
       }
       final docs = await getApplicationDocumentsDirectory();
-      final directory = Directory('\${docs.path}/madinah_hafs_v4');
+      final directory = Directory('${docs.path}/madinah_hafs_v4');
       await directory.create(recursive: true);
       final prefs = await SharedPreferences.getInstance();
       final savedPage = prefs.getInt('madinah_mushaf_last_page') ?? 1;
       var downloaded = 0;
       for (var i = 1; i <= pageCount; i++) {
-        if (await File('\${directory.path}/$i.svg').exists()) downloaded++;
+        if (await File('${directory.path}/$i.svg').exists()) downloaded++;
       }
       if (!mounted) return;
       setState(() {
@@ -85,7 +85,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
   Future<bool> _isVerified(File file, int page) async {
     if (!await file.exists()) return false;
     final bytes = await file.readAsBytes();
-    final header = utf8.encode('blob \${bytes.length}\u0000');
+    final header = utf8.encode('blob ${bytes.length}\u0000');
     return sha1.convert(<int>[...header, ...bytes]).toString() == _expectedHash(page);
   }
 
@@ -95,7 +95,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
     if (directory == null || _manifest == null) {
       throw Exception('المصحف لم يكتمل تجهيزه بعد.');
     }
-    final file = File('\${directory.path}/$page.svg');
+    final file = File('${directory.path}/$page.svg');
     if (await _isVerified(file, page)) return file;
     if (await file.exists()) await file.delete();
 
@@ -109,18 +109,18 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
       try {
         final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 45));
         if (response.statusCode != 200) {
-          throw HttpException('HTTP \${response.statusCode} عند تنزيل الصفحة $page');
+          throw HttpException('HTTP ${response.statusCode} عند تنزيل الصفحة $page');
         }
         final bytes = response.bodyBytes;
         if (bytes.isEmpty || !utf8.decode(bytes.take(200).toList(), allowMalformed: true).contains('<svg')) {
           throw FormatException('الملف المستلم ليس صفحة SVG صالحة: $page');
         }
-        final header = utf8.encode('blob \${bytes.length}\u0000');
+        final header = utf8.encode('blob ${bytes.length}\u0000');
         final digest = sha1.convert(<int>[...header, ...bytes]).toString();
         if (digest != _expectedHash(page)) {
           throw FormatException('فشل التحقق من سلامة الصفحة $page؛ لم يتم حفظها.');
         }
-        final temp = File('\${file.path}.tmp');
+        final temp = File('${file.path}.tmp');
         await temp.writeAsBytes(bytes, flush: true);
         if (await file.exists()) await file.delete();
         await temp.rename(file.path);
@@ -129,7 +129,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
         lastError = e;
       }
     }
-    throw Exception('تعذر تحميل الصفحة $page من المصدرين. \${lastError ?? ''}');
+    throw Exception('تعذر تحميل الصفحة $page من المصدرين. ${lastError ?? ''}');
   }
 
   Future<void> _showPage(int page) async {
