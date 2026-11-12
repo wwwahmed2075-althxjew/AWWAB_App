@@ -516,7 +516,7 @@ class AllahNamesPage extends StatelessWidget {
         title: Text(names[i].$1, style: const TextStyle(color: _fg, fontWeight: FontWeight.w800)),
         children: [Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 14), child: Align(alignment: Alignment.centerRight, child: Text(names[i].$2, textAlign: TextAlign.right, style: const TextStyle(color: _fg, height: 1.8))))],
       )),
-    ));
+    );
     }),
   );
 }
