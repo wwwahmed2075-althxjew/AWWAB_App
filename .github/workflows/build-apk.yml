@@ -1,4 +1,4 @@
-name: Build AWWAB Flutter APK
+name: Build Miladh Flutter APK
 
 on:
   workflow_dispatch:
@@ -18,12 +18,24 @@ jobs:
         run: flutter pub get
       - name: Generate Android platform
         run: flutter create . --platforms=android --org com.awwab
+      - name: Set Android application display name
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          text = manifest.read_text()
+          text, count = re.subn(r'android:label="[^"]*"', 'android:label="ملاذ"', text, count=1)
+          if count == 0:
+              text = text.replace('<application', '<application\\n        android:label="ملاذ"', 1)
+          manifest.write_text(text)
+          PY
       - name: Build debug APK
         run: flutter build apk --debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: AWWAB-Flutter-debug-APK
+          name: Miladh-installable-APK
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 14
