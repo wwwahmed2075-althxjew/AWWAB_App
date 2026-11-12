@@ -766,7 +766,16 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
       setState(() { _position = p; _declination = declination; });
     });
     _compassSubscription = FlutterCompass.events?.listen((event) {
-      if (mounted) setState(() => _heading = event.heading);
+      final raw = event.heading;
+      if (!mounted || raw == null) return;
+      setState(() {
+        if (_heading == null) {
+          _heading = raw;
+        } else {
+          final delta = ((raw - _heading! + 540) % 360) - 180;
+          _heading = (_heading! + delta * 0.22 + 360) % 360;
+        }
+      });
     });
   }
   @override
