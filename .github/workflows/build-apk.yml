@@ -32,10 +32,19 @@ jobs:
           PY
       - name: Build debug APK
         run: flutter build apk --debug
-      - name: Upload APK
+      - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: Miladh-installable-APK
+          name: Miladh-debug-APK
           path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+      - name: Build optimized release APK
+        run: flutter build apk --release
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Miladh-release-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 14
