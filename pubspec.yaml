@@ -15,6 +15,7 @@ dependencies:
   geolocator: ^14.0.2
   adhan: ^2.0.0
   flutter_compass: ^0.8.1
+  geomag: ^0.3.0
   flutter_local_notifications: ^19.4.0
   flutter_timezone: ^5.1.1
   timezone: ^0.10.1
