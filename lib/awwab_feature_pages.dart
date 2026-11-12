@@ -4,8 +4,10 @@ import 'package:adhan/adhan.dart' as adhan;
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'awwab_location_service.dart';
 import 'awwab_prayer_service.dart';
+import 'awwab_notification_service.dart';
 
 const _bg = Color(0xFF07080B);
 const _fg = Color(0xFFF5F5F7);
@@ -402,33 +404,119 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
     'الضحى': false, 'قيام الليل': false, 'الورد اليومي': false,
   };
   final Map<String, TimeOfDay> times = {};
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSaved();
+  }
+
+  Future<void> _loadSaved() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      for (final item in enabled.keys) {
+        final id = enabled.keys.toList().indexOf(item) + 401;
+        enabled[item] = prefs.getBool('reminder_item_$id') ?? false;
+        final hour = prefs.getInt('reminder_item_$id\_hour') ?? 8;
+        final minute = prefs.getInt('reminder_item_$id\_minute') ?? 0;
+        times[item] = TimeOfDay(hour: hour, minute: minute);
+      }
+      _loading = false;
+    });
+  }
+
+  Future<void> _saveItem(String item) async {
+    final index = enabled.keys.toList().indexOf(item);
+    final id = index + 401;
+    final time = times[item] ?? const TimeOfDay(hour: 8, minute: 0);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('reminder_item_$id', enabled[item]!);
+    await prefs.setInt('reminder_item_$id\_hour', time.hour);
+    await prefs.setInt('reminder_item_$id\_minute', time.minute);
+
+    if (item == 'آية الكرسي بعد الصلاة') {
+      const baseId = 5000;
+      for (var day = 0; day < 7; day++) {
+        for (var prayer = 0; prayer < 5; prayer++) {
+          await AwwabNotificationService.instance.cancel(baseId + day * 5 + prayer);
+        }
+      }
+      if (!enabled[item]!) return;
+      final position = await AwwabLocationService().getLocation(askPermission: false);
+      if (position == null) return;
+      final now = DateTime.now();
+      for (var day = 0; day < 7; day++) {
+        final date = now.add(Duration(days: day));
+        final prayerTimes = AwwabPrayerSchedule.obligatoryPrayerTimesForDate(
+          latitude: position.latitude,
+          longitude: position.longitude,
+          date: date,
+        );
+        for (var prayer = 0; prayer < prayerTimes.length; prayer++) {
+          final afterPrayer = prayerTimes[prayer].add(const Duration(minutes: 2));
+          await AwwabNotificationService.instance.scheduleAt(
+            id: baseId + day * 5 + prayer,
+            time: afterPrayer,
+            title: 'لا تنسَ آية الكرسي',
+            body: 'تذكير بقراءة آية الكرسي بعد الصلاة المكتوبة.',
+          );
+        }
+      }
+      return;
+    }
+
+    final dailyId = 401 + index;
+    if (enabled[item]!) {
+      await AwwabNotificationService.instance.scheduleDaily(
+        id: dailyId,
+        title: 'تذكير أوّاب: $item',
+        body: item == 'قيام الليل' ? 'اجعل لك نصيبًا من صلاة الليل.' : 'حان وقت $item.',
+        hour: time.hour,
+        minute: time.minute,
+      );
+    } else {
+      await AwwabNotificationService.instance.cancel(dailyId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: _bg,
     appBar: AppBar(backgroundColor: _bg, title: const Text('متابعة التذكيرات')),
-    body: ListView(padding: const EdgeInsets.all(18), children: [
-      const Text('فعّل ما تريد، واضبط وقت كل تذكير بشكل مستقل.', style: TextStyle(color: _muted, fontSize: 11)),
-      const SizedBox(height: 12),
-      for (final item in enabled.keys) _FeatureCard(child: Column(children: [
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          value: enabled[item]!,
-          activeColor: _fg,
-          title: Text(item, style: const TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700)),
-          onChanged: (v) => setState(() => enabled[item] = v),
+    body: _loading
+      ? const Center(child: CircularProgressIndicator())
+      : ListView(padding: const EdgeInsets.all(18), children: [
+        const Text('فعّل ما تريد، واضبط وقت كل تذكير بشكل مستقل. تعمل التذكيرات محليًا دون إنترنت.', style: TextStyle(color: _muted, fontSize: 11)),
+        const SizedBox(height: 12),
+        for (final item in enabled.keys) Padding(
+          padding: const EdgeInsets.only(bottom: 9),
+          child: _FeatureCard(child: Column(children: [
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: enabled[item]!,
+              activeColor: _fg,
+              title: Text(item, style: const TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700)),
+              onChanged: (v) {
+                setState(() => enabled[item] = v);
+                _saveItem(item);
+              },
+            ),
+            if (enabled[item]!) Align(alignment: Alignment.centerLeft, child: TextButton.icon(
+              onPressed: () async {
+                final picked = await showTimePicker(context: context, initialTime: times[item] ?? const TimeOfDay(hour: 8, minute: 0));
+                if (picked != null) {
+                  setState(() => times[item] = picked);
+                  _saveItem(item);
+                }
+              },
+              icon: const Icon(Icons.schedule, size: 16),
+              label: Text(item == 'آية الكرسي بعد الصلاة' ? 'بعد كل صلاة بوقت قصير' : (times[item]?.format(context) ?? 'اختيار وقت التذكير')),
+            )),
+          ])),
         ),
-        if (enabled[item]!) Align(alignment: Alignment.centerLeft, child: TextButton.icon(
-          onPressed: () async {
-            final picked = await showTimePicker(context: context, initialTime: times[item] ?? const TimeOfDay(hour: 8, minute: 0));
-            if (picked != null) setState(() => times[item] = picked);
-          },
-          icon: const Icon(Icons.schedule, size: 16),
-          label: Text(times[item]?.format(context) ?? 'اختيار وقت التذكير'),
-        )),
-      ])),
-      const SizedBox(height: 12),
-      const Text('هذه الشاشة تحفظ اختيارات الواجهة حاليًا؛ جدولة التنبيهات الفعلية وربطها بإذن الإشعارات ستُستكمل مع إعدادات أندرويد في خطوة البناء.', style: TextStyle(color: _muted, fontSize: 10, height: 1.7)),
-    ]),
+      ]),
   );
 }
 
