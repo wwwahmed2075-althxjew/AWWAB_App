@@ -362,24 +362,46 @@ class _AwwabPrayerPageState extends State<AwwabPrayerPage> with WidgetsBindingOb
 class AwwabAzkarPage extends StatelessWidget {
   const AwwabAzkarPage({super.key});
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: _bg,
-    appBar: AppBar(backgroundColor: _bg, title: const Text('الأذكار')),
-    body: ListView(padding: const EdgeInsets.all(18), children: [
-      for (final item in ['أذكار الاستيقاظ','أذكار الصباح','أذكار المساء','أذكار النوم','أذكار بعد الصلاة','الرقية الشرعية']) Padding(
-        padding: const EdgeInsets.only(bottom: 9),
-        child: InkWell(onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AzkarDetailsPage(title: item))),
-          child: _FeatureCard(child: Row(children: [
-            const Icon(Icons.spa_outlined, color: _fg), const SizedBox(width: 12),
-            Expanded(child: Text(item, style: const TextStyle(color: _fg, fontWeight: FontWeight.w700))),
-            const Icon(Icons.chevron_left, color: _muted),
-          ]))),
-      ),
-      const SizedBox(height: 8),
-      _FeatureCard(child: const Text('يمكن تخصيص التذكيرات لكل ورد من صفحة إعدادات التذكيرات.', style: TextStyle(color: _muted, fontSize: 11))),
-      TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage())), child: const Text('متابعة التذكيرات وضبط مواعيدها')),
-    ]),
-  );
+  Widget build(BuildContext context) {
+    const sections = [
+      ('أذكار الصباح', 'أذكار بداية اليوم', Icons.wb_sunny_outlined),
+      ('أذكار المساء', 'أذكار المساء والتحصين', Icons.nights_stay_outlined),
+      ('أذكار النوم', 'أذكار ما قبل النوم', Icons.bedtime_outlined),
+      ('أذكار الاستيقاظ', 'الحمد والذكر عند الاستيقاظ', Icons.wb_twilight_outlined),
+      ('أذكار بعد الصلاة', 'الأذكار الواردة بعد الفريضة', Icons.mosque_outlined),
+      ('الرقية الشرعية', 'آيات وأذكار الرقية', Icons.shield_outlined),
+    ];
+    return Scaffold(
+      backgroundColor: _bg,
+      appBar: AppBar(backgroundColor: _bg, title: const Text('الأذكار')),
+      body: ListView(padding: const EdgeInsets.fromLTRB(18, 14, 18, 28), children: [
+        const Text('اختر الذكر الذي تريد البدء به', style: TextStyle(color: _muted, fontSize: 12)),
+        const SizedBox(height: 14),
+        for (final section in sections) Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(22),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AzkarDetailsPage(title: section.$1))),
+            child: _FeatureCard(child: Row(children: [
+              Container(width: 44, height: 44, decoration: BoxDecoration(color: Colors.white.withOpacity(.075), borderRadius: BorderRadius.circular(15)),
+                child: Icon(section.$3, color: _fg, size: 21)),
+              const SizedBox(width: 13),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(section.$1, style: const TextStyle(color: _fg, fontWeight: FontWeight.w800, fontSize: 14)),
+                const SizedBox(height: 4),
+                Text(section.$2, style: const TextStyle(color: _muted, fontSize: 10)),
+              ])),
+              const Icon(Icons.chevron_left_rounded, color: _muted),
+            ])),
+          ),
+        ),
+        const SizedBox(height: 5),
+        _FeatureCard(child: const Text('اضغط على أي قسم لفتح أذكاره مباشرة. ويمكنك ضبط التنبيهات الاختيارية من الإعدادات.',
+          style: TextStyle(color: _muted, fontSize: 11, height: 1.8))),
+        TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage())), child: const Text('إعداد التذكيرات')),
+      ]),
+    );
+  }
 }
 
 List<Map<String, String>> _itemsForAzkar(String title) {
@@ -464,18 +486,23 @@ class _AzkarDetailsPageState extends State<AzkarDetailsPage> {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(22),
-              onTap: () => _increment(i),
               child: _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 Row(children: [
                   Text('${i + 1}', style: const TextStyle(color: _muted, fontSize: 11, fontWeight: FontWeight.w700)),
                   const Spacer(),
-                  const Text('اضغط للعد', style: TextStyle(color: _muted, fontSize: 10)),
-                  const SizedBox(width: 7),
-                  const Icon(Icons.touch_app_rounded, color: _muted, size: 16),
+                  Text('${counts[i]} / ${_targetFor(items[i]['count']!)}', style: const TextStyle(color: _fg, fontSize: 11, fontWeight: FontWeight.w800)),
+                  IconButton(tooltip: 'زيادة العدد', onPressed: () => _increment(i), icon: const Icon(Icons.add_circle_outline, color: _muted, size: 19)),
                 ]),
-                const SizedBox(height: 9),
-                Text(items[i]['text']!, textDirection: TextDirection.rtl, textAlign: TextAlign.right,
-                  style: const TextStyle(color: _fg, fontSize: 17, height: 2)),
+                const SizedBox(height: 5),
+                InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => _increment(i),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(items[i]['text']!, textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                      style: const TextStyle(color: _fg, fontSize: 17, height: 2)),
+                  ),
+                ),
                 const SizedBox(height: 12),
                 Row(children: [
                   Expanded(child: Text(items[i]['count']!, style: const TextStyle(color: _fg, fontSize: 10, fontWeight: FontWeight.w700))),
