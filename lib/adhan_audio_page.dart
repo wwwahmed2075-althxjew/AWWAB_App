@@ -75,7 +75,10 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
     final saved = prefs.getString('adhan_selected_recording') ?? 'aishatu98';
     final selected = _recordings.any((item) => item.id == saved) ? saved : 'aishatu98';
     final downloaded = prefs.getString('adhan_downloaded_recording');
-    final recording = _recordings.where((item) => item.id == downloaded).firstOrNull;
+    _AdhanRecording? recording;
+    for (final item in _recordings) {
+      if (item.id == downloaded) { recording = item; break; }
+    }
     File? file;
     if (recording != null) {
       final candidate = await _fileFor(recording);
