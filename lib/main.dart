@@ -471,7 +471,7 @@ class _AzkarPageState extends State<AzkarPage> {
         const SizedBox(height: 16),
         Text('$_count / $target', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
         const SizedBox(height: 10),
-        LinearProgressIndicator(value: (_count / target).clamp(0, 1), minHeight: 4),
+        LinearProgressIndicator(value: (_count / target).clamp(0, 1).toDouble(), minHeight: 4),
         const SizedBox(height: 12),
         Row(children: [
           Expanded(child: OutlinedButton.icon(onPressed: () { setState(() => _count = 0); _persist(); }, icon: const Icon(Icons.refresh, size: 17), label: const Text('إعادة'))),
@@ -564,7 +564,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
         Text('متبقي ${604 - _pagesRead} صفحة', style: const TextStyle(color: muted, fontSize: 12)),
         const SizedBox(height: 16),
         Row(children: [
-          Expanded(child: OutlinedButton(onPressed: _pagesRead == 0 ? null : () { setState(() => _pagesRead = (_pagesRead - 1).clamp(0, 604);); _save(); }, child: const Text('صفحة أقل'))),
+          Expanded(child: OutlinedButton(onPressed: _pagesRead == 0 ? null : () { setState(() => _pagesRead = (_pagesRead - 1).clamp(0, 604).toInt()); _save(); }, child: const Text('صفحة أقل'))),
           const SizedBox(width: 8),
           Expanded(child: FilledButton(onPressed: _pagesRead >= 604 ? null : () { setState(() => _pagesRead++); _save(); }, child: const Text('أتممت صفحة'))),
         ]),
