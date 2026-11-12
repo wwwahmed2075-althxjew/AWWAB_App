@@ -239,12 +239,12 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
       backgroundColor: AppPalette.background,
       appBar: AppBar(
         backgroundColor: const Color(0xFF07080B),
-        title: const Text('الأذان واختيار الصوت'),
+        title: Text('الأذان واختيار الصوت'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text('اختر تسجيلًا للمعاينة', style: TextStyle(
+          Text('اختر تسجيلًا للمعاينة', style: TextStyle(
             color: AppPalette.foreground, fontWeight: FontWeight.w800, fontSize: 16,
           )),
           const SizedBox(height: 10),
@@ -269,10 +269,10 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
                       Text(recording.title, style: TextStyle(color: Color(0xFFF5F5F7), fontWeight: FontWeight.w700)),
                       const SizedBox(height: 3),
                       Text('${recording.creator} • ${recording.duration}',
-                        style: const TextStyle(color: AppPalette.muted, fontSize: 10)),
+                        style: TextStyle(color: AppPalette.muted, fontSize: 10)),
                     ])),
                     if (_downloadedId == recording.id)
-                      const Icon(Icons.offline_pin_rounded, color: Color(0xFFB7D8C4), size: 19),
+                      Icon(Icons.offline_pin_rounded, color: Color(0xFFB7D8C4), size: 19),
                   ]),
                 ),
               ),
@@ -286,11 +286,11 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
               border: Border.all(color: AppPalette.cardBorder),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(selected.title, style: const TextStyle(color: Color(0xFFF5F5F7), fontSize: 16, fontWeight: FontWeight.w800)),
+              Text(selected.title, style: TextStyle(color: Color(0xFFF5F5F7), fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
               Text(
                 'الترخيص: ${selected.licenseLabel}. راجع رابط المصدر لمعرفة شروط النسب وإعادة الاستخدام. أسماء رافعي الملفات لا تعني بالضرورة أنهم المؤذنون؛ لا نذكر اسم مؤذن إلا إذا وثّقه مصدر التسجيل.',
-                style: const TextStyle(color: Color(0xFF9A9CA5), fontSize: 11, height: 1.8),
+                style: TextStyle(color: Color(0xFF9A9CA5), fontSize: 11, height: 1.8),
               ),
               const SizedBox(height: 13),
               if (_audioFile == null)
@@ -298,7 +298,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
                   onPressed: _downloading ? null : _download,
                   icon: _downloading
                     ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Icon(Icons.download_rounded),
+                    : Icon(Icons.download_rounded),
                   label: Text(_downloading ? 'جارٍ التنزيل والتحقق...' : 'تنزيل التسجيل للاستخدام دون إنترنت'),
                 ))
               else ...[
@@ -311,24 +311,24 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
                 Row(children: [
                   Expanded(child: FilledButton.icon(
                     onPressed: _playing ? null : _play,
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    label: const Text('معاينة'),
+                    icon: Icon(Icons.play_arrow_rounded),
+                    label: Text('معاينة'),
                   )),
                   const SizedBox(width: 8),
                   IconButton(
                     onPressed: _playing ? _stop : null,
-                    icon: const Icon(Icons.stop_circle_outlined),
+                    icon: Icon(Icons.stop_circle_outlined),
                     tooltip: 'إيقاف',
                   ),
                 ]),
               ],
               if (_error != null) ...[
                 const SizedBox(height: 9),
-                Text(_error!, style: const TextStyle(color: Colors.orangeAccent, fontSize: 11)),
+                Text(_error!, style: TextStyle(color: Colors.orangeAccent, fontSize: 11)),
               ],
               const SizedBox(height: 8),
               SelectableText('المصدر والترخيص: ${selected.licenseUrl}',
-                style: const TextStyle(color: Color(0xFF9A9CA5), fontSize: 10)),
+                style: TextStyle(color: Color(0xFF9A9CA5), fontSize: 10)),
             ]),
           ),
         ],
