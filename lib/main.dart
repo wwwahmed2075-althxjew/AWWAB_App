@@ -355,6 +355,7 @@ class MorePage extends StatelessWidget {
     _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AwwabQiblaPage()))),
     _MoreTile(icon: Icons.favorite_outline, title: 'أسماء الله الحسنى', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AllahNamesPage()))),
     _MoreTile(icon: Icons.nightlight_round, title: 'فضل الضحى وقيام الليل', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerVirtuesPage()))),
+    _MoreTile(icon: Icons.menu_book_rounded, title: 'فضل القرآن والذكر', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranDhikrVirtuesPage()))),
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'متابعة التذكيرات', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage()))),
     _MoreTile(icon: Icons.language_rounded, title: 'اللغة'),
     _MoreTile(icon: Icons.text_fields_rounded, title: 'الخط والمظهر'),
