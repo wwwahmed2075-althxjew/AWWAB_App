@@ -45,3 +45,6 @@ This register records the primary references for the starter content currently e
 - The adhkar currently included are a starter collection, not a complete corpus. Keep the on-screen note that wording, repetition counts and takhrij require a final review.
 - The 99-name list is a commonly circulated enumeration. Scholars differ over the exact enumeration; the meanings are concise explanations.
 - The Madinah Mushaf V4 page set is separately verified using the SHA-1 manifest in `assets/mushaf/madinah_hafs_v4_manifest.json`.
+
+
+The app's offline reminder scheduler uses the device timezone and refreshes prayer-based Ayat al-Kursi alerts from the cached device coordinates. Audio recordings are not bundled until each recording's redistribution permission and attribution are verified.
