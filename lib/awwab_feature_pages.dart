@@ -175,15 +175,18 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
             Text(_duration(_schedule!.remaining ?? Duration.zero), style: const TextStyle(color: _fg, fontSize: 26, fontWeight: FontWeight.w800, fontFeatures: [])),
             const Text('الوقت المتبقي', style: TextStyle(color: _muted, fontSize: 10)),
             const SizedBox(height: 14),
-            Wrap(spacing: 8, runSpacing: 9, children: _schedule!.entries.map((e) => Container(
+            Wrap(spacing: 8, runSpacing: 9, children: _schedule!.entries.map((e) {
+              final isNext = e.name == _schedule!.next!.name;
+              return Container(
               width: 91, padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 7),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(.045), borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white.withOpacity(.08))),
+              decoration: BoxDecoration(color: Colors.white.withOpacity(isNext ? .13 : .045), borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white.withOpacity(isNext ? .28 : .08))),
               child: Column(children: [
                 Text(e.name, style: const TextStyle(color: _muted, fontSize: 10)),
                 const SizedBox(height: 4),
                 Text(_clock(e.time), style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
               ]),
-            )).toList()),
+            );
+            }).toList()),
             const SizedBox(height: 8),
             TextButton.icon(onPressed: _refreshLocation, icon: const Icon(Icons.refresh, size: 16), label: const Text('تحديث الموقع')),
           ],
