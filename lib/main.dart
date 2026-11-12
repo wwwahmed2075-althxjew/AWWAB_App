@@ -31,7 +31,7 @@ Future<void> _checkForPublishedRelease() async {
     if (previous != null && previous != tag) {
       await AwwabNotificationService.instance.showNow(
         id: 9100,
-        title: 'تحديث جديد لتطبيق أوّاب',
+        title: 'تحديث جديد لتطبيق ملاذ',
         body: 'الإصدار $tag متاح الآن. افتح نبذة عن التطبيق للاطلاع على المميزات.',
       );
     }
@@ -51,7 +51,7 @@ class AwwabApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'أوّاب',
+    title: 'ملاذ',
     theme: ThemeData(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: ink,
@@ -568,7 +568,7 @@ class PrayerPage extends StatelessWidget {
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات أوّاب', child: Column(children: [
+  Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات ملاذ', child: Column(children: [
     _MoreTile(icon: Icons.volume_up_rounded, title: 'الأذان واختيار الصوت', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdhanAudioPage()))),
     _MoreTile(icon: Icons.touch_app_rounded, title: 'السبحة الإلكترونية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbeehPage()))),
     _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AwwabQiblaPage()))),
@@ -578,11 +578,11 @@ class MorePage extends StatelessWidget {
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'متابعة التذكيرات', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage()))),
     _MoreTile(icon: Icons.calendar_month_rounded, title: 'المناسبات الهجرية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HijriOccasionsPage()))),
     _MoreTile(icon: Icons.share_outlined, title: 'مشاركة التطبيق', onTap: () async {
-      await Share.share('جرّب تطبيق أوّاب للقرآن والأذكار والصلاة.\nhttps://github.com/wwwahmed2075-althxjew/AWWAB_App', subject: 'تطبيق أوّاب');
+      await Share.share('تعرّف على تطبيق ملاذ؛ رفيقك للقرآن والأذكار والصلاة.', subject: 'تطبيق ملاذ');
     }),
     _MoreTile(icon: Icons.mail_outline_rounded, title: 'إبلاغ عن خلل أو اقتراح تحسين', onTap: () async {
       final uri = Uri(scheme: 'mailto', path: 'www.ahmed2075@gmail.com', queryParameters: {
-        'subject': 'بلاغ أو اقتراح تحسين لتطبيق أوّاب',
+        'subject': 'بلاغ أو اقتراح تحسين لتطبيق ملاذ',
         'body': 'نوع الرسالة: \n\nتفاصيل البلاغ أو الاقتراح: \n\nنوع الجهاز وإصدار التطبيق (اختياري): ',
       });
       final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -640,20 +640,20 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
         .where((asset) => (asset['name'] as String? ?? '').toLowerCase().endsWith('.apk')).toList();
     return Scaffold(
       backgroundColor: ink,
-      appBar: AppBar(backgroundColor: ink, title: const Text('نبذة عن أوّاب')),
+      appBar: AppBar(backgroundColor: ink, title: const Text('نبذة عن ملاذ')),
       body: ListView(padding: const EdgeInsets.all(18), children: [
         GlassCard(child: Column(children: [
           const Icon(Icons.auto_awesome_rounded, size: 42, color: white),
           const SizedBox(height: 12),
-          const Text('أوّاب', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+          const Text('ملاذ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
           const SizedBox(height: 5),
-          const Text('كل يوم أقرب إلى الله', style: TextStyle(color: muted, fontSize: 12)),
+          const Text('رفيقك للقرآن والأذكار والصلاة', style: TextStyle(color: muted, fontSize: 12)),
         ])),
         const SizedBox(height: 12),
         GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
           Text('عن التطبيق', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
           SizedBox(height: 8),
-          Text('أوّاب رفيقك للقرآن والأذكار والصلاة والتذكيرات اليومية، مع أدوات تساعدك على المحافظة على عباداتك.',
+          Text('ملاذ رفيقك للقرآن والأذكار والصلاة والتذكيرات اليومية، مع أدوات تساعدك على المحافظة على عباداتك.',
             style: TextStyle(color: muted, height: 1.9, fontSize: 12)),
         ])),
         const SizedBox(height: 12),
@@ -671,7 +671,7 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
             Text(_error!, style: const TextStyle(color: muted, fontSize: 11)),
             TextButton(onPressed: _loadRelease, child: const Text('إعادة المحاولة')),
           ] else if (_release == null)
-            const Text('لا يوجد إصدار رسمي منشور حتى الآن. ستظهر ملاحظات التحديث هنا بعد نشر إصدار من مستودع أوّاب.',
+            const Text('لا يوجد إصدار رسمي منشور حتى الآن. ستظهر ملاحظات التحديث هنا بعد نشر إصدار من مستودع ملاذ.',
               style: TextStyle(color: muted, height: 1.8, fontSize: 11))
           else ...[
             Text('الإصدار ${_release!['tag_name'] ?? ''}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
