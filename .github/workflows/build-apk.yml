@@ -2,12 +2,6 @@ name: Build AWWAB Flutter APK
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "lib/**"
-      - "pubspec.yaml"
-      - "pubspec.lock"
-      - ".github/workflows/build-apk.yml"
 
 permissions:
   contents: read
