@@ -142,7 +142,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 120),
       children: [
         Row(children: [
-          const Expanded(child: Text('ملاذ', style: TextStyle(color: _fg, fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: .3))),
+          Expanded(child: Text('ملاذ', style: TextStyle(color: _fg, fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: .3))),
           _FeatureCard(child: Column(children: [
             Text(date, style: TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
             Text('التاريخ الميلادي', style: TextStyle(color: _muted, fontSize: 9)),
@@ -169,9 +169,9 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
         ),
         const SizedBox(height: 14),
         _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Row(children: [Icon(Icons.mosque_outlined, size: 19), SizedBox(width: 8), Text('مواقيت الصلاة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800))]),
+          Row(children: [Icon(Icons.mosque_outlined, size: 19), SizedBox(width: 8), Text('مواقيت الصلاة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800))]),
           const SizedBox(height: 13),
-          if (_loading) const Padding(padding: EdgeInsets.all(12), child: Center(child: Text('جارٍ تحديد الموقع تلقائيًا…', style: TextStyle(color: _muted, fontSize: 11))))
+          if (_loading) Padding(padding: EdgeInsets.all(12), child: Center(child: Text('جارٍ تحديد الموقع تلقائيًا…', style: TextStyle(color: _muted, fontSize: 11))))
           else if (_schedule == null) ...[
             Text('اسمح للتطبيق بالوصول إلى موقعك ليحسب المواقيت تلقائيًا، ويمكنه استخدام آخر موقع محفوظ دون إنترنت.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
             TextButton.icon(onPressed: _refreshLocation, icon: Icon(Icons.my_location), label: Text('تحديث الموقع')),
@@ -326,7 +326,7 @@ class _AwwabPrayerPageState extends State<AwwabPrayerPage> with WidgetsBindingOb
     const SizedBox(height: 6),
     Text('المواقيت تُحسب محليًا على جهازك دون الحاجة للإنترنت', style: TextStyle(color: _muted, fontSize: 11)),
     const SizedBox(height: 18),
-    if (_loading) const Center(child: CircularProgressIndicator())
+    if (_loading) Center(child: CircularProgressIndicator())
     else if (_schedule == null) _FeatureCard(child: Column(children: [
       Icon(Icons.location_off_outlined, color: _muted, size: 28),
       const SizedBox(height: 8),
@@ -631,7 +631,7 @@ class AllahNamesPage extends StatelessWidget {
     backgroundColor: _bg,
     appBar: AppBar(backgroundColor: _bg, title: Text('أسماء الله الحسنى')),
     body: ListView.builder(padding: const EdgeInsets.all(18), itemCount: names.length + 1, itemBuilder: (context, i) {
-      if (i == names.length) return const Padding(padding: EdgeInsets.only(top: 10), child: Text('هذه قائمة مشهورة متداولة للأسماء التسعة والتسعين. وقد اختلف أهل العلم في تعيين القائمة كاملة؛ والمعاني هنا موجزة للتقريب وليست بديلًا عن كتب العقيدة وشروح الأسماء الحسنى.', textDirection: TextDirection.rtl, style: TextStyle(color: _muted, fontSize: 10, height: 1.8)));
+      if (i == names.length) return Padding(padding: EdgeInsets.only(top: 10), child: Text('هذه قائمة مشهورة متداولة للأسماء التسعة والتسعين. وقد اختلف أهل العلم في تعيين القائمة كاملة؛ والمعاني هنا موجزة للتقريب وليست بديلًا عن كتب العقيدة وشروح الأسماء الحسنى.', textDirection: TextDirection.rtl, style: TextStyle(color: _muted, fontSize: 10, height: 1.8)));
       return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(color: Colors.transparent, child: ExpansionTile(
@@ -938,13 +938,13 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
     backgroundColor: _bg,
     appBar: AppBar(backgroundColor: _bg, title: Text('متابعة التذكيرات')),
     body: _loading
-      ? const Center(child: CircularProgressIndicator())
+      ? Center(child: CircularProgressIndicator())
       : ListView(padding: const EdgeInsets.all(18), children: [
         Text(
           'فعّل كل تذكير على حدة، واضبط وقتًا مناسبًا له. تعمل التنبيهات محليًا دون إنترنت بعد منح إذن الإشعارات.',
           style: TextStyle(color: _muted, fontSize: 11, height: 1.8),
         ),
-        if (_saving) const LinearProgressIndicator(minHeight: 2),
+        if (_saving) LinearProgressIndicator(minHeight: 2),
         const SizedBox(height: 12),
         for (final item in _items) Padding(
           padding: const EdgeInsets.only(bottom: 9),
@@ -984,7 +984,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
                 ),
               ),
             if (item == 'آية الكرسي بعد الصلاة' && (enabled[item] ?? false))
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.only(left: 12, bottom: 8),
