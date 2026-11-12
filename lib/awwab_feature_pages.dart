@@ -52,7 +52,8 @@ String _hijriDate(DateTime date) {
 String _clock(DateTime value) {
   final h = value.hour % 12 == 0 ? 12 : value.hour % 12;
   final m = value.minute.toString().padLeft(2, '0');
-  return '$h:$m ${value.hour >= 12 ? 'م' : 'ص'}';
+  final suffix = value.hour >= 12 ? 'م' : 'ص';
+  return '$h:$m $suffix';
 }
 
 String _duration(Duration value) {
@@ -70,7 +71,6 @@ class AwwabHomePage extends StatefulWidget {
 
 class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserver {
   final _location = AwwabLocationService();
-  Position? _position;
   AwwabPrayerSchedule? _schedule;
   bool _loading = true;
   Timer? _ticker;
@@ -266,7 +266,6 @@ class _AwwabPrayerPageState extends State<AwwabPrayerPage> {
     final p = await _location.getLocation();
     if (!mounted) return;
     setState(() {
-      _position = p;
       _schedule = p == null ? null : AwwabPrayerSchedule.calculate(latitude: p.latitude, longitude: p.longitude);
       _loading = false;
     });
