@@ -32,6 +32,23 @@ class _FeatureCard extends StatelessWidget {
   );
 }
 
+String _hijriDate(DateTime date) {
+  final a = (14 - date.month) ~/ 12;
+  final y = date.year + 4800 - a;
+  final m = date.month + 12 * a - 3;
+  final jd = date.day + (153 * m + 2) ~/ 5 + 365 * y + y ~/ 4 - y ~/ 100 + y ~/ 400 - 32045;
+  var l = jd - 1948440 + 10632;
+  final n = (l - 1) ~/ 10631;
+  l = l - 10631 * n + 354;
+  final j = ((10985 - l) ~/ 5316) * ((50 * l) ~/ 17719) + (l ~/ 5670) * ((43 * l) ~/ 15238);
+  l = l - ((30 - j) ~/ 15) * ((17719 * j) ~/ 50) - (j ~/ 16) * ((15238 * j) ~/ 43) + 29;
+  final month = (24 * l) ~/ 709;
+  final day = l - (709 * month) ~/ 24;
+  final year = 30 * n + j - 30;
+  const months = ['المحرّم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوّال','ذو القعدة','ذو الحجة'];
+  return '$day ${months[month - 1]} $year هـ';
+}
+
 String _clock(DateTime value) {
   final h = value.hour % 12 == 0 ? 12 : value.hour % 12;
   final m = value.minute.toString().padLeft(2, '0');
@@ -104,6 +121,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final date = '${now.day}/${now.month}/${now.year}';
+    final dailyIndex = now.difference(DateTime(2024, 1, 1)).inDays.abs();
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 120),
       children: [
@@ -112,6 +130,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> {
           _FeatureCard(child: Column(children: [
             Text(date, style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
             const Text('التاريخ الميلادي', style: TextStyle(color: _muted, fontSize: 9)),
+            Text(_hijriDate(now), style: const TextStyle(color: _fg, fontSize: 10)),
           ])),
         ]),
         const SizedBox(height: 6),
@@ -158,17 +177,18 @@ class _AwwabHomePageState extends State<AwwabHomePage> {
           ],
         ])),
         const SizedBox(height: 14),
-        _DailyContentCard(title: 'آية اليوم', text: _dailyVerses[now.day % _dailyVerses.length]['text']!, source: _dailyVerses[now.day % _dailyVerses.length]['source']!),
+        _DailyContentCard(title: 'آية اليوم', text: _dailyVerses[dailyIndex % _dailyVerses.length]['text']!, source: _dailyVerses[now.day % _dailyVerses.length]['source']!),
         const SizedBox(height: 12),
-        _DailyContentCard(title: 'حديث اليوم', text: _dailyHadith[now.day % _dailyHadith.length]['text']!, source: _dailyHadith[now.day % _dailyHadith.length]['source']!),
+        _DailyContentCard(title: 'حديث اليوم', text: _dailyHadith[dailyIndex % _dailyHadith.length]['text']!, source: _dailyHadith[now.day % _dailyHadith.length]['source']!),
         const SizedBox(height: 12),
-        _DailyContentCard(title: 'دعاء اليوم', text: _dailyDuas[now.day % _dailyDuas.length]['text']!, source: _dailyDuas[now.day % _dailyDuas.length]['source']!),
+        _DailyContentCard(title: 'دعاء اليوم', text: _dailyDuas[dailyIndex % _dailyDuas.length]['text']!, source: _dailyDuas[now.day % _dailyDuas.length]['source']!),
         const SizedBox(height: 14),
         _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text('مساحات للعبادة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
           const SizedBox(height: 10),
           Wrap(spacing: 8, runSpacing: 8, children: [
             _QuickAction('أسماء الله الحسنى', Icons.favorite_outline, () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AllahNamesPage()))),
+            _QuickAction('فضل القرآن والذكر', Icons.menu_book, () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranDhikrVirtuesPage()))),
             _QuickAction('فضل الضحى وقيام الليل', Icons.nightlight_round, () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerVirtuesPage()))),
             _QuickAction('اتجاه القبلة', Icons.explore_outlined, () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AwwabQiblaPage()))),
           ]),
@@ -466,6 +486,67 @@ class PrayerVirtuesPage extends StatelessWidget {
         Text('صحيح مسلم: 1163', style: TextStyle(color: _muted, fontSize: 10)),
         SizedBox(height: 12),
         Text('ومن القرآن: (كَانُوا قَلِيلًا مِنَ اللَّيْلِ مَا يَهْجَعُونَ) — الذاريات: 17.', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.8)),
+      ])),
+    ]),
+  );
+}
+
+class QuranDhikrVirtuesPage extends StatelessWidget {
+  const QuranDhikrVirtuesPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: _bg,
+    appBar: AppBar(backgroundColor: _bg, title: const Text('فضل القرآن والذكر')),
+    body: ListView(padding: const EdgeInsets.all(18), children: [
+      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+        Text('آيات في فضل القرآن', style: TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
+        SizedBox(height: 12),
+        Text('إِنَّ هَذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('الإسراء: 9', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِلْمُؤْمِنِينَ', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('الإسراء: 82', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('الَّذِينَ يَتْلُونَ كِتَابَ اللَّهِ وَأَقَامُوا الصَّلَاةَ وَأَنْفَقُوا مِمَّا رَزَقْنَاهُمْ سِرًّا وَعَلَانِيَةً يَرْجُونَ تِجَارَةً لَنْ تَبُورَ', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('فاطر: 29', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('المزمل: 4', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 18),
+        Text('أحاديث صحيحة في فضل القرآن', style: TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
+        SizedBox(height: 12),
+        Text('«اقرؤوا القرآن فإنه يأتي يوم القيامة شفيعًا لأصحابه».', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('صحيح مسلم: 804', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('«الماهر بالقرآن مع السفرة الكرام البررة، والذي يقرأ القرآن ويتتعتع فيه وهو عليه شاق له أجران».', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('صحيح البخاري: 4937، وصحيح مسلم: 798', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('«من قرأ حرفًا من كتاب الله فله به حسنة، والحسنة بعشر أمثالها».', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('جامع الترمذي: 2910، وقال: حسن صحيح', style: TextStyle(color: _muted, fontSize: 10)),
+      ])),
+      const SizedBox(height: 12),
+      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+        Text('آيات في فضل الذكر', style: TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
+        SizedBox(height: 12),
+        Text('فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('البقرة: 152', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('يَا أَيُّهَا الَّذِينَ آمَنُوا اذْكُرُوا اللَّهَ ذِكْرًا كَثِيرًا', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('الأحزاب: 41', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('الرعد: 28', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 18),
+        Text('أحاديث صحيحة في فضل الذكر', style: TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
+        SizedBox(height: 12),
+        Text('«مثل الذي يذكر ربه والذي لا يذكر ربه مثل الحي والميت».', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('صحيح البخاري: 6407', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('«سبق المفردون». قالوا: وما المفردون يا رسول الله؟ قال: «الذاكرون الله كثيرًا والذاكرات».', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('صحيح مسلم: 2676', style: TextStyle(color: _muted, fontSize: 10)),
+        SizedBox(height: 9),
+        Text('«لا يقعد قوم يذكرون الله عز وجل إلا حفتهم الملائكة وغشيتهم الرحمة ونزلت عليهم السكينة وذكرهم الله فيمن عنده».', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
+        Text('صحيح مسلم: 2700', style: TextStyle(color: _muted, fontSize: 10)),
       ])),
     ]),
   );
