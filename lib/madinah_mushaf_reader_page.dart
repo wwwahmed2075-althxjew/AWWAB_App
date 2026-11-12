@@ -248,7 +248,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
       backgroundColor: const Color(0xFF08090C),
       appBar: AppBar(
         backgroundColor: const Color(0xFF08090C),
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('مصحف المدينة النبوية', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
