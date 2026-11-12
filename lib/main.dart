@@ -9,6 +9,7 @@ import 'madinah_mushaf_reader_page.dart';
 import 'awwab_feature_pages.dart';
 import 'adhan_audio_page.dart';
 import 'awwab_notification_service.dart';
+import 'app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,25 +42,66 @@ Future<void> _checkForPublishedRelease() async {
   }
 }
 
-const ink = Color(0xFF07080B);
-const panel = Color(0xFF15171C);
-const white = Color(0xFFF5F5F7);
-const muted = Color(0xFF9A9CA5);
+Color get ink => AppPalette.background;
+Color get panel => AppPalette.surface;
+Color get white => AppPalette.foreground;
+Color get muted => AppPalette.muted;
 
-class AwwabApp extends StatelessWidget {
+final ValueNotifier<ThemeMode> appThemeMode = ValueNotifier<ThemeMode>(ThemeMode.dark);
+
+class AwwabApp extends StatefulWidget {
   const AwwabApp({super.key});
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'ملاذ',
-    theme: ThemeData(
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: ink,
-      colorScheme: const ColorScheme.dark(primary: white, surface: panel),
-      fontFamily: 'NotoNaskhArabic',
-      useMaterial3: true,
+  State<AwwabApp> createState() => _AwwabAppState();
+}
+
+class _AwwabAppState extends State<AwwabApp> {
+  @override
+  void initState() {
+    super.initState();
+    _restoreTheme();
+  }
+
+  Future<void> _restoreTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    final stored = prefs.getString('app_theme_mode') ?? 'dark';
+    appThemeMode.value = switch (stored) {
+      'light' => ThemeMode.light,
+      'system' => ThemeMode.system,
+      _ => ThemeMode.dark,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<ThemeMode>(
+    valueListenable: appThemeMode,
+    builder: (context, mode, _) => MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'ملاذ',
+      themeMode: mode,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: const Color(0xFFF5F6F8),
+        colorScheme: const ColorScheme.light(primary: Color(0xFF17191E), surface: Colors.white),
+        fontFamily: 'NotoNaskhArabic',
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF07080B),
+        colorScheme: const ColorScheme.dark(primary: Color(0xFFF5F5F7), surface: Color(0xFF15171C)),
+        fontFamily: 'NotoNaskhArabic',
+        useMaterial3: true,
+      ),
+      builder: (context, child) {
+        final brightness = mode == ThemeMode.system
+            ? MediaQuery.platformBrightnessOf(context)
+            : mode == ThemeMode.dark ? Brightness.dark : Brightness.light;
+        AppPalette.isDark = brightness == Brightness.dark;
+        return child ?? const SizedBox.shrink();
+      },
+      home: const MainShell(),
     ),
-    home: const MainShell(),
   );
 }
 
@@ -88,9 +130,9 @@ class _MainShellState extends State<MainShell> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xD91B1D22),
+              color: AppPalette.navSurface,
               borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: Colors.white.withOpacity(.16), width: 1),
+              border: Border.all(color: AppPalette.cardBorder, width: 1),
               boxShadow: [BoxShadow(color: Colors.black.withOpacity(.45), blurRadius: 28, offset: const Offset(0, 10))],
             ),
             child: Row(
@@ -130,7 +172,7 @@ class PageFrame extends StatelessWidget {
   Widget build(BuildContext context) => CustomScrollView(slivers: [
     SliverPadding(padding: const EdgeInsets.fromLTRB(20, 18, 20, 120), sliver: SliverList(delegate: SliverChildListDelegate([
       Row(children: [Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: white)),
+        Text(title, style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: white)),
         if (subtitle != null) ...[const SizedBox(height: 5), Text(subtitle!, style: const TextStyle(fontSize: 12, color: muted))],
       ])), const GlassIcon(icon: Icons.notifications_none_rounded)]),
       const SizedBox(height: 22),
@@ -149,9 +191,9 @@ class GlassCard extends StatelessWidget {
     child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16), child: Container(
       width: double.infinity, padding: padding,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.055),
+        color: AppPalette.cardOverlay,
         borderRadius: BorderRadius.circular(23),
-        border: Border.all(color: Colors.white.withOpacity(.105)),
+        border: Border.all(color: AppPalette.cardBorder),
       ),
       child: child,
     )),
@@ -163,7 +205,7 @@ class GlassIcon extends StatelessWidget {
   const GlassIcon({super.key, required this.icon});
   @override
   Widget build(BuildContext context) => Container(
-    width: 40, height: 40, decoration: BoxDecoration(color: Colors.white.withOpacity(.06), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(.12))),
+    width: 40, height: 40, decoration: BoxDecoration(color: AppPalette.cardOverlay, shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(.12))),
     child: Icon(icon, size: 19, color: white),
   );
 }
@@ -295,7 +337,7 @@ class _QuranPageState extends State<QuranPage> {
           return Padding(padding: const EdgeInsets.only(bottom: 7), child: InkWell(
             borderRadius: BorderRadius.circular(20), onTap: () => openSurah(item),
             child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12), child: Row(children: [
-              Container(width: 34, height: 34, alignment: Alignment.center, decoration: BoxDecoration(color: Colors.white.withOpacity(.07), borderRadius: BorderRadius.circular(11)), child: Text('${item['number']}', style: const TextStyle(fontSize: 11))),
+              Container(width: 34, height: 34, alignment: Alignment.center, decoration: BoxDecoration(color: AppPalette.cardOverlay, borderRadius: BorderRadius.circular(11)), child: Text('${item['number']}', style: const TextStyle(fontSize: 11))),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(item['name'] as String, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
@@ -577,6 +619,7 @@ class MorePage extends StatelessWidget {
     _MoreTile(icon: Icons.menu_book_rounded, title: 'فضل القرآن والذكر', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranDhikrVirtuesPage()))),
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'متابعة التذكيرات', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage()))),
     _MoreTile(icon: Icons.calendar_month_rounded, title: 'المناسبات الهجرية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HijriOccasionsPage()))),
+    _MoreTile(icon: Icons.palette_outlined, title: 'المظهر', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ThemeSettingsPage()))),
     _MoreTile(icon: Icons.share_outlined, title: 'مشاركة التطبيق', onTap: () async {
       await Share.share('تعرّف على تطبيق ملاذ؛ رفيقك للقرآن والأذكار والصلاة.', subject: 'تطبيق ملاذ');
     }),
@@ -703,6 +746,53 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
     );
   }
 }
+
+
+class ThemeSettingsPage extends StatelessWidget {
+  const ThemeSettingsPage({super.key});
+
+  Future<void> _select(ThemeMode mode) async {
+    appThemeMode.value = mode;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('app_theme_mode', switch (mode) {
+      ThemeMode.light => 'light',
+      ThemeMode.dark => 'dark',
+      ThemeMode.system => 'system',
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(backgroundColor: ink, title: const Text('المظهر')),
+    body: ValueListenableBuilder<ThemeMode>(
+      valueListenable: appThemeMode,
+      builder: (context, selected, _) => ListView(padding: const EdgeInsets.all(18), children: [
+        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          const Text('اختر مظهر ملاذ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 6),
+          const Text('يمكنك تغيير المظهر في أي وقت، أو تركه مطابقًا لإعدادات جهازك.', style: TextStyle(color: muted, fontSize: 11, height: 1.7)),
+          const SizedBox(height: 12),
+          for (final option in [
+            (ThemeMode.light, 'فاتح', Icons.light_mode_outlined),
+            (ThemeMode.dark, 'داكن', Icons.dark_mode_outlined),
+            (ThemeMode.system, 'تلقائي حسب الجهاز', Icons.settings_suggest_outlined),
+          ])
+            RadioListTile<ThemeMode>(
+              contentPadding: EdgeInsets.zero,
+              value: option.$1,
+              groupValue: selected,
+              onChanged: (value) { if (value != null) _select(value); },
+              title: Text(option.$2, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              secondary: Icon(option.$3, color: muted, size: 20),
+              dense: true,
+            ),
+        ])),
+      ]),
+    ),
+  );
+}
+
 
 class _MoreTile extends StatelessWidget {
   final IconData icon; final String title; final VoidCallback? onTap;
