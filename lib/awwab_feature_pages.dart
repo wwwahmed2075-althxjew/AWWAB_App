@@ -491,7 +491,6 @@ class _AzkarDetailsPageState extends State<AzkarDetailsPage> {
                   Text('${i + 1}', style: const TextStyle(color: _muted, fontSize: 11, fontWeight: FontWeight.w700)),
                   const Spacer(),
                   Text('${counts[i]} / ${_targetFor(items[i]['count']!)}', style: const TextStyle(color: _fg, fontSize: 11, fontWeight: FontWeight.w800)),
-                  IconButton(tooltip: 'زيادة العدد', onPressed: () => _increment(i), icon: const Icon(Icons.add_circle_outline, color: _muted, size: 19)),
                 ]),
                 const SizedBox(height: 5),
                 InkWell(
