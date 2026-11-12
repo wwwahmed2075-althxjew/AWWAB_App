@@ -819,7 +819,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
         return 'اجعل لك نصيبًا من صلاة الليل ولو بركعتين.';
       case 'الورد اليومي':
       case 'قراءة القرآن':
-        return 'حان وقت وردك من القرآن الكريم.';
+        return 'لا تنس وردك اليومي من القرآن الكريم.';
       case 'أذكار بعد الصلاة':
         return 'لا تنس أذكارك بعد الصلاة.';
       case 'صيام الإثنين':
@@ -948,7 +948,8 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
         ),
         if (_saving) const LinearProgressIndicator(minHeight: 2),
         const SizedBox(height: 12),
-        for (final item in _items) Padding(
+        for (final item in _items)
+          if (item != 'الورد اليومي') Padding(
           padding: const EdgeInsets.only(bottom: 9),
           child: _FeatureCard(child: Column(children: [
             SwitchListTile(
