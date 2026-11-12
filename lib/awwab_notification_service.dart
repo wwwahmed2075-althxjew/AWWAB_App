@@ -48,7 +48,7 @@ class AwwabNotificationService {
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'awwab_updates',
-          'تحديثات أوّاب',
+          'تحديثات ملاذ',
           channelDescription: 'إشعارات الإصدارات الجديدة للتطبيق',
           importance: Importance.defaultImportance,
           priority: Priority.defaultPriority,
@@ -76,7 +76,7 @@ class AwwabNotificationService {
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'awwab_reminders',
-          'تذكيرات أوّاب',
+          'تذكيرات ملاذ',
           channelDescription: 'تذكيرات الأذكار والعبادات',
           importance: Importance.high,
           priority: Priority.high,
@@ -114,7 +114,7 @@ class AwwabNotificationService {
         const NotificationDetails(
           android: AndroidNotificationDetails(
             'awwab_reminders',
-            'تذكيرات أوّاب',
+            'تذكيرات ملاذ',
             channelDescription: 'تذكيرات الأذكار والعبادات',
             importance: Importance.high,
             priority: Priority.high,
