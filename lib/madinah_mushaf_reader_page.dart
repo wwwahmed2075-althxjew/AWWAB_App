@@ -89,6 +89,38 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
     return sha1.convert(<int>[...header, ...bytes]).toString() == _expectedHash(page);
   }
 
+  Future<File> _loadPageOnce(int page) {
+    return _pageLoads.putIfAbsent(page, () async {
+      try {
+        return await _ensurePage(page);
+      } catch (_) {
+        _pageLoads.remove(page);
+        rethrow;
+      }
+    });
+  }
+
+  Future<void> _confirmAndDownloadAll() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF17191E),
+        title: const Text('تنزيل المصحف كاملًا'),
+        content: const Text(
+          'سيتم تنزيل الصفحات الـ604 وحفظها على جهازك لتعمل دون إنترنت. '
+          'قد تحتاج إلى نحو 430 ميجابايت من مساحة التخزين، وقد يستهلك التنزيل بيانات الإنترنت. '
+          'يفضل استخدام شبكة Wi-Fi.',
+          textAlign: TextAlign.right,
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('ليس الآن')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('ابدأ التنزيل')),
+        ],
+      ),
+    );
+    if (confirmed == true) await _downloadAll();
+  }
+
   Future<File> _ensurePage(int page) async {
     if (page < 1 || page > pageCount) throw RangeError.range(page, 1, pageCount);
     final directory = _cacheDirectory;
@@ -140,8 +172,8 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
     });
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('madinah_mushaf_last_page', page);
-    _pageLoads.putIfAbsent(page, () => _ensurePage(page));
-    if (page < pageCount) _pageLoads.putIfAbsent(page + 1, () => _ensurePage(page + 1));
+    _loadPageOnce(page);
+    if (page < pageCount) _loadPageOnce(page + 1);
     if (mounted) setState(() {});
   }
 
@@ -158,7 +190,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
         final end = (start + 3).clamp(1, pageCount).toInt();
         final batch = List.generate(end - start + 1, (i) => start + i);
         await Future.wait(batch.map((page) async {
-          await _ensurePage(page);
+          await _loadPageOnce(page);
           completed++;
           if (mounted) setState(() => _downloaded = completed);
         }));
@@ -225,7 +257,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
         actions: [
           IconButton(
             tooltip: 'تنزيل المصحف كاملًا للعمل دون إنترنت',
-            onPressed: ready && !_downloading ? _downloadAll : null,
+            onPressed: ready && !_downloading ? _confirmAndDownloadAll : null,
             icon: const Icon(Icons.download_for_offline_outlined),
           ),
           IconButton(tooltip: 'انتقال إلى صفحة', onPressed: ready ? _goToPageDialog : null, icon: const Icon(Icons.find_in_page_outlined)),
@@ -267,7 +299,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
                     onPageChanged: _showPage,
                     itemBuilder: (context, index) {
                       final page = index + 1;
-                      final future = _pageLoads.putIfAbsent(page, () => _ensurePage(page));
+                      final future = _loadPageOnce(page);
                       return FutureBuilder<File>(
                         future: future,
                         builder: (context, snapshot) {
@@ -283,7 +315,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
                                   TextButton(
                                     onPressed: () => setState(() {
                                       _pageLoads.remove(page);
-                                      _pageLoads[page] = _ensurePage(page);
+                                      _loadPageOnce(page);
                                     }),
                                     child: const Text('إعادة المحاولة'),
                                   ),
