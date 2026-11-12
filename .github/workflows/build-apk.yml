@@ -27,7 +27,7 @@ jobs:
           text = manifest.read_text()
           text, count = re.subn(r'android:label="[^"]*"', 'android:label="ملاذ"', text, count=1)
           if count == 0:
-              text = text.replace('<application', '<application\\n        android:label="ملاذ"', 1)
+              text = text.replace('<application', '<application\n        android:label="ملاذ"', 1)
           manifest.write_text(text)
           PY
       - name: Build debug APK
