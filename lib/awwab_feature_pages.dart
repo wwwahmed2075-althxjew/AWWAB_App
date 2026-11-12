@@ -150,7 +150,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
           ])),
         ]),
         const SizedBox(height: 6),
-        const Text('كل يوم أقرب إلى الله', style: TextStyle(color: _muted, fontSize: 12)),
+        const Text('كل يوم أقرب إلى الله', style: TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: .1)),
         const SizedBox(height: 18),
         InkWell(
           borderRadius: BorderRadius.circular(22),
