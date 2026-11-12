@@ -106,6 +106,17 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
       licenseUrl: 'https://commons.wikimedia.org/wiki/File:Call_to_prayer_by_Sabah_Fakhry.mp3',
       licenseLabel: 'Public Domain Mark 1.0 — مصنف كملكية عامة وفق صفحة المصدر',
     ),
+    _AdhanRecording(
+      id: 'andrewler_azan',
+      title: 'أذان بصوت آخر – Andrewler',
+      creator: 'Andrewler — تسجيله الأصلي على Wikimedia Commons',
+      duration: '3 دقائق و3 ثوانٍ',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Azan.ogg',
+      sha1: 'ada13592b01c12b0128af40035ed7a803e08b563',
+      filename: 'adhan_andrewler.ogg',
+      licenseUrl: 'https://commons.wikimedia.org/wiki/File:Azan.ogg',
+      licenseLabel: 'CC BY-SA 4.0 — ذكر المصدر ومشاركة أي تعديل بنفس الترخيص',
+    ),
   ];
 
   final AudioPlayer _player = AudioPlayer();
