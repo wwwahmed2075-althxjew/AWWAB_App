@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:adhan/adhan.dart' as adhan;
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:geomag/geomag.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'awwab_location_service.dart';
@@ -754,11 +755,16 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
   final _location = AwwabLocationService();
   Position? _position;
   double? _heading;
+  double _declination = 0;
   StreamSubscription<CompassEvent>? _compassSubscription;
   @override
   void initState() {
     super.initState();
-    _location.getLocation().then((p) { if (mounted) setState(() => _position = p); });
+    _location.getLocation().then((p) {
+      if (!mounted) return;
+      final declination = p == null ? 0.0 : GeoMag().calculate(p.latitude, p.longitude).dec;
+      setState(() { _position = p; _declination = declination; });
+    });
     _compassSubscription = FlutterCompass.events?.listen((event) {
       if (mounted) setState(() => _heading = event.heading);
     });
@@ -771,7 +777,7 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
   @override
   Widget build(BuildContext context) {
     final direction = _position == null ? null : adhan.Qibla(adhan.Coordinates(_position!.latitude, _position!.longitude)).direction;
-    final rotation = direction == null || _heading == null ? 0.0 : (direction - _heading!) * math.pi / 180;
+    final rotation = direction == null || _heading == null ? 0.0 : (direction - (_heading! + _declination)) * math.pi / 180;
     return Scaffold(
       backgroundColor: _bg,
       appBar: AppBar(backgroundColor: _bg, title: const Text('اتجاه القبلة')),
@@ -787,7 +793,8 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
             ]),
           )),
           const SizedBox(height: 18),
-          Text('اتجاه القبلة: ${direction.toStringAsFixed(1)}°', style: const TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
+          Text('اتجاه القبلة الحقيقي: ${direction.toStringAsFixed(1)}°', style: const TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
+          Text('تصحيح الانحراف المغناطيسي: ${_declination.toStringAsFixed(1)}°', style: const TextStyle(color: _muted, fontSize: 10)),
           Text(_heading == null ? 'حساس البوصلة غير متاح أو يحتاج إلى معايرة.' : 'اتبع اتجاه السهم، وحرّك الهاتف على شكل رقم 8 بعيدًا عن المعادن والأجهزة المغناطيسية لمعايرة الحساس.', style: const TextStyle(color: _muted, fontSize: 11)),
         ],
       ]))),
