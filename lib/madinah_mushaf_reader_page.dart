@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'app_theme.dart';
 
 class MadinahMushafReaderPage extends StatefulWidget {
   const MadinahMushafReaderPage({super.key});
@@ -104,7 +105,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF17191E),
+        backgroundColor: AppPalette.surface,
         title: const Text('تنزيل المصحف كاملًا'),
         content: const Text(
           'سيتم تنزيل الصفحات الـ604 وحفظها على جهازك لتعمل دون إنترنت. '
@@ -251,7 +252,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('مصحف المدينة النبوية', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
-            Text('رواية حفص • مجمع الملك فهد • 604 صفحة', style: TextStyle(fontSize: 10, color: Colors.white60)),
+            Text('رواية حفص • مجمع الملك فهد • 604 صفحة', style: TextStyle(fontSize: 10, color: AppPalette.muted)),
           ],
         ),
         actions: [
@@ -279,7 +280,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(_downloading ? 'جارٍ تنزيل صفحات المصحف والتحقق منها' : 'الصفحات المحفوظة على الجهاز'),
-                            Text('$_downloaded / $pageCount', style: const TextStyle(fontSize: 11)),
+                            Text('$_downloaded / $pageCount', style: TextStyle(fontSize: 11, color: AppPalette.foreground)),
                           ],
                         ),
                         const SizedBox(height: 6),
@@ -308,9 +309,9 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.cloud_off_outlined, color: Colors.white54, size: 30),
+                                  Icon(Icons.cloud_off_outlined, color: AppPalette.muted, size: 30),
                                   const SizedBox(height: 10),
-                                  Text('تعذر تحميل الصفحة $page', style: const TextStyle(color: Colors.white)),
+                                  Text('تعذر تحميل الصفحة $page', style: TextStyle(color: AppPalette.foreground)),
                                   const SizedBox(height: 8),
                                   TextButton(
                                     onPressed: () => setState(() {
