@@ -80,19 +80,23 @@ jobs:
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
       - name: Unit and widget tests
         run: flutter test
-      - name: Build optimized split APKs
-        run: flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/symbols
-      - name: Report APK sizes
+      - name: Build one optimized APK for Samsung A16 (ARM64)
+        run: |
+          flutter build apk --release --target-platform android-arm64 --obfuscate --split-debug-info=build/symbols
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Malaz.apk
+      - name: Report APK size
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          for p in sorted(Path("build/app/outputs/flutter-apk").glob("*.apk")):
-              print(f"{p.name}: {p.stat().st_size / 1024 / 1024:.2f} MiB")
+          p = Path("build/app/outputs/flutter-apk/Malaz.apk")
+          if not p.is_file():
+              raise SystemExit("Malaz.apk was not generated")
+          print(f"{p.name}: {p.stat().st_size / 1024 / 1024:.2f} MiB")
           PY
-      - name: Upload release APKs
+      - name: Upload single release APK
         uses: actions/upload-artifact@v4
         with:
-          name: Malaz-Android-Release-APKs
-          path: build/app/outputs/flutter-apk/*.apk
+          name: Malaz-Android-APK
+          path: build/app/outputs/flutter-apk/Malaz.apk
           if-no-files-found: error
           retention-days: 14
