@@ -14,7 +14,7 @@ jobs:
           channel: stable
           cache: true
       - name: Generate Android platform files
-        run: flutter create --platforms=android .
+        run: flutter create --platforms=android --org com.awwab .
       - name: Configure Android permissions and notification desugaring
         run: |
           python3 - <<'PY'
