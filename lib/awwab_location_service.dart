@@ -41,7 +41,14 @@ class AwwabLocationService {
 
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied && askPermission) {
-      permission = await Geolocator.requestPermission();
+      // Avoid repeatedly prompting on every app resume. Once the user has
+      // answered, later calls use the saved position until permission is
+      // changed in Android settings.
+      final alreadyAsked = prefs.getBool('awwab_location_permission_prompted') ?? false;
+      if (!alreadyAsked) {
+        await prefs.setBool('awwab_location_permission_prompted', true);
+        permission = await Geolocator.requestPermission();
+      }
     }
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
