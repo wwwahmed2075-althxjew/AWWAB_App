@@ -662,7 +662,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
 
     if (item == 'آية الكرسي بعد الصلاة') {
       const baseId = 5000;
-      for (var day = 0; day < 7; day++) {
+      for (var day = 0; day < 30; day++) {
         for (var prayer = 0; prayer < 5; prayer++) {
           await AwwabNotificationService.instance.cancel(baseId + day * 5 + prayer);
         }
@@ -671,7 +671,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
       final position = await AwwabLocationService().getLocation(askPermission: true);
       if (position == null) return;
       final now = DateTime.now();
-      for (var day = 0; day < 7; day++) {
+      for (var day = 0; day < 30; day++) {
         final date = now.add(Duration(days: day));
         final prayerTimes = AwwabPrayerSchedule.obligatoryPrayerTimesForDate(
           latitude: position.latitude,
@@ -787,7 +787,7 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
           )),
           const SizedBox(height: 18),
           Text('اتجاه القبلة: ${direction.toStringAsFixed(1)}°', style: const TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
-          Text(_heading == null ? 'حساس البوصلة غير متاح أو يحتاج إلى معايرة.' : 'اتبع اتجاه السهم وحرّك الهاتف ببطء لمعايرة الحساس.', style: const TextStyle(color: _muted, fontSize: 11)),
+          Text(_heading == null ? 'حساس البوصلة غير متاح أو يحتاج إلى معايرة.' : 'اتبع اتجاه السهم، وحرّك الهاتف على شكل رقم 8 بعيدًا عن المعادن والأجهزة المغناطيسية لمعايرة الحساس.', style: const TextStyle(color: _muted, fontSize: 11)),
         ],
       ]))),
     );
