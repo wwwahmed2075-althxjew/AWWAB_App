@@ -112,7 +112,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
         final page = int.tryParse(pageName.replaceFirst('.svg', ''));
         if (page == null || page < start || page > end) continue;
         final pageBytes = entry.content as List<int>;
-        final header = utf8.encode('blob ${pageBytes.length}\\u0000');
+        final header = utf8.encode('blob ${pageBytes.length}\u0000');
         final digest = sha1.convert(<int>[...header, ...pageBytes]).toString();
         if (digest != _expectedHash(page)) {
           throw FormatException('فشل التحقق من صفحة المصحف المضمنة رقم $page.');
