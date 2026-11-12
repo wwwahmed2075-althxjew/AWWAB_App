@@ -1,14 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:malaz/main.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   testWidgets('Malaz app starts with Arabic identity and navigation', (tester) async {
+    SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const MalazApp());
+    await tester.pump();
     expect(find.text('ملاذ'), findsWidgets);
-    expect(find.text('الرئيسية'), findsOneWidget);
-    expect(find.text('القرآن'), findsOneWidget);
-    expect(find.text('الأذكار'), findsOneWidget);
-    expect(find.text('الصلاة'), findsOneWidget);
-    expect(find.text('المزيد'), findsOneWidget);
+    for (final label in ['الرئيسية', 'القرآن', 'الأذكار', 'الصلاة', 'المزيد']) {
+      expect(find.text(label), findsOneWidget);
+    }
   });
 }
