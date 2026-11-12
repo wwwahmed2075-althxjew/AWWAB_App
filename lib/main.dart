@@ -1,5 +1,9 @@
 import 'dart:ui';
 import 'dart:convert';
+import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -228,6 +232,21 @@ class _QuranPageState extends State<QuranPage> {
             Text('مصحف المدينة النبوية', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
             SizedBox(height: 4),
             Text('رواية حفص • 604 صفحة • تنزيل للعمل دون إنترنت', style: TextStyle(color: muted, fontSize: 10)),
+          ])),
+          const Icon(Icons.chevron_left, color: muted),
+        ])),
+      ),
+      const SizedBox(height: 10),
+      InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranAudioLibraryPage())),
+        child: GlassCard(child: Row(children: [
+          const Icon(Icons.headphones_rounded, size: 23),
+          const SizedBox(width: 12),
+          const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('المكتبة الصوتية للقرآن', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
+            SizedBox(height: 4),
+            Text('اختر القارئ والسورة ونزّلها للاستماع دون إنترنت', style: TextStyle(color: muted, fontSize: 10)),
           ])),
           const Icon(Icons.chevron_left, color: muted),
         ])),
@@ -545,6 +564,9 @@ class MorePage extends StatelessWidget {
     _MoreTile(icon: Icons.nightlight_round, title: 'فضل الضحى وقيام الليل', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerVirtuesPage()))),
     _MoreTile(icon: Icons.menu_book_rounded, title: 'فضل القرآن والذكر', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranDhikrVirtuesPage()))),
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'متابعة التذكيرات', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage()))),
+    _MoreTile(icon: Icons.share_outlined, title: 'مشاركة التطبيق', onTap: () async {
+      await Share.share('جرّب تطبيق أوّاب للقرآن والأذكار والصلاة.\nhttps://github.com/wwwahmed2075-althxjew/AWWAB_App', subject: 'تطبيق أوّاب');
+    }),
     _MoreTile(icon: Icons.mail_outline_rounded, title: 'إبلاغ عن خلل أو اقتراح تحسين', onTap: () async {
       final uri = Uri(scheme: 'mailto', path: 'www.ahmed2075@gmail.com', queryParameters: {
         'subject': 'بلاغ أو اقتراح تحسين لتطبيق أوّاب',
@@ -713,5 +735,237 @@ class _TasbeehPageState extends State<TasbeehPage> {
         ),
       ],
     ),
+  );
+}
+
+
+class _QuranReciter {
+  final String name;
+  final String folder;
+  const _QuranReciter(this.name, this.folder);
+}
+
+class QuranAudioLibraryPage extends StatefulWidget {
+  const QuranAudioLibraryPage({super.key});
+  @override
+  State<QuranAudioLibraryPage> createState() => _QuranAudioLibraryPageState();
+}
+
+class _QuranAudioLibraryPageState extends State<QuranAudioLibraryPage> {
+  static const _reciters = [
+    _QuranReciter('مشاري العفاسي', 'Alafasy_128kbps'),
+    _QuranReciter('محمود خليل الحصري', 'Husary_128kbps'),
+    _QuranReciter('ماهر المعيقلي', 'MaherAlMuaiqly128kbps'),
+  ];
+  final AudioPlayer _player = AudioPlayer();
+  List<dynamic> _surahs = [];
+  int _surah = 1;
+  int _reciterIndex = 0;
+  int _downloadedCount = 0;
+  int _downloadProgress = 0;
+  int _playIndex = 0;
+  bool _loading = true;
+  bool _downloading = false;
+  bool _playing = false;
+  String? _error;
+
+  _QuranReciter get _reciter => _reciters[_reciterIndex];
+  Map<String, dynamic> get _selectedSurah =>
+      _surahs.firstWhere((item) => item['number'] == _surah, orElse: () => _surahs.first as Map<String, dynamic>) as Map<String, dynamic>;
+  int get _ayahCount => (_selectedSurah['numberOfAyahs'] as num).toInt();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSurahs();
+    _player.onPlayerComplete.listen((_) {
+      if (!mounted) return;
+      final next = _playIndex + 1;
+      if (next < _ayahCount) {
+        _playIndex = next;
+        _playCurrentAyah();
+      } else {
+        setState(() => _playing = false);
+      }
+    });
+    _player.onPlayerStateChanged.listen((state) {
+      if (mounted) setState(() => _playing = state == PlayerState.playing);
+    });
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  Future<Directory> _audioDirectory() async {
+    final docs = await getApplicationDocumentsDirectory();
+    final dir = Directory('${docs.path}/quran_audio/${_reciter.folder}');
+    await dir.create(recursive: true);
+    return dir;
+  }
+
+  String _filename(int ayah) =>
+      'surah_${_surah.toString().padLeft(3, '0')}_ayah_${ayah.toString().padLeft(3, '0')}.mp3';
+
+  Future<File> _ayahFile(int ayah) async {
+    final dir = await _audioDirectory();
+    return File('${dir.path}/${_filename(ayah)}');
+  }
+
+  Future<void> _loadSurahs() async {
+    try {
+      final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah')).timeout(const Duration(seconds: 25));
+      if (response.statusCode != 200) throw Exception('تعذر تحميل قائمة السور.');
+      final data = (jsonDecode(response.body) as Map<String, dynamic>)['data'] as List<dynamic>;
+      if (!mounted) return;
+      setState(() { _surahs = data; _loading = false; });
+      await _refreshDownloadedCount();
+    } catch (e) {
+      if (mounted) setState(() { _loading = false; _error = 'تعذر تحميل قائمة السور. تحقق من الإنترنت ثم أعد المحاولة.'; });
+    }
+  }
+
+  Future<void> _refreshDownloadedCount() async {
+    if (_surahs.isEmpty) return;
+    var count = 0;
+    for (var ayah = 1; ayah <= _ayahCount; ayah++) {
+      if (await (await _ayahFile(ayah)).exists()) count++;
+    }
+    if (mounted) setState(() => _downloadedCount = count);
+  }
+
+  Future<void> _downloadSurah() async {
+    if (_downloading || _surahs.isEmpty) return;
+    await _player.stop();
+    setState(() { _downloading = true; _downloadProgress = _downloadedCount; _error = null; });
+    try {
+      for (var ayah = 1; ayah <= _ayahCount; ayah++) {
+        final file = await _ayahFile(ayah);
+        if (await file.exists() && await file.length() > 512) continue;
+        final surahText = _surah.toString().padLeft(3, '0');
+        final ayahText = ayah.toString().padLeft(3, '0');
+        final url = 'https://everyayah.com/data/${_reciter.folder}/$surahText$ayahText.mp3';
+        final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 45));
+        final contentType = response.headers['content-type']?.toLowerCase() ?? '';
+        if (response.statusCode != 200 || response.bodyBytes.length < 512 ||
+            (contentType.isNotEmpty && !contentType.contains('audio') && !contentType.contains('octet-stream'))) {
+          throw Exception('تعذر التحقق من ملف الآية $ayah. لم يتم حفظ الملف.');
+        }
+        final temp = File('${file.path}.tmp');
+        await temp.writeAsBytes(response.bodyBytes, flush: true);
+        if (await file.exists()) await file.delete();
+        await temp.rename(file.path);
+        if (mounted) setState(() { _downloadProgress = ayah; _downloadedCount = ayah; });
+      }
+      if (mounted) {
+        setState(() { _downloadedCount = _ayahCount; _downloadProgress = _ayahCount; });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('اكتمل تنزيل سورة ${_selectedSurah['name']} ويمكنك الاستماع إليها دون إنترنت.')));
+      }
+    } catch (e) {
+      if (mounted) setState(() => _error = 'توقف التنزيل عند الآية $_downloadProgress. يمكنك إعادة المحاولة وسيكمل الملفات الناقصة. $e');
+    } finally {
+      if (mounted) setState(() => _downloading = false);
+    }
+  }
+
+  Future<void> _playCurrentAyah() async {
+    try {
+      final file = await _ayahFile(_playIndex + 1);
+      if (!await file.exists()) throw Exception('نزّل السورة أولًا للاستماع دون إنترنت.');
+      await _player.play(DeviceFileSource(file.path));
+    } catch (e) {
+      if (mounted) setState(() { _playing = false; _error = e.toString(); });
+    }
+  }
+
+  Future<void> _togglePlayback() async {
+    if (_downloadedCount != _ayahCount) {
+      setState(() => _error = 'نزّل السورة كاملة أولًا حتى تعمل المكتبة دون إنترنت.');
+      return;
+    }
+    if (_playing) {
+      await _player.pause();
+      return;
+    }
+    if (_playIndex >= _ayahCount) _playIndex = 0;
+    await _playCurrentAyah();
+  }
+
+  Future<void> _changeSelection({int? surah, int? reciter}) async {
+    await _player.stop();
+    setState(() {
+      if (surah != null) _surah = surah;
+      if (reciter != null) _reciterIndex = reciter;
+      _playIndex = 0;
+      _downloadedCount = 0;
+      _error = null;
+    });
+    await _refreshDownloadedCount();
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(backgroundColor: ink, title: const Text('المكتبة الصوتية للقرآن')),
+    body: _loading
+      ? const Center(child: CircularProgressIndicator())
+      : _surahs.isEmpty
+        ? Center(child: Text(_error ?? 'تعذر عرض السور', style: const TextStyle(color: muted)))
+        : ListView(padding: const EdgeInsets.all(18), children: [
+            GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              const Text('اختر القارئ', style: TextStyle(color: muted, fontSize: 11)),
+              const SizedBox(height: 7),
+              DropdownButtonFormField<int>(
+                value: _reciterIndex,
+                dropdownColor: panel,
+                decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true),
+                items: List.generate(_reciters.length, (i) => DropdownMenuItem(value: i, child: Text(_reciters[i].name))),
+                onChanged: _downloading ? null : (value) { if (value != null) _changeSelection(reciter: value); },
+              ),
+              const SizedBox(height: 14),
+              const Text('اختر السورة', style: TextStyle(color: muted, fontSize: 11)),
+              const SizedBox(height: 7),
+              DropdownButtonFormField<int>(
+                value: _surah,
+                isExpanded: true,
+                dropdownColor: panel,
+                decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true),
+                items: _surahs.map((raw) {
+                  final item = raw as Map<String, dynamic>;
+                  return DropdownMenuItem<int>(value: item['number'] as int, child: Text('${item['number']}. ${item['name']}'));
+                }).toList(),
+                onChanged: _downloading ? null : (value) { if (value != null) _changeSelection(surah: value); },
+              ),
+              const SizedBox(height: 14),
+              Text('الملفات المحفوظة: $_downloadedCount / $_ayahCount آية', style: const TextStyle(color: muted, fontSize: 11)),
+              const SizedBox(height: 7),
+              LinearProgressIndicator(value: _ayahCount == 0 ? 0 : _downloadedCount / _ayahCount, minHeight: 4),
+              if (_downloading) ...[
+                const SizedBox(height: 8),
+                Text('جارٍ التنزيل: $_downloadProgress / $_ayahCount', style: const TextStyle(color: muted, fontSize: 10)),
+              ],
+              const SizedBox(height: 14),
+              OutlinedButton.icon(
+                onPressed: _downloading || _downloadedCount == _ayahCount ? null : _downloadSurah,
+                icon: const Icon(Icons.download_for_offline_outlined),
+                label: Text(_downloadedCount == _ayahCount ? 'السورة محفوظة على الجهاز' : 'تنزيل السورة للاستماع دون إنترنت'),
+              ),
+              const SizedBox(height: 7),
+              FilledButton.icon(
+                onPressed: _downloading ? null : _togglePlayback,
+                icon: Icon(_playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
+                label: Text(_playing ? 'إيقاف مؤقت' : 'تشغيل السورة المحفوظة'),
+              ),
+            ])),
+            const SizedBox(height: 12),
+            GlassCard(child: const Text('مصدر الملفات الصوتية: EveryAyah.com. التنزيل يتم آيةً آيةً مع فحص الاستجابة قبل حفظها. يلزم اتصال بالإنترنت أثناء التنزيل فقط.',
+              style: TextStyle(color: muted, fontSize: 10, height: 1.8))),
+            if (_error != null) ...[
+              const SizedBox(height: 10),
+              GlassCard(child: Text(_error!, style: const TextStyle(color: Colors.orangeAccent, fontSize: 11))),
+            ],
+          ]),
   );
 }
