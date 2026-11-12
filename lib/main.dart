@@ -677,18 +677,3 @@ class _TasbeehPageState extends State<TasbeehPage> {
     ),
   );
 }
-
-class _TasbeehPageState extends State<TasbeehPage> {
-  int count = 0; int goal = 100; String phrase = 'سبحان الله';
-  @override
-  void initState() { super.initState(); _load(); }
-  Future<void> _load() async { final p = await SharedPreferences.getInstance(); setState(() { count = p.getInt('tasbeeh_count') ?? 0; goal = p.getInt('tasbeeh_goal') ?? 100; phrase = p.getString('tasbeeh_phrase') ?? 'سبحان الله'; }); }
-  Future<void> _save() async { final p = await SharedPreferences.getInstance(); await p.setInt('tasbeeh_count', count); await p.setInt('tasbeeh_goal', goal); await p.setString('tasbeeh_phrase', phrase); }
-  @override
-  Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('السبحة الإلكترونية'), backgroundColor: ink), body: Padding(padding: const EdgeInsets.all(22), child: Column(children: [
-    const SizedBox(height: 20), Text(phrase, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)), const SizedBox(height: 25),
-    Expanded(child: Center(child: GestureDetector(onTap: () { setState(() => count++); _save(); }, child: Container(width: 230, height: 230, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(.045), border: Border.all(color: Colors.white.withOpacity(.2), width: 2), boxShadow: [BoxShadow(color: Colors.white.withOpacity(.035), blurRadius: 35, spreadRadius: 8)]), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text('$count', style: const TextStyle(fontSize: 58, fontWeight: FontWeight.w300)), Text('من $goal', style: const TextStyle(color: muted, fontSize: 12))]))))),
-    Row(children: [Expanded(child: OutlinedButton(onPressed: () { setState(() => count = 0); _save(); }, child: const Text('تصفير'))), const SizedBox(width: 10), Expanded(child: OutlinedButton(onPressed: () { setState(() { phrase = phrase == 'سبحان الله' ? 'الحمد لله' : phrase == 'الحمد لله' ? 'الله أكبر' : 'سبحان الله'; count = 0; }); _save(); }, child: const Text('تغيير الذكر')))]),
-    const SizedBox(height: 20),
-  ])));
-}
