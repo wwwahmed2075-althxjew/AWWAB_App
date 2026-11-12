@@ -508,7 +508,7 @@ class MorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات ملاذ', child: Column(children: [
     _MoreTile(icon: Icons.touch_app_rounded, title: 'السبحة الإلكترونية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbeehPage()))),
-    _MoreTile(icon: Icons.flag_outlined, title: 'الختمة والورد اليومي'),
+    _MoreTile(icon: Icons.flag_outlined, title: 'الختمة والورد اليومي', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const KhatmaPage()))),
     _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة'),
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'التنبيهات والأذان'),
     _MoreTile(icon: Icons.language_rounded, title: 'اللغة'),
@@ -522,6 +522,68 @@ class _MoreTile extends StatelessWidget {
   const _MoreTile({required this.icon, required this.title, this.onTap});
   @override
   Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 9), child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(22), child: GlassCard(child: Row(children: [Icon(icon, size: 20, color: muted), const SizedBox(width: 13), Expanded(child: Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600))), const Icon(Icons.chevron_left, color: muted, size: 18)]))));
+}
+
+
+class KhatmaPage extends StatefulWidget {
+  const KhatmaPage({super.key});
+  @override
+  State<KhatmaPage> createState() => _KhatmaPageState();
+}
+
+class _KhatmaPageState extends State<KhatmaPage> {
+  int _pagesRead = 0;
+  int _dailyGoal = 20;
+  final _goalController = TextEditingController(text: '20');
+  @override
+  void initState() { super.initState(); _load(); }
+  @override
+  void dispose() { _goalController.dispose(); super.dispose(); }
+  Future<void> _load() async {
+    final p = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() { _pagesRead = (p.getInt('khatma_pages_read') ?? 0).clamp(0, 604); _dailyGoal = (p.getInt('khatma_daily_goal') ?? 20).clamp(1, 604); _goalController.text = '$_dailyGoal'; });
+  }
+  Future<void> _save() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setInt('khatma_pages_read', _pagesRead);
+    await p.setInt('khatma_daily_goal', _dailyGoal);
+  }
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(backgroundColor: ink, title: const Text('الختمة والورد اليومي')),
+    body: ListView(padding: const EdgeInsets.all(20), children: [
+      GlassCard(child: Column(children: [
+        const Text('إنجاز ختمتك', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 18),
+        Text('$_pagesRead / 604', style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 8),
+        LinearProgressIndicator(value: _pagesRead / 604, minHeight: 6),
+        const SizedBox(height: 8),
+        Text('متبقي ${604 - _pagesRead} صفحة', style: const TextStyle(color: muted, fontSize: 12)),
+        const SizedBox(height: 16),
+        Row(children: [
+          Expanded(child: OutlinedButton(onPressed: _pagesRead == 0 ? null : () { setState(() => _pagesRead = (_pagesRead - 1).clamp(0, 604);); _save(); }, child: const Text('صفحة أقل'))),
+          const SizedBox(width: 8),
+          Expanded(child: FilledButton(onPressed: _pagesRead >= 604 ? null : () { setState(() => _pagesRead++); _save(); }, child: const Text('أتممت صفحة'))),
+        ]),
+      ])),
+      const SizedBox(height: 14),
+      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        const Text('الورد اليومي', style: TextStyle(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 8),
+        const Text('حدد عدد الصفحات التي تريد قراءتها يوميًا. المدة التقريبية للختمة تُحسب على هذا الأساس.', style: TextStyle(color: muted, fontSize: 11, height: 1.7)),
+        const SizedBox(height: 8),
+        TextField(controller: _goalController, keyboardType: TextInputType.number, style: const TextStyle(color: white), decoration: const InputDecoration(labelText: 'صفحات يوميًا', border: OutlineInputBorder())),
+        const SizedBox(height: 8),
+        OutlinedButton(onPressed: () { final value = int.tryParse(_goalController.text.trim()); if (value == null || value < 1 || value > 604) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('أدخل عددًا من 1 إلى 604'))); return; } setState(() => _dailyGoal = value); _save(); }, child: const Text('حفظ الورد')),
+        Text('الختمة خلال نحو ${(604 / _dailyGoal).ceil()} يومًا', textAlign: TextAlign.center, style: const TextStyle(color: muted, fontSize: 12)),
+      ])),
+      const SizedBox(height: 10),
+      TextButton(onPressed: () async { final ok = await showDialog<bool>(context: context, builder: (c) => AlertDialog(title: const Text('بدء ختمة جديدة؟'), content: const Text('سيتم تصفير عدد الصفحات المقروءة.'), actions: [TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('إلغاء')), TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('تصفير'))])); if (ok == true) { setState(() => _pagesRead = 0); _save(); } }, child: const Text('بدء ختمة جديدة')),
+    ]),
+  );
 }
 
 class TasbeehPage extends StatefulWidget {
