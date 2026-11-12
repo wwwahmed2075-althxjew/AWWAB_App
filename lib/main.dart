@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'madinah_mushaf_reader_page.dart';
 import 'awwab_feature_pages.dart';
 import 'adhan_audio_page.dart';
@@ -359,6 +360,16 @@ class MorePage extends StatelessWidget {
     _MoreTile(icon: Icons.nightlight_round, title: 'فضل الضحى وقيام الليل', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerVirtuesPage()))),
     _MoreTile(icon: Icons.menu_book_rounded, title: 'فضل القرآن والذكر', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranDhikrVirtuesPage()))),
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'متابعة التذكيرات', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage()))),
+    _MoreTile(icon: Icons.mail_outline_rounded, title: 'إبلاغ عن خلل أو اقتراح تحسين', onTap: () async {
+      final uri = Uri(scheme: 'mailto', path: 'www.ahmed2075@gmail.com', queryParameters: {
+        'subject': 'بلاغ أو اقتراح تحسين لتطبيق أوّاب',
+        'body': 'نوع الرسالة: \n\nتفاصيل البلاغ أو الاقتراح: \n\nنوع الجهاز وإصدار التطبيق (اختياري): ',
+      });
+      final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!opened && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تعذر فتح تطبيق البريد الإلكتروني.')));
+      }
+    }),
     _MoreTile(icon: Icons.language_rounded, title: 'اللغة'),
     _MoreTile(icon: Icons.text_fields_rounded, title: 'الخط والمظهر'),
     _MoreTile(icon: Icons.info_outline_rounded, title: 'عن أوّاب'),
