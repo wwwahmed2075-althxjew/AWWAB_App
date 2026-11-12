@@ -656,7 +656,7 @@ class PrayerVirtuesPage extends StatelessWidget {
     backgroundColor: _bg,
     appBar: AppBar(backgroundColor: _bg, title: Text('فضل الضحى وقيام الليل')),
     body: ListView(padding: const EdgeInsets.all(18), children: [
-      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('فضل صلاة الضحى', style: TextStyle(color: _fg, fontWeight: FontWeight.w800, fontSize: 17)),
         SizedBox(height: 10),
         Text('«يصبح على كل سلامى من أحدكم صدقة... ويجزئ من ذلك ركعتان يركعهما من الضحى».', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, fontSize: 15, height: 2)),
@@ -690,7 +690,7 @@ class QuranDhikrVirtuesPage extends StatelessWidget {
     backgroundColor: _bg,
     appBar: AppBar(backgroundColor: _bg, title: Text('فضل القرآن والذكر')),
     body: ListView(padding: const EdgeInsets.all(18), children: [
-      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('آيات في فضل القرآن', style: TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
         SizedBox(height: 12),
         Text('إِنَّ هَذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
@@ -717,7 +717,7 @@ class QuranDhikrVirtuesPage extends StatelessWidget {
         Text('جامع الترمذي: 2910، وقال: حسن صحيح', style: TextStyle(color: _muted, fontSize: 10)),
       ])),
       const SizedBox(height: 12),
-      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+      _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('آيات في فضل الذكر', style: TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
         SizedBox(height: 12),
         Text('فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ', textDirection: TextDirection.rtl, style: TextStyle(color: _fg, height: 1.9)),
@@ -1055,7 +1055,7 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> with WidgetsBindingObse
           Transform.rotate(angle: rotation, child: Container(
             width: 250, height: 250,
             decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppPalette.overlay(.22), width: 2), color: AppPalette.overlay(.045)),
-            child: const Stack(alignment: Alignment.center, children: [
+            child: Stack(alignment: Alignment.center, children: [
               Icon(Icons.navigation_rounded, color: _fg, size: 130),
               Positioned(top: 18, child: Text('القبلة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800))),
             ]),
