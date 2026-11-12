@@ -1,8 +1,10 @@
 import 'dart:ui';
+import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 import 'madinah_mushaf_reader_page.dart';
 
 void main() => runApp(const AwwabApp());
@@ -176,16 +178,79 @@ class _QuranPageState extends State<QuranPage> {
   String search = '';
   int? lastSurah;
   int? lastAyah;
+  bool downloadingQuran = false;
+  int downloadedSurahs = 0;
   @override
   void initState() { super.initState(); surahsFuture = loadSurahs(); loadLastRead(); }
   @override
   void dispose() { searchController.dispose(); super.dispose(); }
   Future<List<dynamic>> loadSurahs() async {
-    final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah')).timeout(const Duration(seconds: 20));
-    if (response.statusCode != 200) throw Exception('تعذر تحميل فهرس السور');
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-    if (json['code'] != 200) throw Exception('مصدر القرآن لم يستجب بشكل صحيح');
-    return json['data'] as List<dynamic>;
+    final prefs = await SharedPreferences.getInstance();
+    final cached = prefs.getString('malaz_quran_surah_index_v1');
+    try {
+      final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah')).timeout(const Duration(seconds: 20));
+      if (response.statusCode != 200) throw Exception('تعذر تحميل فهرس السور');
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (json['code'] != 200 || json['data'] is! List || (json['data'] as List).length != 114) {
+        throw Exception('فهرس السور غير مكتمل أو غير صالح');
+      }
+      await prefs.setString('malaz_quran_surah_index_v1', jsonEncode(json['data']));
+      return json['data'] as List<dynamic>;
+    } catch (_) {
+      if (cached != null) {
+        final local = jsonDecode(cached) as List<dynamic>;
+        if (local.length == 114) return local;
+      }
+      rethrow;
+    }
+  }
+
+  Future<Directory> _quranOfflineDirectory() async {
+    final root = await getApplicationDocumentsDirectory();
+    final directory = Directory('${root.path}/malaz_quran_text_v1');
+    await directory.create(recursive: true);
+    return directory;
+  }
+
+  Future<void> downloadAllSurahs() async {
+    if (downloadingQuran) return;
+    setState(() { downloadingQuran = true; downloadedSurahs = 0; });
+    try {
+      final all = await surahsFuture;
+      final directory = await _quranOfflineDirectory();
+      for (final raw in all) {
+        final surah = raw as Map<String, dynamic>;
+        final number = surah['number'] as int;
+        final file = File('${directory.path}/$number.json');
+        if (await file.exists()) {
+          try {
+            final local = jsonDecode(await file.readAsString()) as List<dynamic>;
+            if (local.length == surah['numberOfAyahs']) {
+              if (mounted) setState(() => downloadedSurahs++);
+              continue;
+            }
+          } catch (_) {}
+          await file.delete();
+        }
+        final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah/$number')).timeout(const Duration(seconds: 30));
+        if (response.statusCode != 200) throw Exception('تعذر تنزيل سورة $number');
+        final json = jsonDecode(response.body) as Map<String, dynamic>;
+        final ayahs = json['data']?['ayahs'];
+        if (json['code'] != 200 || ayahs is! List || ayahs.length != surah['numberOfAyahs']) {
+          throw Exception('عدد آيات سورة $number غير مطابق للفهرس');
+        }
+        final temp = File('${file.path}.tmp');
+        await temp.writeAsString(jsonEncode(ayahs), flush: true);
+        if (await file.exists()) await file.delete();
+        await temp.rename(file.path);
+        if (mounted) setState(() => downloadedSurahs++);
+      }
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('اكتمل حفظ نص القرآن الكريم للعمل دون إنترنت.')));
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('توقف تنزيل القرآن بعد حفظ $downloadedSurahs سورة. $e')));
+    } finally {
+      if (mounted) setState(() => downloadingQuran = false);
+    }
   }
   Future<void> loadLastRead() async {
     final prefs = await SharedPreferences.getInstance();
@@ -212,6 +277,23 @@ class _QuranPageState extends State<QuranPage> {
           Text('آخر موضع قراءة: سورة رقم $lastSurah${lastAyah == null ? '' : ' • آية $lastAyah'}', style: const TextStyle(fontSize: 11, color: white))
         else
           const Text('آخر موضع قراءة: لم تبدأ بعد', style: TextStyle(fontSize: 11, color: muted)),
+      ])),
+      const SizedBox(height: 12),
+      GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        const Text('القرآن دون إنترنت', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 5),
+        const Text('احفظ نص السور الـ114 على جهازك لتتمكن من قراءتها دون اتصال.', style: TextStyle(color: muted, fontSize: 11, height: 1.6)),
+        const SizedBox(height: 10),
+        if (downloadingQuran) ...[
+          LinearProgressIndicator(value: downloadedSurahs / 114, minHeight: 4),
+          const SizedBox(height: 6),
+          Text('تم حفظ $downloadedSurahs من 114 سورة', textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, color: muted)),
+        ],
+        OutlinedButton.icon(
+          onPressed: downloadingQuran ? null : downloadAllSurahs,
+          icon: Icon(downloadingQuran ? Icons.downloading_rounded : Icons.download_for_offline_outlined, size: 18),
+          label: Text(downloadingQuran ? 'جارٍ الحفظ...' : 'تنزيل نص القرآن كاملًا'),
+        ),
       ])),
       const SizedBox(height: 13),
       InkWell(
@@ -286,11 +368,29 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
   @override
   void initState() { super.initState(); ayahsFuture = loadAyahs(); }
   Future<List<dynamic>> loadAyahs() async {
-    final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah/${widget.number}')).timeout(const Duration(seconds: 25));
-    if (response.statusCode != 200) throw Exception('تعذر تحميل السورة');
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-    if (json['code'] != 200) throw Exception('لم تصل بيانات السورة');
-    return json['data']['ayahs'] as List<dynamic>;
+    final root = await getApplicationDocumentsDirectory();
+    final file = File('${root.path}/malaz_quran_text_v1/${widget.number}.json');
+    try {
+      final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah/${widget.number}')).timeout(const Duration(seconds: 25));
+      if (response.statusCode != 200) throw Exception('تعذر تحميل السورة');
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      final ayahs = json['data']?['ayahs'];
+      if (json['code'] != 200 || ayahs is! List || ayahs.length != widget.ayahCount) {
+        throw Exception('بيانات السورة غير مكتملة أو غير مطابقة لعدد آياتها');
+      }
+      await file.parent.create(recursive: true);
+      final temp = File('${file.path}.tmp');
+      await temp.writeAsString(jsonEncode(ayahs), flush: true);
+      if (await file.exists()) await file.delete();
+      await temp.rename(file.path);
+      return ayahs;
+    } catch (networkError) {
+      if (await file.exists()) {
+        final local = jsonDecode(await file.readAsString()) as List<dynamic>;
+        if (local.length == widget.ayahCount) return local;
+      }
+      rethrow;
+    }
   }
   Future<void> savePosition(int ayah) async {
     final prefs = await SharedPreferences.getInstance();
