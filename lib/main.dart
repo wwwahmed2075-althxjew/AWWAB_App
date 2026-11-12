@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'madinah_mushaf_reader_page.dart';
+import 'awwab_feature_pages.dart';
 
 void main() => runApp(const AwwabApp());
 
@@ -37,7 +38,7 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int tab = 0;
-  final pages = const [HomePage(), QuranPage(), AzkarPage(), PrayerPage(), MorePage()];
+  final pages = const [AwwabHomePage(), QuranPage(), AwwabAzkarPage(), AwwabPrayerPage(), MorePage()];
   final labels = const ['الرئيسية', 'القرآن', 'الأذكار', 'الصلاة', 'المزيد'];
   final icons = const [Icons.home_rounded, Icons.menu_book_rounded, Icons.auto_awesome_rounded, Icons.mosque_rounded, Icons.grid_view_rounded];
 
@@ -351,8 +352,10 @@ class MorePage extends StatelessWidget {
   Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات أوّاب', child: Column(children: [
     _MoreTile(icon: Icons.touch_app_rounded, title: 'السبحة الإلكترونية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbeehPage()))),
     _MoreTile(icon: Icons.flag_outlined, title: 'الختمة والورد اليومي'),
-    _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة'),
-    _MoreTile(icon: Icons.notifications_none_rounded, title: 'التنبيهات والأذان'),
+    _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AwwabQiblaPage()))),
+    _MoreTile(icon: Icons.favorite_outline, title: 'أسماء الله الحسنى', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AllahNamesPage()))),
+    _MoreTile(icon: Icons.nightlight_round, title: 'فضل الضحى وقيام الليل', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerVirtuesPage()))),
+    _MoreTile(icon: Icons.notifications_none_rounded, title: 'متابعة التذكيرات', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage()))),
     _MoreTile(icon: Icons.language_rounded, title: 'اللغة'),
     _MoreTile(icon: Icons.text_fields_rounded, title: 'الخط والمظهر'),
     _MoreTile(icon: Icons.info_outline_rounded, title: 'عن أوّاب'),
