@@ -528,8 +528,10 @@ class _PrayerPageState extends State<PrayerPage> {
     final p = await SharedPreferences.getInstance();
     if (!mounted) return;
     setState(() { _method = p.getInt('malaz_prayer_method') ?? 0; _locationLabel = p.getString('malaz_prayer_location_label'); });
+    final today = DateTime.now();
+    final todayKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
     final saved = p.getString('malaz_prayer_times');
-    if (saved != null) {
+    if (saved != null && p.getString('malaz_prayer_date') == todayKey) {
       try { final decoded = jsonDecode(saved) as Map<String, dynamic>; if (mounted) setState(() => _times = decoded.map((k,v) => MapEntry(k, v.toString()))); } catch (_) {}
     }
   }
@@ -557,6 +559,7 @@ class _PrayerPageState extends State<PrayerPage> {
       for (var i=0;i<_keys.length;i++) { values[_keys[i]] = TimeOfDay.fromDateTime(raw[i].toLocal()).format(context); }
       final p = await SharedPreferences.getInstance();
       await p.setString('malaz_prayer_times', jsonEncode(values));
+      await p.setString('malaz_prayer_date', '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}');
       await p.setString('malaz_prayer_location_label', 'موقعك الحالي');
       await p.setInt('malaz_prayer_method', _method);
       if (!mounted) return;
