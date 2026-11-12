@@ -325,6 +325,7 @@ class AzkarDetailsPage extends StatelessWidget {
 class AllahNamesPage extends StatelessWidget {
   const AllahNamesPage({super.key});
   static const names = [
+    ('اللَّه', 'المعبود بحق، المتفرد بجميع صفات الكمال، المستحق وحده للعبادة.'),
     ('الرَّحْمَن', 'واسع الرحمة الذي وسعت رحمته جميع خلقه.'),
     ('الرَّحِيم', 'المتفضل برحمته على عباده المؤمنين.'),
     ('الْمَلِك', 'المالك المتصرف في خلقه وأمره.'),
