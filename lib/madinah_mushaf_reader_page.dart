@@ -66,14 +66,14 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
       await directory.create(recursive: true);
       final prefs = await SharedPreferences.getInstance();
       final savedPage = prefs.getInt('madinah_mushaf_last_page') ?? 1;
+      _manifest = manifest;
+      _cacheDirectory = directory;
       var downloaded = 0;
       for (var i = 1; i <= pageCount; i++) {
-        if (await File('${directory.path}/$i.svg').exists()) downloaded++;
+        if (await _isVerified(File('${directory.path}/$i.svg'), i)) downloaded++;
       }
       if (!mounted) return;
       setState(() {
-        _manifest = manifest;
-        _cacheDirectory = directory;
         _page = savedPage.clamp(1, pageCount).toInt();
         _downloaded = downloaded;
       });
