@@ -186,7 +186,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
               final isNext = e.name == _schedule!.next!.name;
               return Container(
               width: 91, padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 7),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(isNext ? .13 : .045), borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white.withOpacity(isNext ? .28 : .08))),
+              decoration: BoxDecoration(color: AppPalette.overlay(isNext ? .13 : .045), borderRadius: BorderRadius.circular(14), border: Border.all(color: AppPalette.overlay(isNext ? .28 : .08))),
               child: Column(children: [
                 Text(e.name, style: TextStyle(color: _muted, fontSize: 10)),
                 const SizedBox(height: 4),
@@ -227,8 +227,8 @@ class _QuickAction extends StatelessWidget {
   Widget build(BuildContext context) => ActionChip(
     avatar: Icon(icon, size: 16, color: _fg),
     label: Text(label, style: TextStyle(color: _fg, fontSize: 10)),
-    backgroundColor: Colors.white.withOpacity(.07),
-    side: BorderSide(color: Colors.white.withOpacity(.1)),
+    backgroundColor: AppPalette.overlay(.07),
+    side: BorderSide(color: AppPalette.overlay(.1)),
     onPressed: onTap,
   );
 }
@@ -382,7 +382,7 @@ class AwwabAzkarPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(22),
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AzkarDetailsPage(title: section.$1))),
             child: _FeatureCard(child: Row(children: [
-              Container(width: 44, height: 44, decoration: BoxDecoration(color: Colors.white.withOpacity(.075), borderRadius: BorderRadius.circular(15)),
+              Container(width: 44, height: 44, decoration: BoxDecoration(color: AppPalette.overlay(.075), borderRadius: BorderRadius.circular(15)),
                 child: Icon(section.$3, color: _fg, size: 21)),
               const SizedBox(width: 13),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -506,7 +506,7 @@ class _AzkarDetailsPageState extends State<AzkarDetailsPage> {
                   Expanded(child: Text(items[i]['count']!, style: TextStyle(color: _fg, fontSize: 10, fontWeight: FontWeight.w700))),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(.09), borderRadius: BorderRadius.circular(18)),
+                    decoration: BoxDecoration(color: AppPalette.overlay(.09), borderRadius: BorderRadius.circular(18)),
                     child: Text('${counts[i]} / ${_targetFor(items[i]['count']!)}',
                       style: TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w800)),
                   ),
@@ -636,10 +636,10 @@ class AllahNamesPage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(color: Colors.transparent, child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 15),
-        collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Colors.white.withOpacity(.1))),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Colors.white.withOpacity(.16))),
-        backgroundColor: Colors.white.withOpacity(.055),
-        collapsedBackgroundColor: Colors.white.withOpacity(.045),
+        collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: AppPalette.overlay(.1))),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: AppPalette.overlay(.16))),
+        backgroundColor: AppPalette.overlay(.055),
+        collapsedBackgroundColor: AppPalette.overlay(.045),
         leading: Text('${i + 1}'.padLeft(2, '0'), style: TextStyle(color: _muted)),
         title: Text(names[i].$1, style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
         children: [Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 14), child: Align(alignment: Alignment.centerRight, child: Text(names[i].$2, textAlign: TextAlign.right, style: TextStyle(color: _fg, height: 1.8))))],
@@ -1054,7 +1054,7 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> with WidgetsBindingObse
         else ...[
           Transform.rotate(angle: rotation, child: Container(
             width: 250, height: 250,
-            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(.22), width: 2), color: Colors.white.withOpacity(.045)),
+            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppPalette.overlay(.22), width: 2), color: AppPalette.overlay(.045)),
             child: const Stack(alignment: Alignment.center, children: [
               Icon(Icons.navigation_rounded, color: _fg, size: 130),
               Positioned(top: 18, child: Text('القبلة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800))),
