@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'madinah_mushaf_reader_page.dart';
 
 void main() => runApp(const AwwabApp());
 
@@ -212,6 +213,21 @@ class _QuranPageState extends State<QuranPage> {
         else
           const Text('آخر موضع قراءة: لم تبدأ بعد', style: TextStyle(fontSize: 11, color: muted)),
       ])),
+      const SizedBox(height: 13),
+      InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MadinahMushafReaderPage())),
+        child: GlassCard(child: Row(children: [
+          const Icon(Icons.menu_book_rounded, size: 23),
+          const SizedBox(width: 12),
+          const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('مصحف المدينة النبوية', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
+            SizedBox(height: 4),
+            Text('رواية حفص • 604 صفحة • تنزيل للعمل دون إنترنت', style: TextStyle(color: muted, fontSize: 10)),
+          ])),
+          const Icon(Icons.chevron_left, color: muted),
+        ])),
+      ),
       const SizedBox(height: 13),
       TextField(controller: searchController, onChanged: (value) => setState(() => search = value.trim()),
         style: const TextStyle(color: white, fontSize: 13),
