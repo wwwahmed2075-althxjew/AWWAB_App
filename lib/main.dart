@@ -521,7 +521,6 @@ class _PrayerPageState extends State<PrayerPage> {
     if (saved != null) {
       try { final decoded = jsonDecode(saved) as Map<String, dynamic>; if (mounted) setState(() => _times = decoded.map((k,v) => MapEntry(k, v.toString()))); } catch (_) {}
     }
-    if (_locationLabel != null) _calculate();
   }
   Future<void> _calculate() async {
     if (_loading) return;
