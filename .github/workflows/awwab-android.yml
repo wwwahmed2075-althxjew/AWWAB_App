@@ -45,7 +45,7 @@ jobs:
                   if re.search(r'dependencies \{', g):
                       g = re.sub(r'dependencies \{', 'dependencies {\n    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")', g, count=1)
                   else:
-                      g += '\\ndependencies {\\n    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")\\n}\\n'
+                      g += '\ndependencies {\n    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")\n}\n'
               gradle.write_text(g)
           PY
       - name: Install Flutter dependencies
