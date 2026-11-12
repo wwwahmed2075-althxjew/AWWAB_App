@@ -1,9 +1,7 @@
 name: AWWAB Android APK
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches: ["main", "feature/**"]
   workflow_dispatch:
 
 jobs:
