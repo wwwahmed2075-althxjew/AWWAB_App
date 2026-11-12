@@ -348,20 +348,6 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
                     },
                   ),
                 ),
-                SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 8, 18, 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(onPressed: _page > 1 ? () => _pageController.previousPage(duration: const Duration(milliseconds: 180), curve: Curves.easeOut) : null, icon: const Icon(Icons.chevron_left_rounded)),
-                        Text('$_page من $pageCount', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
-                        IconButton(onPressed: _page < pageCount ? () => _pageController.nextPage(duration: const Duration(milliseconds: 180), curve: Curves.easeOut) : null, icon: const Icon(Icons.chevron_right_rounded)),
-                      ],
-                    ),
-                  ),
-                ),
               ],
             ),
     );
