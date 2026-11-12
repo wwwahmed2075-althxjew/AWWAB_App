@@ -11,5 +11,6 @@ class AppPalette {
   static Color get muted => isDark ? const Color(0xFF9A9CA5) : const Color(0xFF626875);
   static Color get cardOverlay => isDark ? Colors.white.withOpacity(.055) : Colors.black.withOpacity(.035);
   static Color get cardBorder => isDark ? Colors.white.withOpacity(.11) : Colors.black.withOpacity(.09);
+  static Color overlay(double opacity) => (isDark ? Colors.white : Colors.black).withOpacity(opacity);
   static Color get navSurface => isDark ? const Color(0xD91B1D22) : const Color(0xEFFFFFFF);
 }
