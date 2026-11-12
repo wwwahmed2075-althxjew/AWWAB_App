@@ -573,6 +573,113 @@ class TasbeehPage extends StatefulWidget {
   @override
   State<TasbeehPage> createState() => _TasbeehPageState();
 }
+
+class _TasbeehPageState extends State<TasbeehPage> {
+  static const phrases = ['سبحان الله', 'الحمد لله', 'الله أكبر'];
+  final Map<String, int> counts = {for (final phrase in phrases) phrase: 0};
+  int goal = 33;
+  bool loaded = false;
+
+  @override
+  void initState() { super.initState(); _load(); }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      goal = prefs.getInt('tasbeeh_goal') ?? 33;
+      for (var i = 0; i < phrases.length; i++) {
+        counts[phrases[i]] = prefs.getInt('tasbeeh_count_$i') ??
+            (i == 0 ? (prefs.getInt('tasbeeh_count') ?? 0) : 0);
+      }
+      loaded = true;
+    });
+  }
+
+  Future<void> _save() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('tasbeeh_goal', goal);
+    for (var i = 0; i < phrases.length; i++) {
+      await prefs.setInt('tasbeeh_count_$i', counts[phrases[i]] ?? 0);
+    }
+    await prefs.setInt('tasbeeh_count', counts[phrases.first] ?? 0);
+  }
+
+  void _increment(String phrase) {
+    setState(() => counts[phrase] = (counts[phrase] ?? 0) + 1);
+    _save();
+  }
+
+  Future<void> _reset() async {
+    setState(() { for (final phrase in phrases) { counts[phrase] = 0; } });
+    await _save();
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(
+      title: const Text('السبحة الإلكترونية'),
+      backgroundColor: ink,
+      actions: [IconButton(tooltip: 'تصفير جميع العدادات', onPressed: _reset, icon: const Icon(Icons.refresh_rounded))],
+    ),
+    body: !loaded ? const Center(child: CircularProgressIndicator()) : ListView(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 28),
+      children: [
+        GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text('تسبيحك اليوم', style: TextStyle(color: muted, fontSize: 11)),
+          const SizedBox(height: 5),
+          Text('${counts.values.fold<int>(0, (sum, value) => sum + value)}', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800)),
+          const Text('إجمالي التسبيحات', style: TextStyle(color: muted, fontSize: 10)),
+        ])),
+        const SizedBox(height: 14),
+        for (final phrase in phrases) Padding(
+          padding: const EdgeInsets.only(bottom: 11),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(22),
+              onTap: () => _increment(phrase),
+              child: GlassCard(child: Row(children: [
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(phrase, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 5),
+                  Text('اضغط على الذكر لزيادة عداده • الهدف $goal', style: const TextStyle(color: muted, fontSize: 10)),
+                ])),
+                Container(
+                  constraints: const BoxConstraints(minWidth: 58),
+                  padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+                  decoration: BoxDecoration(color: Colors.white.withOpacity(.09), borderRadius: BorderRadius.circular(15)),
+                  child: Text('${counts[phrase]}', textAlign: TextAlign.center, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
+                ),
+              ])),
+            ),
+          ),
+        ),
+        OutlinedButton.icon(
+          onPressed: () async {
+            final controller = TextEditingController(text: goal.toString());
+            final picked = await showDialog<int>(context: context, builder: (dialogContext) => AlertDialog(
+              backgroundColor: panel,
+              title: const Text('هدف التكرار'),
+              content: TextField(controller: controller, keyboardType: TextInputType.number, autofocus: true,
+                decoration: const InputDecoration(hintText: 'مثلاً 33')),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('إلغاء')),
+                TextButton(onPressed: () => Navigator.pop(dialogContext, int.tryParse(controller.text)), child: const Text('حفظ')),
+              ],
+            ));
+            controller.dispose();
+            if (picked != null && picked > 0) { setState(() => goal = picked); await _save(); }
+          },
+          icon: const Icon(Icons.flag_outlined),
+          label: Text('تغيير الهدف الحالي: $goal'),
+        ),
+      ],
+    ),
+  );
+}
+
 class _TasbeehPageState extends State<TasbeehPage> {
   int count = 0; int goal = 100; String phrase = 'سبحان الله';
   @override
