@@ -90,7 +90,7 @@ class _AwwabAppState extends State<AwwabApp> {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF07080B),
-        colorScheme: const ColorScheme.dark(primary: AppPalette.foreground, surface: Color(0xFF15171C)),
+        colorScheme: ColorScheme.dark(primary: white, surface: panel),
         fontFamily: 'NotoNaskhArabic',
         useMaterial3: true,
       ),
@@ -185,7 +185,7 @@ class PageFrame extends StatelessWidget {
 class GlassCard extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
-  const GlassCard({super.key, required this.child, this.padding = const EdgeInsets.all(17)});
+  GlassCard({super.key, required this.child, this.padding = const EdgeInsets.all(17)});
   @override
   Widget build(BuildContext context) => ClipRRect(
     borderRadius: BorderRadius.circular(23),
@@ -220,18 +220,18 @@ class HomePage extends StatelessWidget {
       const SizedBox(height: 5),
       Text('خطوة صغيرة كل يوم… وأثر يبقى في القلب.', style: TextStyle(color: muted, fontSize: 12)),
       const SizedBox(height: 18),
-      const Row(children: [Icon(Icons.auto_awesome, size: 15, color: muted), SizedBox(width: 7), Text('وردك اليومي يبدأ من هنا', style: TextStyle(fontSize: 11, color: muted))]),
+      Row(children: [Icon(Icons.auto_awesome, size: 15, color: muted), SizedBox(width: 7), Text('وردك اليومي يبدأ من هنا', style: TextStyle(fontSize: 11, color: muted))]),
     ])),
     const SizedBox(height: 14),
     GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Row(children: [Icon(Icons.mosque_outlined, size: 18), SizedBox(width: 8), Text('مواقيت الصلاة', style: TextStyle(fontWeight: FontWeight.w700))]),
+      Row(children: [Icon(Icons.mosque_outlined, size: 18), SizedBox(width: 8), Text('مواقيت الصلاة', style: TextStyle(fontWeight: FontWeight.w700))]),
       const SizedBox(height: 13),
       Text('اضبط موقعك وطريقة الحساب لعرض مواقيت دقيقة', style: TextStyle(color: muted, fontSize: 12)),
       const SizedBox(height: 12),
-      const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [PrayerMini(name: 'الفجر'), PrayerMini(name: 'الظهر'), PrayerMini(name: 'العصر'), PrayerMini(name: 'المغرب'), PrayerMini(name: 'العشاء')]),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [PrayerMini(name: 'الفجر'), PrayerMini(name: 'الظهر'), PrayerMini(name: 'العصر'), PrayerMini(name: 'المغرب'), PrayerMini(name: 'العشاء')]),
     ])),
     const SizedBox(height: 14),
-    GlassCard(child: Row(children: [Icon(Icons.menu_book_rounded, size: 22), const SizedBox(width: 12), const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('متابعة القرآن', style: TextStyle(fontWeight: FontWeight.w700)), SizedBox(height: 4), Text('ابدأ القراءة وسنحفظ موضعك على جهازك', style: TextStyle(color: muted, fontSize: 11))])), Icon(Icons.chevron_left, color: muted)])),
+    GlassCard(child: Row(children: [Icon(Icons.menu_book_rounded, size: 22), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('متابعة القرآن', style: TextStyle(fontWeight: FontWeight.w700)), SizedBox(height: 4), Text('ابدأ القراءة وسنحفظ موضعك على جهازك', style: TextStyle(color: muted, fontSize: 11))])), Icon(Icons.chevron_left, color: muted)])),
   ]));
 }
 
@@ -298,7 +298,7 @@ class _QuranPageState extends State<QuranPage> {
         child: GlassCard(child: Row(children: [
           Icon(Icons.menu_book_rounded, size: 23),
           const SizedBox(width: 12),
-          const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('مصحف المدينة النبوية', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
             SizedBox(height: 4),
             Text('رواية حفص • 604 صفحة • تنزيل للعمل دون إنترنت', style: TextStyle(color: muted, fontSize: 10)),
@@ -335,7 +335,7 @@ class _QuranPageState extends State<QuranPage> {
       ),
       const SizedBox(height: 12),
       FutureBuilder<List<dynamic>>(future: surahsFuture, builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) return const Padding(padding: EdgeInsets.all(35), child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
+        if (snapshot.connectionState == ConnectionState.waiting) return Padding(padding: EdgeInsets.all(35), child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
         if (snapshot.hasError) return GlassCard(child: Column(children: [
           Icon(Icons.wifi_off_rounded, color: muted, size: 25), const SizedBox(height: 9),
           Text('تعذر تحميل فهرس القرآن', style: TextStyle(fontWeight: FontWeight.w700)),
@@ -454,7 +454,7 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
     showModalBottomSheet(
       context: context,
       backgroundColor: panel,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (sheetContext) => SafeArea(child: Padding(
         padding: const EdgeInsets.fromLTRB(18, 14, 18, 22),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -504,7 +504,7 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
       ],
     ),
     body: FutureBuilder<List<dynamic>>(future: ayahsFuture, builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+      if (snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(strokeWidth: 2));
       if (snapshot.hasError) return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
         Icon(Icons.wifi_off_rounded, color: muted, size: 28), const SizedBox(height: 10), Text('تعذر تحميل الآيات'),
         TextButton(onPressed: () => setState(() { _initialScrollDone = false; ayahsFuture = loadAyahs(); }), child: Text('إعادة المحاولة')),
@@ -581,7 +581,7 @@ class _QuranFavoritesPageState extends State<QuranFavoritesPage> {
     backgroundColor: ink,
     appBar: AppBar(backgroundColor: ink, title: Text('الآيات المفضلة')),
     body: _items.isEmpty
-      ? const Center(child: Text('لم تضف آيات إلى المفضلة بعد', style: TextStyle(color: muted)))
+      ? Center(child: Text('لم تضف آيات إلى المفضلة بعد', style: TextStyle(color: muted)))
       : ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: _items.length,
@@ -725,7 +725,7 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
         GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('سجل التحديثات', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
           const SizedBox(height: 8),
-          if (_loading) const LinearProgressIndicator(minHeight: 2)
+          if (_loading) LinearProgressIndicator(minHeight: 2)
           else if (_error != null) ...[
             Text(_error!, style: TextStyle(color: muted, fontSize: 11)),
             TextButton(onPressed: _loadRelease, child: Text('إعادة المحاولة')),
@@ -751,7 +751,7 @@ class _AwwabAboutPageState extends State<AwwabAboutPage> {
                   label: Text('تنزيل ${asset['name']}'),
                 )),
             ] else
-              const Padding(padding: EdgeInsets.only(top: 10), child: Text('لا يوجد ملف APK مرفق بهذا الإصدار حتى الآن.',
+              Padding(padding: EdgeInsets.only(top: 10), child: Text('لا يوجد ملف APK مرفق بهذا الإصدار حتى الآن.',
                 style: TextStyle(color: muted, fontSize: 10))),
             if (_release!['html_url'] is String)
               TextButton(onPressed: () => launchUrl(Uri.parse(_release!['html_url'] as String), mode: LaunchMode.externalApplication),
@@ -872,7 +872,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
       backgroundColor: ink,
       actions: [IconButton(tooltip: 'تصفير جميع العدادات', onPressed: _reset, icon: Icon(Icons.refresh_rounded))],
     ),
-    body: !loaded ? const Center(child: CircularProgressIndicator()) : ListView(
+    body: !loaded ? Center(child: CircularProgressIndicator()) : ListView(
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 28),
       children: [
         GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -912,7 +912,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
               backgroundColor: panel,
               title: Text('هدف التكرار'),
               content: TextField(controller: controller, keyboardType: TextInputType.number, autofocus: true,
-                decoration: const InputDecoration(hintText: 'مثلاً 33')),
+                decoration: InputDecoration(hintText: 'مثلاً 33')),
               actions: [
                 TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text('إلغاء')),
                 TextButton(onPressed: () => Navigator.pop(dialogContext, int.tryParse(controller.text)), child: Text('حفظ')),
@@ -1018,7 +1018,7 @@ class _HijriOccasionsPageState extends State<HijriOccasionsPage> {
     backgroundColor: ink,
     appBar: AppBar(backgroundColor: ink, title: Text('المناسبات الهجرية')),
     body: _loading
-      ? const Center(child: CircularProgressIndicator())
+      ? Center(child: CircularProgressIndicator())
       : _events.isEmpty
         ? Center(child: Padding(padding: const EdgeInsets.all(22), child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(_error ?? 'لا توجد بيانات متاحة', textAlign: TextAlign.center, style: TextStyle(color: muted)),
@@ -1032,7 +1032,7 @@ class _HijriOccasionsPageState extends State<HijriOccasionsPage> {
                 borderRadius: BorderRadius.circular(22),
                 onTap: () => showModalBottomSheet(
                   context: context, backgroundColor: panel,
-                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
                   builder: (sheetContext) => SafeArea(child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -1058,7 +1058,7 @@ class _HijriOccasionsPageState extends State<HijriOccasionsPage> {
               ),
             ),
             const SizedBox(height: 4),
-            const GlassCard(child: Text('تنبيه: التواريخ المعروضة تقديرية وفق تقويم حسابي، وقد تتقدم أو تتأخر يومًا بحسب ثبوت الهلال والرؤية الشرعية في بلدك.',
+            GlassCard(child: Text('تنبيه: التواريخ المعروضة تقديرية وفق تقويم حسابي، وقد تتقدم أو تتأخر يومًا بحسب ثبوت الهلال والرؤية الشرعية في بلدك.',
               style: TextStyle(color: muted, fontSize: 11, height: 1.8))),
           ]),
   );
