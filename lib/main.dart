@@ -427,12 +427,70 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
     }),
   );
 }
-class AzkarPage extends StatelessWidget {
+class AzkarPage extends StatefulWidget {
   const AzkarPage({super.key});
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'الأذكار', subtitle: 'أذكارك اليومية في مكان واحد', child: Column(children: [
-    for (final item in ['أذكار الصباح','أذكار المساء','أذكار النوم','أذكار الاستيقاظ','الرقية الشرعية','أذكار بعد الصلاة']) Padding(padding: const EdgeInsets.only(bottom: 10), child: GlassCard(child: Row(children: [const Icon(Icons.spa_outlined, size: 20), const SizedBox(width: 12), Expanded(child: Text(item, style: const TextStyle(fontWeight: FontWeight.w600))), const Icon(Icons.chevron_left, color: muted)]))),
-  ]));
+  State<AzkarPage> createState() => _AzkarPageState();
+}
+
+class _AzkarPageState extends State<AzkarPage> {
+  static const _items = <Map<String, Object>>[
+    {'title': 'سبحان الله وبحمده', 'text': 'سبحان الله وبحمده', 'count': 100},
+    {'title': 'أستغفر الله', 'text': 'أستغفر الله وأتوب إليه', 'count': 100},
+    {'title': 'سيد الاستغفار', 'text': 'اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك عليّ، وأبوء بذنبي فاغفر لي، فإنه لا يغفر الذنوب إلا أنت', 'count': 1},
+    {'title': 'آية الكرسي', 'text': 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ... (البقرة: 255)', 'count': 1},
+    {'title': 'المعوذات', 'text': 'سورة الإخلاص، وسورة الفلق، وسورة الناس', 'count': 3},
+  ];
+  int _selected = 0;
+  int _count = 0;
+  @override
+  void initState() { super.initState(); _restore(); }
+  Future<void> _restore() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() { _selected = (prefs.getInt('azkar_selected') ?? 0).clamp(0, _items.length - 1); _count = prefs.getInt('azkar_count') ?? 0; });
+  }
+  Future<void> _persist() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('azkar_selected', _selected);
+    await prefs.setInt('azkar_count', _count);
+  }
+  void _choose(int index) {
+    setState(() { _selected = index; _count = 0; });
+    _persist();
+  }
+  @override
+  Widget build(BuildContext context) {
+    final item = _items[_selected];
+    final target = item['count'] as int;
+    return PageFrame(title: 'الأذكار', subtitle: 'أذكار مختارة مع عدّاد يحفظ تقدمك', child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      GlassCard(child: Column(children: [
+        Text(item['title'] as String, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 14),
+        Text(item['text'] as String, textAlign: TextAlign.center, textDirection: TextDirection.rtl, style: const TextStyle(fontSize: 19, height: 2, color: white)),
+        const SizedBox(height: 16),
+        Text('$_count / $target', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 10),
+        LinearProgressIndicator(value: (_count / target).clamp(0, 1), minHeight: 4),
+        const SizedBox(height: 12),
+        Row(children: [
+          Expanded(child: OutlinedButton.icon(onPressed: () { setState(() => _count = 0); _persist(); }, icon: const Icon(Icons.refresh, size: 17), label: const Text('إعادة'))),
+          const SizedBox(width: 9),
+          Expanded(child: FilledButton.icon(onPressed: _count >= target ? null : () { setState(() => _count++); _persist(); }, icon: const Icon(Icons.touch_app, size: 17), label: const Text('تسبيح'))),
+        ]),
+      ])),
+      const SizedBox(height: 14),
+      const Text('اختر الذكر', style: TextStyle(fontWeight: FontWeight.w700)),
+      const SizedBox(height: 8),
+      for (var i = 0; i < _items.length; i++)
+        Padding(padding: const EdgeInsets.only(bottom: 7), child: InkWell(onTap: () => _choose(i), borderRadius: BorderRadius.circular(18), child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12), child: Row(children: [
+          Icon(_selected == i ? Icons.radio_button_checked : Icons.radio_button_off, size: 18, color: _selected == i ? white : muted),
+          const SizedBox(width: 10),
+          Expanded(child: Text(_items[i]['title'] as String, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600))),
+          Text('× ${_items[i]['count']}', style: const TextStyle(fontSize: 11, color: muted)),
+        ])))),
+    ]));
+  }
 }
 
 class PrayerPage extends StatelessWidget {
