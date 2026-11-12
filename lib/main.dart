@@ -199,6 +199,7 @@ class _QuranPageState extends State<QuranPage> {
     await Navigator.push(context, MaterialPageRoute(builder: (_) => QuranReaderPage(
       number: surah['number'] as int, name: surah['name'] as String,
       englishName: surah['englishName'] as String, ayahCount: surah['numberOfAyahs'] as int,
+      initialAyah: lastSurah == surah['number'] ? (lastAyah ?? 1) : 1,
     )));
     loadLastRead();
   }
