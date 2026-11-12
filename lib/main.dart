@@ -17,7 +17,7 @@ class AwwabApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'أوّاب',
+    title: 'ملاذ',
     theme: ThemeData(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: ink,
@@ -348,14 +348,14 @@ class PrayerPage extends StatelessWidget {
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات أوّاب', child: Column(children: [
+  Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات ملاذ', child: Column(children: [
     _MoreTile(icon: Icons.touch_app_rounded, title: 'السبحة الإلكترونية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbeehPage()))),
     _MoreTile(icon: Icons.flag_outlined, title: 'الختمة والورد اليومي'),
     _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة'),
     _MoreTile(icon: Icons.notifications_none_rounded, title: 'التنبيهات والأذان'),
     _MoreTile(icon: Icons.language_rounded, title: 'اللغة'),
     _MoreTile(icon: Icons.text_fields_rounded, title: 'الخط والمظهر'),
-    _MoreTile(icon: Icons.info_outline_rounded, title: 'عن أوّاب'),
+    _MoreTile(icon: Icons.info_outline_rounded, title: 'عن ملاذ'),
   ]));
 }
 
