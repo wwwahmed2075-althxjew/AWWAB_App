@@ -106,16 +106,16 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppPalette.surface,
-        title: const Text('تنزيل المصحف كاملًا'),
-        content: const Text(
+        title: Text('تنزيل المصحف كاملًا'),
+        content: Text(
           'سيتم تنزيل الصفحات الـ604 وحفظها على جهازك لتعمل دون إنترنت. '
           'قد تحتاج إلى نحو 430 ميجابايت من مساحة التخزين، وقد يستهلك التنزيل بيانات الإنترنت. '
           'يفضل استخدام شبكة Wi-Fi.',
           textAlign: TextAlign.right,
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('ليس الآن')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('ابدأ التنزيل')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text('ليس الآن')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text('ابدأ التنزيل')),
         ],
       ),
     );
@@ -215,7 +215,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF17191E),
-        title: const Text('الانتقال إلى صفحة'),
+        title: Text('الانتقال إلى صفحة'),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
@@ -223,13 +223,13 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
           decoration: const InputDecoration(hintText: 'من 1 إلى 604'),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('إلغاء')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text('إلغاء')),
           TextButton(
             onPressed: () {
               final parsed = int.tryParse(controller.text.trim());
               if (parsed != null && parsed >= 1 && parsed <= pageCount) Navigator.pop(context, parsed);
             },
-            child: const Text('انتقال'),
+            child: Text('انتقال'),
           ),
         ],
       ),
@@ -259,9 +259,9 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
           IconButton(
             tooltip: 'تنزيل المصحف كاملًا للعمل دون إنترنت',
             onPressed: ready && !_downloading ? _confirmAndDownloadAll : null,
-            icon: const Icon(Icons.download_for_offline_outlined),
+            icon: Icon(Icons.download_for_offline_outlined),
           ),
-          IconButton(tooltip: 'انتقال إلى صفحة', onPressed: ready ? _goToPageDialog : null, icon: const Icon(Icons.find_in_page_outlined)),
+          IconButton(tooltip: 'انتقال إلى صفحة', onPressed: ready ? _goToPageDialog : null, icon: Icon(Icons.find_in_page_outlined)),
         ],
       ),
       body: !ready
@@ -291,7 +291,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
                 if (_error != null)
                   Padding(
                     padding: const EdgeInsets.all(10),
-                    child: Text(_error!, style: const TextStyle(color: Colors.orangeAccent, fontSize: 11), textAlign: TextAlign.center),
+                    child: Text(_error!, style: TextStyle(color: Colors.orangeAccent, fontSize: 11), textAlign: TextAlign.center),
                   ),
                 Expanded(
                   child: PageView.builder(
@@ -318,7 +318,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
                                       _pageLoads.remove(page);
                                       _loadPageOnce(page);
                                     }),
-                                    child: const Text('إعادة المحاولة'),
+                                    child: Text('إعادة المحاولة'),
                                   ),
                                 ],
                               ),
