@@ -106,6 +106,12 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
   Future<void> _refreshLocation() async {
     setState(() => _loading = true);
     final position = await _location.getLocation();
+    if (position != null) {
+      unawaited(AwwabNotificationService.instance.refreshPrayerAyatReminders(
+        latitude: position.latitude,
+        longitude: position.longitude,
+      ));
+    }
     if (!mounted) return;
     setState(() {
       _position = position;
@@ -668,32 +674,21 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
 
     if (item == 'آية الكرسي بعد الصلاة') {
       const baseId = 5000;
-      for (var day = 0; day < 30; day++) {
-        for (var prayer = 0; prayer < 5; prayer++) {
-          await AwwabNotificationService.instance.cancel(baseId + day * 5 + prayer);
+      if (!enabled[item]!) {
+        for (var day = 0; day < 30; day++) {
+          for (var prayer = 0; prayer < 5; prayer++) {
+            await AwwabNotificationService.instance.cancel(baseId + day * 5 + prayer);
+          }
         }
+        return;
       }
-      if (!enabled[item]!) return;
       final position = await AwwabLocationService().getLocation(askPermission: true);
       if (position == null) return;
-      final now = DateTime.now();
-      for (var day = 0; day < 30; day++) {
-        final date = now.add(Duration(days: day));
-        final prayerTimes = AwwabPrayerSchedule.obligatoryPrayerTimesForDate(
-          latitude: position.latitude,
-          longitude: position.longitude,
-          date: date,
-        );
-        for (var prayer = 0; prayer < prayerTimes.length; prayer++) {
-          final afterPrayer = prayerTimes[prayer].add(const Duration(minutes: 2));
-          await AwwabNotificationService.instance.scheduleAt(
-            id: baseId + day * 5 + prayer,
-            time: afterPrayer,
-            title: 'لا تنسَ آية الكرسي',
-            body: 'تذكير بقراءة آية الكرسي بعد الصلاة المكتوبة.',
-          );
-        }
-      }
+      await AwwabNotificationService.instance.refreshPrayerAyatReminders(
+        latitude: position.latitude,
+        longitude: position.longitude,
+        requestPermission: true,
+      );
       return;
     }
 
