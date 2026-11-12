@@ -145,9 +145,9 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
           const Expanded(child: Text('ملاذ', style: TextStyle(color: _fg, fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: .3))),
           _FeatureCard(child: Column(children: [
             Text(date, style: TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
-            const Text('التاريخ الميلادي', style: TextStyle(color: _muted, fontSize: 9)),
-            Text(_hijriDate(now), style: const TextStyle(color: _fg, fontSize: 10)),
-            const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted, fontSize: 8)),
+            Text('التاريخ الميلادي', style: TextStyle(color: _muted, fontSize: 9)),
+            Text(_hijriDate(now), style: TextStyle(color: _fg, fontSize: 10)),
+            Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted, fontSize: 8)),
           ])),
         ]),
         const SizedBox(height: 18),
@@ -158,13 +158,13 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
             Navigator.push(context, MaterialPageRoute(builder: (_) => AzkarDetailsPage(title: selected)));
           },
           child: _FeatureCard(child: Row(children: [
-            const Icon(Icons.auto_awesome_rounded, color: _fg, size: 25),
+            Icon(Icons.auto_awesome_rounded, color: _fg, size: 25),
             const SizedBox(width: 12),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('وردك اليومي', style: TextStyle(color: _muted, fontSize: 10)),
-              Text(_dailyAdhkar(), style: const TextStyle(color: _fg, fontSize: 16, fontWeight: FontWeight.w800)),
+              Text('وردك اليومي', style: TextStyle(color: _muted, fontSize: 10)),
+              Text(_dailyAdhkar(), style: TextStyle(color: _fg, fontSize: 16, fontWeight: FontWeight.w800)),
             ])),
-            const Icon(Icons.chevron_left_rounded, color: _muted),
+            Icon(Icons.chevron_left_rounded, color: _muted),
           ])),
         ),
         const SizedBox(height: 14),
@@ -173,14 +173,14 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
           const SizedBox(height: 13),
           if (_loading) const Padding(padding: EdgeInsets.all(12), child: Center(child: Text('جارٍ تحديد الموقع تلقائيًا…', style: TextStyle(color: _muted, fontSize: 11))))
           else if (_schedule == null) ...[
-            const Text('اسمح للتطبيق بالوصول إلى موقعك ليحسب المواقيت تلقائيًا، ويمكنه استخدام آخر موقع محفوظ دون إنترنت.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
-            TextButton.icon(onPressed: _refreshLocation, icon: const Icon(Icons.my_location), label: const Text('تحديث الموقع')),
-            TextButton.icon(onPressed: () => Geolocator.openAppSettings(), icon: const Icon(Icons.settings_outlined), label: const Text('فتح إعدادات إذن الموقع')),
+            Text('اسمح للتطبيق بالوصول إلى موقعك ليحسب المواقيت تلقائيًا، ويمكنه استخدام آخر موقع محفوظ دون إنترنت.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
+            TextButton.icon(onPressed: _refreshLocation, icon: Icon(Icons.my_location), label: Text('تحديث الموقع')),
+            TextButton.icon(onPressed: () => Geolocator.openAppSettings(), icon: Icon(Icons.settings_outlined), label: Text('فتح إعدادات إذن الموقع')),
           ] else ...[
-            Text('الصلاة القادمة: ${_schedule!.next!.name}', style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
+            Text('الصلاة القادمة: ${_schedule!.next!.name}', style: TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
             const SizedBox(height: 3),
-            Text(_duration(_schedule!.remaining ?? Duration.zero), style: const TextStyle(color: _fg, fontSize: 26, fontWeight: FontWeight.w800, fontFeatures: [])),
-            const Text('الوقت المتبقي', style: TextStyle(color: _muted, fontSize: 10)),
+            Text(_duration(_schedule!.remaining ?? Duration.zero), style: TextStyle(color: _fg, fontSize: 26, fontWeight: FontWeight.w800, fontFeatures: [])),
+            Text('الوقت المتبقي', style: TextStyle(color: _muted, fontSize: 10)),
             const SizedBox(height: 14),
             Wrap(spacing: 8, runSpacing: 9, children: _schedule!.entries.map((e) {
               final isNext = e.name == _schedule!.next!.name;
@@ -188,14 +188,14 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
               width: 91, padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 7),
               decoration: BoxDecoration(color: Colors.white.withOpacity(isNext ? .13 : .045), borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white.withOpacity(isNext ? .28 : .08))),
               child: Column(children: [
-                Text(e.name, style: const TextStyle(color: _muted, fontSize: 10)),
+                Text(e.name, style: TextStyle(color: _muted, fontSize: 10)),
                 const SizedBox(height: 4),
-                Text(_clock(e.time), style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
+                Text(_clock(e.time), style: TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
               ]),
             );
             }).toList()),
             const SizedBox(height: 8),
-            TextButton.icon(onPressed: _refreshLocation, icon: const Icon(Icons.refresh, size: 16), label: const Text('تحديث الموقع')),
+            TextButton.icon(onPressed: _refreshLocation, icon: Icon(Icons.refresh, size: 16), label: Text('تحديث الموقع')),
           ],
         ])),
         const SizedBox(height: 14),
@@ -206,7 +206,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
         _DailyContentCard(title: 'دعاء اليوم', text: _dailyDuas[dailyIndex % _dailyDuas.length]['text']!, source: _dailyDuas[dailyIndex % _dailyDuas.length]['source']!),
         const SizedBox(height: 14),
         _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('مساحات للعبادة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
+          Text('مساحات للعبادة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
           const SizedBox(height: 10),
           Wrap(spacing: 8, runSpacing: 8, children: [
             _QuickAction('أسماء الله الحسنى', Icons.favorite_outline, () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AllahNamesPage()))),
@@ -226,7 +226,7 @@ class _QuickAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ActionChip(
     avatar: Icon(icon, size: 16, color: _fg),
-    label: Text(label, style: const TextStyle(color: _fg, fontSize: 10)),
+    label: Text(label, style: TextStyle(color: _fg, fontSize: 10)),
     backgroundColor: Colors.white.withOpacity(.07),
     side: BorderSide(color: Colors.white.withOpacity(.1)),
     onPressed: onTap,
@@ -238,11 +238,11 @@ class _DailyContentCard extends StatelessWidget {
   const _DailyContentCard({required this.title, required this.text, required this.source});
   @override
   Widget build(BuildContext context) => _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text(title, style: const TextStyle(color: _fg, fontWeight: FontWeight.w800, fontSize: 13)),
+    Text(title, style: TextStyle(color: _fg, fontWeight: FontWeight.w800, fontSize: 13)),
     const SizedBox(height: 9),
-    Text(text, textAlign: TextAlign.right, textDirection: TextDirection.rtl, style: const TextStyle(color: _fg, fontSize: 15, height: 1.9)),
+    Text(text, textAlign: TextAlign.right, textDirection: TextDirection.rtl, style: TextStyle(color: _fg, fontSize: 15, height: 1.9)),
     const SizedBox(height: 7),
-    Text(source, style: const TextStyle(color: _muted, fontSize: 10)),
+    Text(source, style: TextStyle(color: _muted, fontSize: 10)),
   ]));
 }
 
@@ -322,39 +322,39 @@ class _AwwabPrayerPageState extends State<AwwabPrayerPage> with WidgetsBindingOb
   }
   @override
   Widget build(BuildContext context) => ListView(padding: const EdgeInsets.fromLTRB(20, 18, 20, 120), children: [
-    const Text('الصلاة', style: TextStyle(color: _fg, fontSize: 25, fontWeight: FontWeight.w800)),
+    Text('الصلاة', style: TextStyle(color: _fg, fontSize: 25, fontWeight: FontWeight.w800)),
     const SizedBox(height: 6),
-    const Text('المواقيت تُحسب محليًا على جهازك دون الحاجة للإنترنت', style: TextStyle(color: _muted, fontSize: 11)),
+    Text('المواقيت تُحسب محليًا على جهازك دون الحاجة للإنترنت', style: TextStyle(color: _muted, fontSize: 11)),
     const SizedBox(height: 18),
     if (_loading) const Center(child: CircularProgressIndicator())
     else if (_schedule == null) _FeatureCard(child: Column(children: [
-      const Icon(Icons.location_off_outlined, color: _muted, size: 28),
+      Icon(Icons.location_off_outlined, color: _muted, size: 28),
       const SizedBox(height: 8),
-      const Text('اسمح بالوصول للموقع لتحديد مواقيت الصلاة واتجاه القبلة تلقائيًا.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 12)),
-      TextButton(onPressed: _load, child: const Text('تحديث الموقع')),
-      TextButton(onPressed: () => Geolocator.openAppSettings(), child: const Text('فتح إعدادات إذن الموقع')),
+      Text('اسمح بالوصول للموقع لتحديد مواقيت الصلاة واتجاه القبلة تلقائيًا.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 12)),
+      TextButton(onPressed: _load, child: Text('تحديث الموقع')),
+      TextButton(onPressed: () => Geolocator.openAppSettings(), child: Text('فتح إعدادات إذن الموقع')),
     ]))
     else ...[
       _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('الصلاة القادمة: ${_schedule!.next!.name}', style: const TextStyle(color: _fg, fontWeight: FontWeight.w800)),
+        Text('الصلاة القادمة: ${_schedule!.next!.name}', style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
         const SizedBox(height: 6),
-        Text(_clock(_schedule!.next!.time), style: const TextStyle(color: _fg, fontSize: 27, fontWeight: FontWeight.w800)),
-        const Text('تُحسب المواقيت وفق طريقة الهيئة المصرية العامة للمساحة', style: TextStyle(color: _muted, fontSize: 10)),
+        Text(_clock(_schedule!.next!.time), style: TextStyle(color: _fg, fontSize: 27, fontWeight: FontWeight.w800)),
+        Text('تُحسب المواقيت وفق طريقة الهيئة المصرية العامة للمساحة', style: TextStyle(color: _muted, fontSize: 10)),
       ])),
       const SizedBox(height: 12),
       for (final e in _schedule!.entries) Padding(padding: const EdgeInsets.only(bottom: 8), child: _FeatureCard(child: Row(children: [
-        const Icon(Icons.access_time_rounded, color: _muted, size: 18), const SizedBox(width: 12),
-        Expanded(child: Text(e.name, style: const TextStyle(color: _fg, fontWeight: FontWeight.w700))),
-        Text(_clock(e.time), style: const TextStyle(color: _fg, fontWeight: FontWeight.w700)),
+        Icon(Icons.access_time_rounded, color: _muted, size: 18), const SizedBox(width: 12),
+        Expanded(child: Text(e.name, style: TextStyle(color: _fg, fontWeight: FontWeight.w700))),
+        Text(_clock(e.time), style: TextStyle(color: _fg, fontWeight: FontWeight.w700)),
       ]))),
       _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('التذكير بآية الكرسي بعد الصلاة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
+        Text('التذكير بآية الكرسي بعد الصلاة', style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
         const SizedBox(height: 6),
-        const Text('يمكن تفعيل تنبيه محلي بعد كل صلاة من إعدادات التذكيرات. يعمل بعد منح إذن الإشعارات.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
+        Text('يمكن تفعيل تنبيه محلي بعد كل صلاة من إعدادات التذكيرات. يعمل بعد منح إذن الإشعارات.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
       ])),
     ],
     const SizedBox(height: 12),
-    TextButton.icon(onPressed: _load, icon: const Icon(Icons.my_location), label: const Text('تحديث الموقع تلقائيًا')),
+    TextButton.icon(onPressed: _load, icon: Icon(Icons.my_location), label: Text('تحديث الموقع تلقائيًا')),
   ]);
 }
 
@@ -372,9 +372,9 @@ class AwwabAzkarPage extends StatelessWidget {
     ];
     return Scaffold(
       backgroundColor: _bg,
-      appBar: AppBar(backgroundColor: _bg, title: const Text('الأذكار')),
+      appBar: AppBar(backgroundColor: _bg, title: Text('الأذكار')),
       body: ListView(padding: const EdgeInsets.fromLTRB(18, 14, 18, 28), children: [
-        const Text('اختر الذكر الذي تريد البدء به', style: TextStyle(color: _muted, fontSize: 12)),
+        Text('اختر الذكر الذي تريد البدء به', style: TextStyle(color: _muted, fontSize: 12)),
         const SizedBox(height: 14),
         for (final section in sections) Padding(
           padding: const EdgeInsets.only(bottom: 10),
@@ -386,18 +386,18 @@ class AwwabAzkarPage extends StatelessWidget {
                 child: Icon(section.$3, color: _fg, size: 21)),
               const SizedBox(width: 13),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(section.$1, style: const TextStyle(color: _fg, fontWeight: FontWeight.w800, fontSize: 14)),
+                Text(section.$1, style: TextStyle(color: _fg, fontWeight: FontWeight.w800, fontSize: 14)),
                 const SizedBox(height: 4),
-                Text(section.$2, style: const TextStyle(color: _muted, fontSize: 10)),
+                Text(section.$2, style: TextStyle(color: _muted, fontSize: 10)),
               ])),
-              const Icon(Icons.chevron_left_rounded, color: _muted),
+              Icon(Icons.chevron_left_rounded, color: _muted),
             ])),
           ),
         ),
         const SizedBox(height: 5),
-        _FeatureCard(child: const Text('اضغط على أي قسم لفتح أذكاره مباشرة. ويمكنك ضبط التنبيهات الاختيارية من الإعدادات.',
+        _FeatureCard(child: Text('اضغط على أي قسم لفتح أذكاره مباشرة. ويمكنك ضبط التنبيهات الاختيارية من الإعدادات.',
           style: TextStyle(color: _muted, fontSize: 11, height: 1.8))),
-        TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage())), child: const Text('إعداد التذكيرات')),
+        TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReminderSettingsPage())), child: Text('إعداد التذكيرات')),
       ]),
     );
   }
@@ -474,7 +474,7 @@ class _AzkarDetailsPageState extends State<AzkarDetailsPage> {
       backgroundColor: _bg,
       title: Text(widget.title),
       actions: [
-        IconButton(tooltip: 'إعادة العدادات', onPressed: _reset, icon: const Icon(Icons.refresh_rounded)),
+        IconButton(tooltip: 'إعادة العدادات', onPressed: _reset, icon: Icon(Icons.refresh_rounded)),
       ],
     ),
     body: ListView(padding: const EdgeInsets.fromLTRB(16, 12, 16, 24), children: [
@@ -487,9 +487,9 @@ class _AzkarDetailsPageState extends State<AzkarDetailsPage> {
               borderRadius: BorderRadius.circular(22),
               child: _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 Row(children: [
-                  Text('${i + 1}', style: const TextStyle(color: _muted, fontSize: 11, fontWeight: FontWeight.w700)),
+                  Text('${i + 1}', style: TextStyle(color: _muted, fontSize: 11, fontWeight: FontWeight.w700)),
                   const Spacer(),
-                  Text('${counts[i]} / ${_targetFor(items[i]['count']!)}', style: const TextStyle(color: _fg, fontSize: 11, fontWeight: FontWeight.w800)),
+                  Text('${counts[i]} / ${_targetFor(items[i]['count']!)}', style: TextStyle(color: _fg, fontSize: 11, fontWeight: FontWeight.w800)),
                 ]),
                 const SizedBox(height: 5),
                 InkWell(
@@ -498,26 +498,26 @@ class _AzkarDetailsPageState extends State<AzkarDetailsPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Text(items[i]['text']!, textDirection: TextDirection.rtl, textAlign: TextAlign.right,
-                      style: const TextStyle(color: _fg, fontSize: 17, height: 2)),
+                      style: TextStyle(color: _fg, fontSize: 17, height: 2)),
                   ),
                 ),
                 const SizedBox(height: 12),
                 Row(children: [
-                  Expanded(child: Text(items[i]['count']!, style: const TextStyle(color: _fg, fontSize: 10, fontWeight: FontWeight.w700))),
+                  Expanded(child: Text(items[i]['count']!, style: TextStyle(color: _fg, fontSize: 10, fontWeight: FontWeight.w700))),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
                     decoration: BoxDecoration(color: Colors.white.withOpacity(.09), borderRadius: BorderRadius.circular(18)),
                     child: Text('${counts[i]} / ${_targetFor(items[i]['count']!)}',
-                      style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w800)),
+                      style: TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w800)),
                   ),
                 ]),
                 const SizedBox(height: 4),
-                Text(items[i]['source']!, style: const TextStyle(color: _muted, fontSize: 10)),
+                Text(items[i]['source']!, style: TextStyle(color: _muted, fontSize: 10)),
               ])),
             ),
           ),
         ),
-      const Text('اضغط على بطاقة الذكر نفسها لزيادة العداد، واستخدم زر الإعادة أعلى الصفحة لتصفير جميع العدادات.',
+      Text('اضغط على بطاقة الذكر نفسها لزيادة العداد، واستخدم زر الإعادة أعلى الصفحة لتصفير جميع العدادات.',
         textDirection: TextDirection.rtl, style: TextStyle(color: _muted, fontSize: 10, height: 1.8)),
     ]),
   );
@@ -629,7 +629,7 @@ class AllahNamesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: _bg,
-    appBar: AppBar(backgroundColor: _bg, title: const Text('أسماء الله الحسنى')),
+    appBar: AppBar(backgroundColor: _bg, title: Text('أسماء الله الحسنى')),
     body: ListView.builder(padding: const EdgeInsets.all(18), itemCount: names.length + 1, itemBuilder: (context, i) {
       if (i == names.length) return const Padding(padding: EdgeInsets.only(top: 10), child: Text('هذه قائمة مشهورة متداولة للأسماء التسعة والتسعين. وقد اختلف أهل العلم في تعيين القائمة كاملة؛ والمعاني هنا موجزة للتقريب وليست بديلًا عن كتب العقيدة وشروح الأسماء الحسنى.', textDirection: TextDirection.rtl, style: TextStyle(color: _muted, fontSize: 10, height: 1.8)));
       return Padding(
@@ -640,9 +640,9 @@ class AllahNamesPage extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Colors.white.withOpacity(.16))),
         backgroundColor: Colors.white.withOpacity(.055),
         collapsedBackgroundColor: Colors.white.withOpacity(.045),
-        leading: Text('${i + 1}'.padLeft(2, '0'), style: const TextStyle(color: _muted)),
-        title: Text(names[i].$1, style: const TextStyle(color: _fg, fontWeight: FontWeight.w800)),
-        children: [Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 14), child: Align(alignment: Alignment.centerRight, child: Text(names[i].$2, textAlign: TextAlign.right, style: const TextStyle(color: _fg, height: 1.8))))],
+        leading: Text('${i + 1}'.padLeft(2, '0'), style: TextStyle(color: _muted)),
+        title: Text(names[i].$1, style: TextStyle(color: _fg, fontWeight: FontWeight.w800)),
+        children: [Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 14), child: Align(alignment: Alignment.centerRight, child: Text(names[i].$2, textAlign: TextAlign.right, style: TextStyle(color: _fg, height: 1.8))))],
       )),
     );
     }),
@@ -654,7 +654,7 @@ class PrayerVirtuesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: _bg,
-    appBar: AppBar(backgroundColor: _bg, title: const Text('فضل الضحى وقيام الليل')),
+    appBar: AppBar(backgroundColor: _bg, title: Text('فضل الضحى وقيام الليل')),
     body: ListView(padding: const EdgeInsets.all(18), children: [
       _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
         Text('فضل صلاة الضحى', style: TextStyle(color: _fg, fontWeight: FontWeight.w800, fontSize: 17)),
@@ -688,7 +688,7 @@ class QuranDhikrVirtuesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: _bg,
-    appBar: AppBar(backgroundColor: _bg, title: const Text('فضل القرآن والذكر')),
+    appBar: AppBar(backgroundColor: _bg, title: Text('فضل القرآن والذكر')),
     body: ListView(padding: const EdgeInsets.all(18), children: [
       _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
         Text('آيات في فضل القرآن', style: TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
@@ -936,11 +936,11 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: _bg,
-    appBar: AppBar(backgroundColor: _bg, title: const Text('متابعة التذكيرات')),
+    appBar: AppBar(backgroundColor: _bg, title: Text('متابعة التذكيرات')),
     body: _loading
       ? const Center(child: CircularProgressIndicator())
       : ListView(padding: const EdgeInsets.all(18), children: [
-        const Text(
+        Text(
           'فعّل كل تذكير على حدة، واضبط وقتًا مناسبًا له. تعمل التنبيهات محليًا دون إنترنت بعد منح إذن الإشعارات.',
           style: TextStyle(color: _muted, fontSize: 11, height: 1.8),
         ),
@@ -953,7 +953,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
               contentPadding: EdgeInsets.zero,
               value: enabled[item] ?? false,
               activeThumbColor: _fg,
-              title: Text(item == 'الورد اليومي' ? 'تذكير الورد القرآني اليومي' : item, style: const TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700)),
+              title: Text(item == 'الورد اليومي' ? 'تذكير الورد القرآني اليومي' : item, style: TextStyle(color: _fg, fontSize: 13, fontWeight: FontWeight.w700)),
               onChanged: (value) => _toggle(item, value),
             ),
             if ((enabled[item] ?? false) && item != 'آية الكرسي بعد الصلاة')
@@ -970,7 +970,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
                       await _saveItem(item);
                     }
                   },
-                  icon: const Icon(Icons.schedule, size: 16),
+                  icon: Icon(Icons.schedule, size: 16),
                   label: Text('موعد التنبيه: ${(times[item] ?? _defaultTime(item)).format(context)}'),
                 ),
               ),
@@ -980,7 +980,7 @@ class _ReminderSettingsPageState extends State<ReminderSettingsPage> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 12, bottom: 8),
                   child: Text(item == 'صيام الإثنين' ? 'يتكرر كل يوم إثنين في الموعد المحدد' : 'يتكرر كل يوم خميس في الموعد المحدد',
-                    style: const TextStyle(color: _muted, fontSize: 10)),
+                    style: TextStyle(color: _muted, fontSize: 10)),
                 ),
               ),
             if (item == 'آية الكرسي بعد الصلاة' && (enabled[item] ?? false))
@@ -1048,9 +1048,9 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> with WidgetsBindingObse
     final rotation = direction == null || _heading == null ? 0.0 : (direction - (_heading! + _declination)) * math.pi / 180;
     return Scaffold(
       backgroundColor: _bg,
-      appBar: AppBar(backgroundColor: _bg, title: const Text('اتجاه القبلة')),
+      appBar: AppBar(backgroundColor: _bg, title: Text('اتجاه القبلة')),
       body: Center(child: Padding(padding: const EdgeInsets.all(22), child: Column(mainAxisSize: MainAxisSize.min, children: [
-        if (direction == null) const Text('اسمح بالوصول للموقع لتحديد اتجاه القبلة.', style: TextStyle(color: _muted))
+        if (direction == null) Text('اسمح بالوصول للموقع لتحديد اتجاه القبلة.', style: TextStyle(color: _muted))
         else ...[
           Transform.rotate(angle: rotation, child: Container(
             width: 250, height: 250,
@@ -1061,9 +1061,9 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> with WidgetsBindingObse
             ]),
           )),
           const SizedBox(height: 18),
-          Text('اتجاه القبلة الحقيقي: ${direction.toStringAsFixed(1)}°', style: const TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
-          Text('تصحيح الانحراف المغناطيسي: ${_declination.toStringAsFixed(1)}°', style: const TextStyle(color: _muted, fontSize: 10)),
-          Text(_heading == null ? 'حساس البوصلة غير متاح أو يحتاج إلى معايرة.' : 'اتبع اتجاه السهم، وحرّك الهاتف على شكل رقم 8 بعيدًا عن المعادن والأجهزة المغناطيسية لمعايرة الحساس.', style: const TextStyle(color: _muted, fontSize: 11)),
+          Text('اتجاه القبلة الحقيقي: ${direction.toStringAsFixed(1)}°', style: TextStyle(color: _fg, fontSize: 17, fontWeight: FontWeight.w800)),
+          Text('تصحيح الانحراف المغناطيسي: ${_declination.toStringAsFixed(1)}°', style: TextStyle(color: _muted, fontSize: 10)),
+          Text(_heading == null ? 'حساس البوصلة غير متاح أو يحتاج إلى معايرة.' : 'اتبع اتجاه السهم، وحرّك الهاتف على شكل رقم 8 بعيدًا عن المعادن والأجهزة المغناطيسية لمعايرة الحساس.', style: TextStyle(color: _muted, fontSize: 11)),
         ],
       ]))),
     );
