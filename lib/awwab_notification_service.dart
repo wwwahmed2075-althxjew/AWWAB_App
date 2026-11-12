@@ -8,19 +8,24 @@ class AwwabNotificationService {
   static final AwwabNotificationService instance = AwwabNotificationService._();
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
   bool _ready = false;
+  bool _permissionRequested = false;
 
   Future<void> initialise({bool requestPermission = false}) async {
-    if (_ready) return;
-    tzdata.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Africa/Cairo'));
-    await _plugin.initialize(
-      const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      ),
-    );
-    final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-    if (requestPermission) await android?.requestNotificationsPermission();
-    _ready = true;
+    if (!_ready) {
+      tzdata.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation('Africa/Cairo'));
+      await _plugin.initialize(
+        const InitializationSettings(
+          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        ),
+      );
+      _ready = true;
+    }
+    if (requestPermission && !_permissionRequested) {
+      final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      await android?.requestNotificationsPermission();
+      _permissionRequested = true;
+    }
   }
 
   Future<void> scheduleDaily({
