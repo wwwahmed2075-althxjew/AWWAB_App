@@ -63,3 +63,7 @@ This register records the primary references for the starter content currently e
 
 
 The app's offline reminder scheduler uses the device timezone and refreshes prayer-based Ayat al-Kursi alerts from the cached device coordinates. Audio recordings are not bundled until each recording's redistribution permission and attribution are verified.
+
+
+## Adhan audio
+- `Adhan.ogg` by Aishatu98, Wikimedia Commons, dedicated under Creative Commons CC0 1.0 Universal. File page: https://commons.wikimedia.org/wiki/File:Adhan.ogg. Original recording is approximately 42 seconds; the app downloads it on request, verifies SHA-1 `b86432f1581e11f898de1dc3402af0d541af110e`, and stores it for offline playback. This recording is not attributed to a named sheikh or muezzin.
