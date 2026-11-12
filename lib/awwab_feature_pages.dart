@@ -9,10 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'awwab_location_service.dart';
 import 'awwab_prayer_service.dart';
 import 'awwab_notification_service.dart';
+import 'app_theme.dart';
 
-const _bg = Color(0xFF07080B);
-const _fg = Color(0xFFF5F5F7);
-const _muted = Color(0xFF9A9CA5);
+Color get _bg => AppPalette.background;
+Color get _fg => AppPalette.foreground;
+Color get _muted => AppPalette.muted;
 
 class _FeatureCard extends StatelessWidget {
   final Widget child;
@@ -24,9 +25,9 @@ class _FeatureCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.055),
+        color: AppPalette.cardOverlay,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withOpacity(.11)),
+        border: Border.all(color: AppPalette.cardBorder),
       ),
       child: child,
     ),
@@ -143,7 +144,7 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
         Row(children: [
           const Expanded(child: Text('ملاذ', style: TextStyle(color: _fg, fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: .3))),
           _FeatureCard(child: Column(children: [
-            Text(date, style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
+            Text(date, style: TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
             const Text('التاريخ الميلادي', style: TextStyle(color: _muted, fontSize: 9)),
             Text(_hijriDate(now), style: const TextStyle(color: _fg, fontSize: 10)),
             const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted, fontSize: 8)),
