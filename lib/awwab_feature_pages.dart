@@ -175,7 +175,8 @@ class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserv
           if (_loading) const Padding(padding: EdgeInsets.all(12), child: Center(child: Text('جارٍ تحديد الموقع تلقائيًا…', style: TextStyle(color: _muted, fontSize: 11))))
           else if (_schedule == null) ...[
             const Text('اسمح للتطبيق بالوصول إلى موقعك ليحسب المواقيت تلقائيًا، ويمكنه استخدام آخر موقع محفوظ دون إنترنت.', style: TextStyle(color: _muted, fontSize: 11, height: 1.7)),
-            TextButton.icon(onPressed: _refreshLocation, icon: const Icon(Icons.my_location), label: const Text('السماح وتحديد موقعي')),
+            TextButton.icon(onPressed: _refreshLocation, icon: const Icon(Icons.my_location), label: const Text('تحديث الموقع')),
+            TextButton.icon(onPressed: () => Geolocator.openAppSettings(), icon: const Icon(Icons.settings_outlined), label: const Text('فتح إعدادات إذن الموقع')),
           ] else ...[
             Text('الصلاة القادمة: ${_schedule!.next!.name}', style: const TextStyle(color: _fg, fontSize: 12, fontWeight: FontWeight.w700)),
             const SizedBox(height: 3),
@@ -331,7 +332,8 @@ class _AwwabPrayerPageState extends State<AwwabPrayerPage> with WidgetsBindingOb
       const Icon(Icons.location_off_outlined, color: _muted, size: 28),
       const SizedBox(height: 8),
       const Text('اسمح بالوصول للموقع لتحديد مواقيت الصلاة واتجاه القبلة تلقائيًا.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 12)),
-      TextButton(onPressed: _load, child: const Text('السماح بالموقع')),
+      TextButton(onPressed: _load, child: const Text('تحديث الموقع')),
+      TextButton(onPressed: () => Geolocator.openAppSettings(), child: const Text('فتح إعدادات إذن الموقع')),
     ]))
     else ...[
       _FeatureCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
