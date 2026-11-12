@@ -7,15 +7,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'madinah_mushaf_reader_page.dart';
 
-void main() => runApp(const AwwabApp());
+void main() => runApp(const MalazApp());
 
 const ink = Color(0xFF07080B);
 const panel = Color(0xFF15171C);
 const white = Color(0xFFF5F5F7);
 const muted = Color(0xFF9A9CA5);
 
-class AwwabApp extends StatelessWidget {
-  const AwwabApp({super.key});
+class MalazApp extends StatelessWidget {
+  const MalazApp({super.key});
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
