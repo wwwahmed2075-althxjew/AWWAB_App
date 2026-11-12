@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:archive/archive.dart';
+
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,6 +70,7 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
       final savedPage = prefs.getInt('madinah_mushaf_last_page') ?? 1;
       _manifest = manifest;
       _cacheDirectory = directory;
+      await _installBundledPages(directory);
       var downloaded = 0;
       for (var i = 1; i <= pageCount; i++) {
         if (await _isVerified(File('${directory.path}/$i.svg'), i)) downloaded++;
@@ -82,6 +85,50 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
       });
     } catch (e) {
       if (mounted) setState(() => _error = 'تعذر تهيئة المصحف: $e');
+    }
+  }
+
+  Future<void> _installBundledPages(Directory directory) async {
+    // The release APK contains eleven verified ZIP bundles covering all 604 pages.
+    // Extract one 60-page bundle at a time to keep peak memory bounded.
+    for (var start = 1; start <= pageCount; start += 60) {
+      final end = (start + 59).clamp(1, pageCount).toInt();
+      var chunkReady = true;
+      for (var page = start; page <= end; page++) {
+        if (!await _isVerified(File('${directory.path}/$page.svg'), page)) {
+          chunkReady = false;
+          break;
+        }
+      }
+      if (chunkReady) continue;
+
+      final assetName = 'assets/mushaf/offline/pages_${start.toString().padLeft(3, '0')}_${end.toString().padLeft(3, '0')}.zip';
+      final asset = await rootBundle.load(assetName);
+      final bytes = asset.buffer.asUint8List(asset.offsetInBytes, asset.lengthInBytes);
+      final archive = ZipDecoder().decodeBytes(bytes);
+      for (final entry in archive.files) {
+        if (!entry.isFile) continue;
+        final pageName = entry.name.split('/').last;
+        final page = int.tryParse(pageName.replaceFirst('.svg', ''));
+        if (page == null || page < start || page > end) continue;
+        final pageBytes = entry.content as List<int>;
+        final header = utf8.encode('blob ${pageBytes.length}\\u0000');
+        final digest = sha1.convert(<int>[...header, ...pageBytes]).toString();
+        if (digest != _expectedHash(page)) {
+          throw FormatException('فشل التحقق من صفحة المصحف المضمنة رقم $page.');
+        }
+        final target = File('${directory.path}/$page.svg');
+        final temp = File('${target.path}.tmp');
+        await temp.writeAsBytes(pageBytes, flush: true);
+        if (await target.exists()) await target.delete();
+        await temp.rename(target.path);
+      }
+      for (var page = start; page <= end; page++) {
+        if (!await _isVerified(File('${directory.path}/$page.svg'), page)) {
+          throw FormatException('ملف المصحف المضمن لا يحتوي على صفحة سليمة رقم $page.');
+        }
+      }
+      if (mounted) setState(() => _downloaded = end);
     }
   }
 
@@ -267,10 +314,9 @@ class _MadinahMushafReaderPageState extends State<MadinahMushafReaderPage> {
           ],
         ),
         actions: [
-          IconButton(
-            tooltip: 'تنزيل المصحف كاملًا للعمل دون إنترنت',
-            onPressed: ready && !_downloading ? _confirmAndDownloadAll : null,
-            icon: const Icon(Icons.download_for_offline_outlined),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Icon(Icons.offline_pin_outlined, size: 21),
           ),
           IconButton(tooltip: 'انتقال إلى صفحة', onPressed: ready ? _goToPageDialog : null, icon: const Icon(Icons.find_in_page_outlined)),
         ],
