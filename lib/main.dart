@@ -90,7 +90,7 @@ class _AwwabAppState extends State<AwwabApp> {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF07080B),
-        colorScheme: const ColorScheme.dark(primary: Color(0xFFF5F5F7), surface: Color(0xFF15171C)),
+        colorScheme: const ColorScheme.dark(primary: AppPalette.foreground, surface: Color(0xFF15171C)),
         fontFamily: 'NotoNaskhArabic',
         useMaterial3: true,
       ),
@@ -145,7 +145,7 @@ class _MainShellState extends State<MainShell> {
                     duration: const Duration(milliseconds: 220),
                     padding: const EdgeInsets.symmetric(vertical: 7),
                     decoration: BoxDecoration(
-                      color: tab == i ? Colors.white.withOpacity(.12) : Colors.transparent,
+                      color: tab == i ? AppPalette.overlay(.12) : Colors.transparent,
                       borderRadius: BorderRadius.circular(19),
                     ),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -206,7 +206,7 @@ class GlassIcon extends StatelessWidget {
   const GlassIcon({super.key, required this.icon});
   @override
   Widget build(BuildContext context) => Container(
-    width: 40, height: 40, decoration: BoxDecoration(color: AppPalette.cardOverlay, shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(.12))),
+    width: 40, height: 40, decoration: BoxDecoration(color: AppPalette.cardOverlay, shape: BoxShape.circle, border: Border.all(color: AppPalette.overlay(.12))),
     child: Icon(icon, size: 19, color: white),
   );
 }
@@ -327,9 +327,9 @@ class _QuranPageState extends State<QuranPage> {
         decoration: InputDecoration(
           hintText: 'ابحث باسم السورة أو رقمها', hintStyle: TextStyle(color: muted, fontSize: 12),
           prefixIcon: Icon(Icons.search_rounded, color: muted, size: 19),
-          filled: true, fillColor: Colors.white.withOpacity(.045),
+          filled: true, fillColor: AppPalette.overlay(.045),
           contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withOpacity(.1))),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: AppPalette.overlay(.1))),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Colors.white38)),
         ),
       ),
@@ -525,14 +525,14 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
             onLongPress: () => _showAyahActions(ayah),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 7),
-              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(.09)))),
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppPalette.overlay(.09)))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 Text(ayah['text'] as String, textAlign: TextAlign.justify, textDirection: TextDirection.rtl,
                   style: TextStyle(fontSize: 23, height: 2.05, color: white, fontFamily: 'serif')),
                 const SizedBox(height: 12),
                 Align(alignment: Alignment.centerLeft, child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(.07), borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: AppPalette.overlay(.07), borderRadius: BorderRadius.circular(20)),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
                     Text('۞ $number', style: TextStyle(fontSize: 9, color: muted)),
                     if (_favorites.contains(number)) ...[
@@ -898,7 +898,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
                 Container(
                   constraints: const BoxConstraints(minWidth: 58),
                   padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(.09), borderRadius: BorderRadius.circular(15)),
+                  decoration: BoxDecoration(color: AppPalette.overlay(.09), borderRadius: BorderRadius.circular(15)),
                   child: Text('${counts[phrase]}', textAlign: TextAlign.center, style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
                 ),
               ])),
