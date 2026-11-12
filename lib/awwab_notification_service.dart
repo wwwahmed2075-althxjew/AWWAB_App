@@ -53,6 +53,33 @@ class AwwabNotificationService {
     );
   }
 
+  Future<void> scheduleAt({
+    required int id,
+    required DateTime time,
+    required String title,
+    required String body,
+  }) async {
+    await initialise();
+    final scheduled = tz.TZDateTime.from(time, tz.local);
+    if (!scheduled.isAfter(tz.TZDateTime.now(tz.local))) return;
+    await _plugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduled,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'awwab_prayer_reminders',
+          'تذكير بعد الصلاة',
+          channelDescription: 'التذكير بقراءة آية الكرسي بعد الصلاة المكتوبة',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
+  }
+
   Future<void> cancel(int id) async {
     await initialise();
     await _plugin.cancel(id);
