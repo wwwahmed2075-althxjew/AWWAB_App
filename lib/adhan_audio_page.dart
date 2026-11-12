@@ -257,16 +257,16 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
                 child: Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: AppPalette.isDark ? Colors.white.withOpacity(_selectedId == recording.id ? .11 : .045) : Colors.black.withOpacity(_selectedId == recording.id ? .08 : .025),
+                    color: AppPalette.isDark ? AppPalette.overlay(_selectedId == recording.id ? .11 : .045) : Colors.black.withOpacity(_selectedId == recording.id ? .08 : .025),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppPalette.isDark ? Colors.white.withOpacity(_selectedId == recording.id ? .25 : .08) : Colors.black.withOpacity(_selectedId == recording.id ? .18 : .06)),
+                    border: Border.all(color: AppPalette.isDark ? AppPalette.overlay(_selectedId == recording.id ? .25 : .08) : Colors.black.withOpacity(_selectedId == recording.id ? .18 : .06)),
                   ),
                   child: Row(children: [
                     Icon(_selectedId == recording.id ? Icons.radio_button_checked : Icons.radio_button_off,
                       color: AppPalette.foreground, size: 19),
                     const SizedBox(width: 10),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(recording.title, style: TextStyle(color: Color(0xFFF5F5F7), fontWeight: FontWeight.w700)),
+                      Text(recording.title, style: TextStyle(color: AppPalette.foreground, fontWeight: FontWeight.w700)),
                       const SizedBox(height: 3),
                       Text('${recording.creator} • ${recording.duration}',
                         style: TextStyle(color: AppPalette.muted, fontSize: 10)),
@@ -286,11 +286,11 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
               border: Border.all(color: AppPalette.cardBorder),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(selected.title, style: TextStyle(color: Color(0xFFF5F5F7), fontSize: 16, fontWeight: FontWeight.w800)),
+              Text(selected.title, style: TextStyle(color: AppPalette.foreground, fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
               Text(
                 'الترخيص: ${selected.licenseLabel}. راجع رابط المصدر لمعرفة شروط النسب وإعادة الاستخدام. أسماء رافعي الملفات لا تعني بالضرورة أنهم المؤذنون؛ لا نذكر اسم مؤذن إلا إذا وثّقه مصدر التسجيل.',
-                style: TextStyle(color: Color(0xFF9A9CA5), fontSize: 11, height: 1.8),
+                style: TextStyle(color: AppPalette.muted, fontSize: 11, height: 1.8),
               ),
               const SizedBox(height: 13),
               if (_audioFile == null)
@@ -305,7 +305,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
                 const Row(children: [
                   Icon(Icons.offline_pin_rounded, color: Color(0xFFB7D8C4)),
                   SizedBox(width: 8),
-                  Text('التسجيل محفوظ على الجهاز', style: TextStyle(color: Color(0xFFF5F5F7), fontSize: 12)),
+                  Text('التسجيل محفوظ على الجهاز', style: TextStyle(color: AppPalette.foreground, fontSize: 12)),
                 ]),
                 const SizedBox(height: 10),
                 Row(children: [
@@ -328,7 +328,7 @@ class _AdhanAudioPageState extends State<AdhanAudioPage> {
               ],
               const SizedBox(height: 8),
               SelectableText('المصدر والترخيص: ${selected.licenseUrl}',
-                style: TextStyle(color: Color(0xFF9A9CA5), fontSize: 10)),
+                style: TextStyle(color: AppPalette.muted, fontSize: 10)),
             ]),
           ),
         ],
