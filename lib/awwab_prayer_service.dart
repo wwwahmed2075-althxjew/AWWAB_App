@@ -48,10 +48,10 @@ class AwwabPrayerSchedule {
     }
 
     if (next == null) {
-      final tomorrow = PrayerTimes.today(
+      final tomorrow = PrayerTimes(
         coordinates,
+        DateComponents.from(instant.add(const Duration(days: 1))),
         parameters,
-        date: DateComponents.from(instant.add(const Duration(days: 1))),
       );
       next = AwwabPrayerEntry('الفجر', tomorrow.fajr);
     }
