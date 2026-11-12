@@ -9,7 +9,7 @@ class AwwabNotificationService {
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
   bool _ready = false;
 
-  Future<void> initialise() async {
+  Future<void> initialise({bool requestPermission = false}) async {
     if (_ready) return;
     tzdata.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('Africa/Cairo'));
@@ -19,7 +19,7 @@ class AwwabNotificationService {
       ),
     );
     final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-    await android?.requestNotificationsPermission();
+    if (requestPermission) await android?.requestNotificationsPermission();
     _ready = true;
   }
 
@@ -30,7 +30,7 @@ class AwwabNotificationService {
     required int hour,
     required int minute,
   }) async {
-    await initialise();
+    await initialise(requestPermission: true);
     final now = tz.TZDateTime.now(tz.local);
     var next = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
     if (!next.isAfter(now)) next = next.add(const Duration(days: 1));
@@ -59,7 +59,7 @@ class AwwabNotificationService {
     required String title,
     required String body,
   }) async {
-    await initialise();
+    await initialise(requestPermission: true);
     final scheduled = tz.TZDateTime.from(time, tz.local);
     if (!scheduled.isAfter(tz.TZDateTime.now(tz.local))) return;
     await _plugin.zonedSchedule(
