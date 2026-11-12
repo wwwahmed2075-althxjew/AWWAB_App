@@ -493,13 +493,83 @@ class _AzkarPageState extends State<AzkarPage> {
   }
 }
 
-class PrayerPage extends StatelessWidget {
+class PrayerPage extends StatefulWidget {
   const PrayerPage({super.key});
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'الصلاة', subtitle: 'مواقيت الصلاة والأذان والقبلة', child: Column(children: [
-    GlassCard(child: Column(children: const [Icon(Icons.location_on_outlined, size: 25), SizedBox(height: 9), Text('حدد موقعك لعرض المواقيت الصحيحة', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)), SizedBox(height: 5), Text('لن نعرض أوقاتًا تقديرية غير موثوقة', style: TextStyle(fontSize: 11, color: muted))])),
+  State<PrayerPage> createState() => _PrayerPageState();
+}
+
+class _PrayerPageState extends State<PrayerPage> {
+  static const _names = ['الفجر', 'الشروق', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
+  static const _keys = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+  Map<String, String>? _times;
+  String? _locationLabel;
+  String? _error;
+  bool _loading = false;
+  int _method = 5;
+  @override
+  void initState() { super.initState(); _restore(); }
+  Future<void> _restore() async {
+    final p = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() { _method = p.getInt('malaz_prayer_method') ?? 5; _locationLabel = p.getString('malaz_prayer_location_label'); });
+    final saved = p.getString('malaz_prayer_times');
+    if (saved != null) {
+      try { final decoded = jsonDecode(saved) as Map<String, dynamic>; if (mounted) setState(() => _times = decoded.map((k,v) => MapEntry(k, v.toString()))); } catch (_) {}
+    }
+    if (_locationLabel != null) _calculate();
+  }
+  Future<void> _calculate() async {
+    if (_loading) return;
+    setState(() { _loading = true; _error = null; });
+    try {
+      final service = await Geolocator.isLocationServiceEnabled();
+      if (!service) throw Exception('فعّل خدمة الموقع في الهاتف أولًا.');
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) throw Exception('اسمح لملاذ بالوصول إلى الموقع لحساب المواقيت.');
+      final position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 20)));
+      final now = DateTime.now();
+      final coordinates = Coordinates(position.latitude, position.longitude);
+      final date = DateComponents(now.year, now.month, now.day);
+      final params = _method == 0 ? CalculationMethod.egyptian.getParameters()
+          : _method == 1 ? CalculationMethod.muslim_world_league.getParameters()
+          : _method == 2 ? CalculationMethod.umm_al_qura.getParameters()
+          : CalculationMethod.karachi.getParameters();
+      params.madhab = Madhab.shafi;
+      final prayers = PrayerTimes(coordinates, date, params);
+      final values = <String, String>{};
+      final raw = [prayers.fajr, prayers.sunrise, prayers.dhuhr, prayers.asr, prayers.maghrib, prayers.isha];
+      for (var i=0;i<_keys.length;i++) { values[_keys[i]] = TimeOfDay.fromDateTime(raw[i].toLocal()).format(context); }
+      final p = await SharedPreferences.getInstance();
+      await p.setString('malaz_prayer_times', jsonEncode(values));
+      await p.setString('malaz_prayer_location_label', 'موقعك الحالي');
+      await p.setInt('malaz_prayer_method', _method);
+      if (!mounted) return;
+      setState(() { _times = values; _locationLabel = 'موقعك الحالي'; });
+    } catch (e) {
+      if (mounted) setState(() => _error = e.toString().replaceFirst('Exception: ', ''));
+    } finally { if (mounted) setState(() => _loading = false); }
+  }
+  @override
+  Widget build(BuildContext context) => PageFrame(title: 'الصلاة', subtitle: 'مواقيت محسوبة حسب موقعك وطريقة الحساب', child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+    GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      Row(children: [const Icon(Icons.location_on_outlined, size: 20), const SizedBox(width: 8), Expanded(child: Text(_locationLabel ?? 'لم يتم تحديد الموقع', style: const TextStyle(fontWeight: FontWeight.w700))), if (_loading) const SizedBox(width: 18,height:18,child:CircularProgressIndicator(strokeWidth:2))]),
+      const SizedBox(height: 12),
+      DropdownButtonFormField<int>(value: _method, dropdownColor: panel, decoration: const InputDecoration(labelText: 'طريقة حساب المواقيت', border: OutlineInputBorder()), items: const [
+        DropdownMenuItem(value: 0, child: Text('الهيئة المصرية العامة للمساحة')),
+        DropdownMenuItem(value: 1, child: Text('رابطة العالم الإسلامي')),
+        DropdownMenuItem(value: 2, child: Text('أم القرى')),
+        DropdownMenuItem(value: 3, child: Text('كراتشي')),
+      ], onChanged: (v) async { if (v == null) return; setState(() => _method=v); final p=await SharedPreferences.getInstance(); await p.setInt('malaz_prayer_method',v); _calculate(); }),
+      const SizedBox(height: 10),
+      FilledButton.icon(onPressed: _loading ? null : _calculate, icon: const Icon(Icons.my_location, size: 18), label: Text(_loading ? 'جارٍ تحديد الموقع والحساب...' : 'تحديد موقعي وحساب المواقيت')),
+      if (_error != null) Padding(padding: const EdgeInsets.only(top:8), child: Text(_error!, style: const TextStyle(color: Colors.orangeAccent,fontSize:11))),
+      const Padding(padding: EdgeInsets.only(top:8), child: Text('تُحفظ آخر مواقيت محسوبة على جهازك لعرضها عند انقطاع الإنترنت. أعد الحساب يوميًا لتحديثها.', style: TextStyle(color: muted,fontSize:10,height:1.6))),
+    ])),
     const SizedBox(height: 12),
-    for (final p in ['الفجر','الشروق','الظهر','العصر','المغرب','العشاء']) Padding(padding: const EdgeInsets.only(bottom: 8), child: GlassCard(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14), child: Row(children: [const Icon(Icons.access_time_rounded, size: 18, color: muted), const SizedBox(width: 12), Expanded(child: Text(p)), const Text('--:--', style: TextStyle(color: muted))]))),
+    for (var i=0;i<_names.length;i++) Padding(padding: const EdgeInsets.only(bottom:8), child: GlassCard(padding: const EdgeInsets.symmetric(horizontal:16,vertical:14), child: Row(children: [const Icon(Icons.access_time_rounded,size:18,color:muted),const SizedBox(width:12),Expanded(child:Text(_names[i])),Text(_times?[_keys[i]] ?? '--:--',style: const TextStyle(color:white,fontWeight:FontWeight.w700))]))),
+    GlassCard(child: const Text('الأذان والتنبيهات والقبلة ستظهر هنا بعد تفعيل إعداداتها. لا يتم تشغيل صوت أو إرسال تنبيه دون اختيارك.', style: TextStyle(color:muted,fontSize:11,height:1.7))),
   ]));
 }
 
