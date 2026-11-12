@@ -67,6 +67,8 @@ jobs:
           PY
       - name: Install dependencies
         run: flutter pub get
+      - name: Generate Android launcher icons from approved artwork
+        run: dart run flutter_launcher_icons
       - name: Static analysis
         run: flutter analyze
       - name: Unit and widget tests
