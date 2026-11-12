@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#080a0f">
+<meta name="description" content="ملاذ — رفيقك اليومي للقرآن والأذكار والعبادة">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="polish.css">
+<title>ملاذ</title>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="#" data-page="home" aria-label="ملاذ الرئيسية">
+      <span class="brand-mark">و</span><span><b>ملاذ</b><small></small></span>
+    </a>
+    <div class="top-actions">
+      <button class="icon-btn" id="langBtn" aria-label="تغيير اللغة">EN</button>
+      <button class="icon-btn" id="themeBtn" aria-label="المظهر">◐</button>
+    </div>
+  </header>
+  <main id="main">
+    <section class="page active" id="homePage">
+      <div class="greeting-row"><div><p class="eyebrow" id="todayLabel">رحلتك تبدأ بخطوة</p><h1 id="greeting">السلام عليك 👋</h1></div><div class="date-chip" id="dateChip">اليوم</div></div>
+      <article class="hero-card"><div class="hero-glow"></div><p class="eyebrow">محطتك الروحانية</p><h2>وَاذْكُر رَّبَّكَ كَثِيرًا</h2><p class="hero-copy">اجعل لقلبك نصيبًا من الذكر، ولروحك وقتًا مع القرآن.</p><button class="primary-btn" data-go="azkar">ابدأ وردك <span>←</span></button><span class="hero-ornament">۞</span></article>
+      <article class="next-prayer-card" id="homePrayerCard"><div class="next-prayer-top"><span class="eyebrow">موعدك القادم مع الصلاة</span><span class="prayer-live">● مباشر</span></div><div class="next-prayer-main"><div><small id="nextPrayerLabel">الصلاة القادمة</small><h2 id="nextPrayerName">الفجر</h2><strong id="nextPrayerTime">--:--</strong></div><div class="prayer-countdown"><small>متبقي على الصلاة</small><b id="nextPrayerCountdown">--:--:--</b></div></div><div class="prayer-mini-times" id="homePrayerTimes"><span>الفجر --:--</span><span>الظهر --:--</span><span>العصر --:--</span><span>المغرب --:--</span><span>العشاء --:--</span></div><button class="text-btn" data-go="prayer">عرض كل المواقيت ←</button></article>
+      <div class="section-heading"><div><p class="eyebrow">مساحتك اليومية</p><h2>ملخص يومك</h2></div><span class="tiny-dot"></span></div>
+      <div class="stats-grid"><div class="stat-card"><span class="stat-icon">☾</span><strong id="homeTasbeeh">0</strong><small>تسبيحة اليوم</small></div><div class="stat-card"><span class="stat-icon">▤</span><strong id="homePages">0</strong><small>صفحة قرآن</small></div><div class="stat-card"><span class="stat-icon">♡</span><strong id="homeWird">0/5</strong><small>مهام الورد</small></div></div>
+      <div class="section-heading"><div><p class="eyebrow">وصول سريع</p><h2>ماذا تريد أن تفعل؟</h2></div></div>
+      <div class="quick-grid"><button class="quick-card" data-go="quran"><span>📖</span><b>القرآن الكريم</b><small>قراءة وتدبّر</small></button><button class="quick-card" data-go="azkar"><span>☁</span><b>الأذكار</b><small>صباح ومساء</small></button><button class="quick-card" data-go="tasbeeh"><span>◉</span><b>السبحة</b><small>اذكر الله</small></button><button class="quick-card" data-go="prayer"><span>✧</span><b>الصلاة</b><small>مواقيت الصلاة</small></button></div>
+      <blockquote class="verse-card"><span>آية اليوم</span><p>﴿أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ﴾</p><small>سورة الرعد — ٢٨</small></blockquote>
+    </section>
+    <section class="page" id="quranPage">
+      <div class="page-head"><p class="eyebrow">نور يومك</p><h1>القرآن الكريم</h1><p>اختر سورة وابدأ رحلتك مع كلام الله.</p></div>
+      <div class="search-wrap"><span>⌕</span><input id="surahSearch" placeholder="ابحث عن سورة..." autocomplete="off"></div>
+      <div class="continue-card"><div><small>آخر قراءة</small><b id="lastRead">لم تبدأ القراءة بعد</b></div><button class="soft-btn" id="continueBtn">متابعة</button></div>
+      <div class="section-heading"><h2>فهرس السور</h2><small id="surahCount">114 سورة</small></div>
+      <div class="surah-list" id="surahList"><div class="loading">جارٍ تجهيز فهرس السور...</div></div>
+      <div class="reader hidden" id="reader">
+        <div class="reader-head"><button class="soft-btn" id="backSurahs">← السور</button><span id="readerMeta"></span></div>
+        <div class="quran-reader-tools">
+          <div class="quran-tool-line"><span class="reader-label">مظهر المصحف</span><div class="reader-segments"><button data-reader-theme="auto" class="selected">حسب الهاتف</button><button data-reader-theme="light">أبيض</button><button data-reader-theme="dark">أسود</button></div></div>
+          <div class="quran-tool-line"><span class="reader-label">حجم الخط</span><div class="reader-segments"><button id="quranFontDown" aria-label="تصغير الخط">−</button><b id="quranFontSizeLabel">26</b><button id="quranFontUp" aria-label="تكبير الخط">+</button></div></div>
+          <div class="quran-tool-line"><span class="reader-label">نوع الخط</span><div class="reader-segments"><button data-reader-script="ios" class="selected">iPhone</button><button data-reader-script="android">Android</button></div></div>
+        </div>
+        <div class="hasanat-note"><b>🌿 تذكير بالأجر</b><p>قال رسول الله ﷺ: «من قرأ حرفًا من كتاب الله فله به حسنة، والحسنة بعشر أمثالها» — الترمذي (2910). هذا للتشجيع والتذكير، وليس حصرًا للأجر؛ والله يضاعف لمن يشاء.</p></div>
+        <h2 id="readerTitle"></h2><div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <div id="ayahs" class="ayahs"><p class="loading">جارٍ تحميل الآيات...</p></div>
+        <div class="reader-foot"><button class="primary-btn" id="markRead">حفظ موضع القراءة</button></div>
+      </div>
+    </section>
+    <section class="page" id="azkarPage">
+      <div class="page-head"><p class="eyebrow">حصنك اليومي</p><h1>الأذكار</h1><p>لحظات قصيرة تملأ يومك طمأنينة.</p></div>
+      <div class="pill-tabs" id="azkarTabs"><button class="selected" data-kind="morning">الصباح</button><button data-kind="evening">المساء</button><button data-kind="sleep">النوم</button><button data-kind="wake">الاستيقاظ</button><button data-kind="ruqyah">الرقية</button></div>
+      <div class="azkar-progress"><div><span>إنجاز الورد</span><b id="azkarProgressText">0%</b></div><div class="progress-track"><i id="azkarProgress"></i></div></div><div id="azkarList" class="azkar-list"></div>
+      <p class="source-note">تنبيه: هذه مجموعة أذكار مختارة كبداية، ويجب مراجعة النصوص والتخريج قبل اعتمادها في إصدار النشر النهائي.</p>
+    </section>
+    <section class="page" id="tasbeehPage">
+      <div class="page-head"><p class="eyebrow">قلبك يذكر</p><h1>السبحة الإلكترونية</h1><p>اختر ذكرك، وابدأ على مهل.</p></div>
+      <div class="tasbeeh-panel"><div class="tasbeeh-top"><span class="live-dot"></span><span>جلسة التسبيح</span><button id="resetTasbeeh" class="text-btn">إعادة ضبط</button></div><div class="dhikr-select"><button class="selected" data-dhikr="سبحان الله">سبحان الله</button><button data-dhikr="الحمد لله">الحمد لله</button><button data-dhikr="الله أكبر">الله أكبر</button><button data-dhikr="أستغفر الله">أستغفر الله</button></div><div class="counter-ring" id="counterRing"><div><small>عدد التسبيحات</small><strong id="count">0</strong><span id="currentDhikr">سبحان الله</span></div></div><button class="count-btn" id="countBtn" aria-label="سبّح">اضغط للتسبيح</button><p class="tap-hint">يمكنك الضغط على مساحة السبحة كلها للعدّ</p><div class="counter-controls"><button id="undoBtn" class="soft-btn">↶ تراجع</button><label>الهدف <input id="goalInput" type="number" min="1" max="10000" value="100"></label></div><div class="progress-track"><i id="tasbeehProgress"></i></div><small class="goal-caption" id="goalCaption">0 من 100</small></div>
+    </section>
+    <section class="page" id="prayerPage">
+      <div class="page-head"><p class="eyebrow">على موعد مع الطمأنينة</p><h1>مواقيت الصلاة</h1><p>اعرف مواقيت الصلاة حسب مدينتك.</p></div>
+      <div class="location-card"><div><small>الموقع الحالي</small><b id="locationName">القاهرة، مصر</b></div><button class="soft-btn" id="editLocation">تغيير</button></div>
+      <div class="location-form hidden" id="locationForm"><input id="cityInput" value="Cairo" placeholder="City"><input id="countryInput" value="Egypt" placeholder="Country"><button class="primary-btn" id="loadPrayer">عرض المواقيت</button></div>
+      <div class="prayer-date" id="prayerDate">مواقيت اليوم</div><div class="prayer-list" id="prayerList"><div class="loading">اضغط لعرض المواقيت</div></div><p class="source-note">تُجلب المواقيت من خدمة AlAdhan، وقد تختلف دقائق قليلة حسب طريقة الحساب والجهة الرسمية في بلدك.</p>
+    </section>
+    <section class="page" id="wirdPage">
+      <div class="page-head"><p class="eyebrow">خطوات صغيرة وأثر كبير</p><h1>وردي اليومي</h1><p>ضع علامة عند إتمام كل عبادة.</p></div><div class="wird-summary"><strong id="wirdPercent">0%</strong><span>من إنجاز وردك اليوم</span><div class="progress-track"><i id="wirdProgress"></i></div></div><div class="wird-list" id="wirdList"></div><button class="soft-btn full-btn" id="resetWird">إعادة ضبط ورد اليوم</button>
+    </section>
+    <section class="page" id="morePage">
+      <div class="page-head"><p class="eyebrow">تجربتك كما تحب</p><h1>المزيد</h1><p>إعدادات ملاذ ومعلومات التطبيق.</p></div>
+      <div class="settings-group"><button class="setting-row" id="settingsLang"><span class="setting-icon">文</span><span><b>اللغة</b><small>العربية / English</small></span><strong>العربية</strong></button><button class="setting-row" id="settingsTheme"><span class="setting-icon">◐</span><span><b>المظهر</b><small>أسود داكن</small></span><strong>داكن</strong></button><div class="setting-row"><span class="setting-icon">♧</span><span><b>عن ملاذ</b><small>رفيقك اليومي للعبادة</small></span><strong>v1.0</strong></div></div>
+      <div class="settings-group reminder-settings"><div class="setting-row"><span class="setting-icon">☾</span><span><b>تذكير قيام الليل</b><small>تنبيه يومي في الوقت الذي تختاره</small></span><input id="remQiyam" type="checkbox" class="setting-toggle"></div><div class="setting-row"><span class="setting-icon">☀</span><span><b>تذكير صلاة الضحى</b><small>بعد الشروق بوقت مناسب</small></span><input id="remDuha" type="checkbox" class="setting-toggle"></div><div class="setting-row"><span class="setting-icon">♡</span><span><b>الصلاة على النبي ﷺ</b><small>تذكير يومي</small></span><input id="remSalawat" type="checkbox" class="setting-toggle"></div><div class="setting-row"><span class="setting-icon">☽</span><span><b>صيام الاثنين والخميس</b><small>تذكير مساء اليوم السابق</small></span><input id="remFasting" type="checkbox" class="setting-toggle"></div><div class="reminder-times"><label>قيام الليل <input id="qiyamTime" type="time" value="03:30"></label><label>الضحى <input id="duhaTime" type="time" value="08:00"></label><label>الصلاة على النبي ﷺ <input id="salawatTime" type="time" value="12:00"></label></div><button class="primary-btn full-btn" id="saveReminders">حفظ التذكيرات وتفعيل الإشعارات</button><small class="source-note">تعمل التنبيهات في هذه النسخة أثناء فتح التطبيق أو عمله في الخلفية وفق دعم المتصفح؛ التنبيه المضمون عند إغلاق التطبيق يحتاج إصدارًا أصليًا وإشعارات مجدولة.</small></div>
+      <div class="virtue-grid"><article class="virtue-card"><span>🌙</span><h3>فضل قيام الليل</h3><p>قيام الليل من أعظم القربات، وفيه خلوة ومناجاة ودعاء. ابدأ بركعتين، ولو بالقليل الدائم.</p><small>قال تعالى: ﴿وَمِنَ اللَّيْلِ فَتَهَجَّدْ بِهِ نَافِلَةً لَكَ﴾ [الإسراء: 79]</small></article><article class="virtue-card"><span>☀️</span><h3>صلاة الضحى</h3><p>صلاة الضحى صدقة عن مفاصل الجسد، وأقلها ركعتان.</p><small>صحيح مسلم: «ويجزئ من ذلك ركعتان يركعهما من الضحى»</small></article><article class="virtue-card"><span>♡</span><h3>الصلاة على النبي ﷺ</h3><p>أكثر من الصلاة والسلام على النبي ﷺ، واجعلها وردًا يسيرًا ثابتًا.</p><small>قال تعالى: ﴿إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ﴾ [الأحزاب: 56]</small></article><article class="virtue-card"><span>🌿</span><h3>صيام الاثنين والخميس</h3><p>كان النبي ﷺ يتحرى صيام الاثنين والخميس، وهما من أيام عرض الأعمال.</p><small>سنن الترمذي والنسائي، بألفاظ وروايات متعددة</small></article></div>
+      <div class="about-card"><div class="brand-mark">و</div><h2>ملاذ</h2><p>كل يوم أقرب إلى الله</p><small>نسخة تجريبية قيد التطوير — نسأل الله القبول.</small></div>
+    </section>
+  </main>
+  <nav class="bottom-nav" aria-label="التنقل الرئيسي"><button class="nav-item active" data-page="home"><span>⌂</span><small>الرئيسية</small></button><button class="nav-item" data-page="azkar"><span>☁</span><small>الأذكار</small></button><button class="nav-item" data-page="quran"><span>▤</span><small>القرآن</small></button><button class="nav-item" data-page="tasbeeh"><span>◉</span><small>السبحة</small></button><button class="nav-item" data-page="more"><span>⋯</span><small>المزيد</small></button></nav>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script><script src="enhancements.js"></script><script src="repair.js"></script>
+</body></html>
