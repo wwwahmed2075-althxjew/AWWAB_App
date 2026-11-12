@@ -279,15 +279,36 @@ class _QuranPageState extends State<QuranPage> {
   );
 }
 class QuranReaderPage extends StatefulWidget {
-  final int number; final String name; final String englishName; final int ayahCount;
-  const QuranReaderPage({super.key, required this.number, required this.name, required this.englishName, required this.ayahCount});
+  final int number;
+  final String name;
+  final String englishName;
+  final int ayahCount;
+  final int initialAyah;
+  const QuranReaderPage({super.key, required this.number, required this.name, required this.englishName, required this.ayahCount, this.initialAyah = 1});
   @override
   State<QuranReaderPage> createState() => _QuranReaderPageState();
 }
+
 class _QuranReaderPageState extends State<QuranReaderPage> {
   late Future<List<dynamic>> ayahsFuture;
+  final ScrollController _scrollController = ScrollController();
+  final Map<int, GlobalKey> _ayahKeys = {};
+  Set<int> _favorites = {};
+  bool _initialScrollDone = false;
+
   @override
-  void initState() { super.initState(); ayahsFuture = loadAyahs(); }
+  void initState() {
+    super.initState();
+    ayahsFuture = loadAyahs();
+    _loadFavorites();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   Future<List<dynamic>> loadAyahs() async {
     final response = await http.get(Uri.parse('https://api.alquran.cloud/v1/surah/${widget.number}')).timeout(const Duration(seconds: 25));
     if (response.statusCode != 200) throw Exception('تعذر تحميل السورة');
@@ -295,41 +316,205 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
     if (json['code'] != 200) throw Exception('لم تصل بيانات السورة');
     return json['data']['ayahs'] as List<dynamic>;
   }
+
+  Future<void> _loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('quran_favorite_ayahs');
+    final decoded = raw == null ? <dynamic>[] : (jsonDecode(raw) as List<dynamic>);
+    if (!mounted) return;
+    setState(() => _favorites = decoded
+        .where((e) => e is Map && e['surah'] == widget.number)
+        .map<int>((e) => e['ayah'] as int).toSet());
+  }
+
   Future<void> savePosition(int ayah) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('quran_last_surah', widget.number);
     await prefs.setInt('quran_last_ayah', ayah);
   }
+
+  Future<void> _toggleFavorite(Map<String, dynamic> ayah) async {
+    final number = ayah['numberInSurah'] as int;
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('quran_favorite_ayahs');
+    final entries = raw == null ? <Map<String, dynamic>>[] :
+        (jsonDecode(raw) as List<dynamic>).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+    final existing = entries.indexWhere((e) => e['surah'] == widget.number && e['ayah'] == number);
+    final add = existing < 0;
+    if (add) {
+      entries.add({'surah': widget.number, 'surahName': widget.name, 'ayah': number, 'text': ayah['text']});
+    } else {
+      entries.removeAt(existing);
+    }
+    await prefs.setString('quran_favorite_ayahs', jsonEncode(entries));
+    if (!mounted) return;
+    setState(() {
+      if (add) { _favorites.add(number); } else { _favorites.remove(number); }
+    });
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(add ? 'أُضيفت الآية إلى المفضلة' : 'أُزيلت الآية من المفضلة'),
+      duration: const Duration(seconds: 1),
+    ));
+  }
+
+  Future<void> _showAyahActions(Map<String, dynamic> ayah) async {
+    final number = ayah['numberInSurah'] as int;
+    await savePosition(number);
+    if (!mounted) return;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: panel,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (sheetContext) => SafeArea(child: Padding(
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 22),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(width: 38, height: 4, decoration: BoxDecoration(color: muted.withOpacity(.6), borderRadius: BorderRadius.circular(8))),
+          const SizedBox(height: 16),
+          Text('سورة ${widget.name} • الآية $number', style: const TextStyle(color: white, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 12),
+          ListTile(
+            leading: Icon(_favorites.contains(number) ? Icons.favorite : Icons.favorite_border, color: white),
+            title: Text(_favorites.contains(number) ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة', style: const TextStyle(color: white)),
+            onTap: () { Navigator.pop(sheetContext); _toggleFavorite(ayah); },
+          ),
+          ListTile(
+            leading: const Icon(Icons.bookmark_outline_rounded, color: white),
+            title: const Text('حفظ كآخر موضع قراءة', style: TextStyle(color: white)),
+            onTap: () { Navigator.pop(sheetContext); savePosition(number); },
+          ),
+        ]),
+      )),
+    );
+  }
+
+  void _scrollToInitialAyah(List<dynamic> ayahs) {
+    if (_initialScrollDone || widget.initialAyah <= 1) return;
+    _initialScrollDone = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final key = _ayahKeys[widget.initialAyah];
+      final targetContext = key?.currentContext;
+      if (targetContext != null) {
+        Scrollable.ensureVisible(targetContext, duration: const Duration(milliseconds: 450), alignment: .12);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: ink,
-    appBar: AppBar(backgroundColor: ink, title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(widget.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-      Text('${widget.englishName} • ${widget.ayahCount} آية', style: const TextStyle(fontSize: 10, color: muted)),
-    ])),
+    appBar: AppBar(
+      backgroundColor: ink,
+      title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(widget.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+        Text('${widget.englishName} • ${widget.ayahCount} آية', style: const TextStyle(fontSize: 10, color: muted)),
+      ]),
+      actions: [
+        IconButton(tooltip: 'الآيات المفضلة', onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuranFavoritesPage())),
+          icon: const Icon(Icons.favorite_border_rounded)),
+      ],
+    ),
     body: FutureBuilder<List<dynamic>>(future: ayahsFuture, builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator(strokeWidth: 2));
       if (snapshot.hasError) return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
         const Icon(Icons.wifi_off_rounded, color: muted, size: 28), const SizedBox(height: 10), const Text('تعذر تحميل الآيات'),
-        TextButton(onPressed: () => setState(() => ayahsFuture = loadAyahs()), child: const Text('إعادة المحاولة')),
+        TextButton(onPressed: () => setState(() { _initialScrollDone = false; ayahsFuture = loadAyahs(); }), child: const Text('إعادة المحاولة')),
       ]));
       final ayahs = snapshot.data ?? [];
-      return ListView.builder(padding: const EdgeInsets.fromLTRB(18, 18, 18, 35), itemCount: ayahs.length, itemBuilder: (context, index) {
-        final ayah = ayahs[index] as Map<String, dynamic>;
-        final number = ayah['numberInSurah'] as int;
-        return InkWell(onTap: () => savePosition(number), child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 7),
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(.09)))),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Text(ayah['text'] as String, textAlign: TextAlign.justify, textDirection: TextDirection.rtl, style: const TextStyle(fontSize: 23, height: 2.05, color: white, fontFamily: 'serif')),
-            const SizedBox(height: 12),
-            Align(alignment: Alignment.centerLeft, child: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity(.07), borderRadius: BorderRadius.circular(20)), child: Text('۞ $number  •  حفظ موضع القراءة', style: const TextStyle(fontSize: 9, color: muted)))),
-          ]),
-        ));
-      });
+      _scrollToInitialAyah(ayahs);
+      return ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 35),
+        itemCount: ayahs.length,
+        itemBuilder: (context, index) {
+          final ayah = ayahs[index] as Map<String, dynamic>;
+          final number = ayah['numberInSurah'] as int;
+          final key = _ayahKeys.putIfAbsent(number, () => GlobalKey());
+          return InkWell(
+            key: key,
+            onTap: () => savePosition(number),
+            onLongPress: () => _showAyahActions(ayah),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 7),
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(.09)))),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Text(ayah['text'] as String, textAlign: TextAlign.justify, textDirection: TextDirection.rtl,
+                  style: const TextStyle(fontSize: 23, height: 2.05, color: white, fontFamily: 'serif')),
+                const SizedBox(height: 12),
+                Align(alignment: Alignment.centerLeft, child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(color: Colors.white.withOpacity(.07), borderRadius: BorderRadius.circular(20)),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Text('۞ $number', style: const TextStyle(fontSize: 9, color: muted)),
+                    if (_favorites.contains(number)) ...[
+                      const SizedBox(width: 6),
+                      const Icon(Icons.favorite, size: 11, color: white),
+                    ],
+                  ]),
+                )),
+              ]),
+            ),
+          );
+        },
+      );
     }),
   );
 }
+
+class QuranFavoritesPage extends StatefulWidget {
+  const QuranFavoritesPage({super.key});
+  @override
+  State<QuranFavoritesPage> createState() => _QuranFavoritesPageState();
+}
+
+class _QuranFavoritesPageState extends State<QuranFavoritesPage> {
+  List<Map<String, dynamic>> _items = [];
+  @override
+  void initState() { super.initState(); _load(); }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('quran_favorite_ayahs');
+    final values = raw == null ? <Map<String, dynamic>>[] :
+      (jsonDecode(raw) as List<dynamic>).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+    if (mounted) setState(() => _items = values);
+  }
+
+  Future<void> _remove(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    _items.removeAt(index);
+    await prefs.setString('quran_favorite_ayahs', jsonEncode(_items));
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: ink,
+    appBar: AppBar(backgroundColor: ink, title: const Text('الآيات المفضلة')),
+    body: _items.isEmpty
+      ? const Center(child: Text('لم تضف آيات إلى المفضلة بعد', style: TextStyle(color: muted)))
+      : ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _items.length,
+        itemBuilder: (context, index) {
+          final item = _items[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 9),
+            child: GlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              Text('${item['surahName']} • الآية ${item['ayah']}', style: const TextStyle(color: muted, fontSize: 11, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 8),
+              Text(item['text'] as String, textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                style: const TextStyle(color: white, fontSize: 19, height: 2)),
+              Row(children: [
+                const Spacer(),
+                TextButton.icon(onPressed: () => _remove(index), icon: const Icon(Icons.delete_outline, size: 16), label: const Text('إزالة')),
+              ]),
+            ])),
+          );
+        },
+      ),
+  );
+}
+
 class AzkarPage extends StatelessWidget {
   const AzkarPage({super.key});
   @override
