@@ -788,7 +788,7 @@ class AwwabQiblaPage extends StatefulWidget {
   @override
   State<AwwabQiblaPage> createState() => _AwwabQiblaPageState();
 }
-class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
+class _AwwabQiblaPageState extends State<AwwabQiblaPage> with WidgetsBindingObserver {
   final _location = AwwabLocationService();
   Position? _position;
   double? _heading;
@@ -797,11 +797,8 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
   @override
   void initState() {
     super.initState();
-    _location.getLocation().then((p) {
-      if (!mounted) return;
-      final declination = p == null ? 0.0 : GeoMag().calculate(p.latitude, p.longitude).dec;
-      setState(() { _position = p; _declination = declination; });
-    });
+    WidgetsBinding.instance.addObserver(this);
+    _loadPosition();
     _compassSubscription = FlutterCompass.events?.listen((event) {
       final raw = event.heading;
       if (!mounted || raw == null) return;
@@ -815,8 +812,19 @@ class _AwwabQiblaPageState extends State<AwwabQiblaPage> {
       });
     });
   }
+  Future<void> _loadPosition() async {
+    final p = await _location.getLocation();
+    if (!mounted) return;
+    final declination = p == null ? 0.0 : GeoMag().calculate(p.latitude, p.longitude).dec;
+    setState(() { _position = p; _declination = declination; });
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _loadPosition();
+  }
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _compassSubscription?.cancel();
     super.dispose();
   }
