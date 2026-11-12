@@ -3,6 +3,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
+import 'awwab_prayer_service.dart';
 
 class AwwabNotificationService {
   AwwabNotificationService._();
@@ -69,8 +70,9 @@ class AwwabNotificationService {
     required DateTime time,
     required String title,
     required String body,
+    bool requestPermission = false,
   }) async {
-    await initialise(requestPermission: true);
+    await initialise(requestPermission: requestPermission);
     final scheduled = tz.TZDateTime.from(time, tz.local);
     if (!scheduled.isAfter(tz.TZDateTime.now(tz.local))) return;
     await _plugin.zonedSchedule(
@@ -89,6 +91,39 @@ class AwwabNotificationService {
       ),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
+  }
+
+  Future<void> refreshPrayerAyatReminders({
+    required double latitude,
+    required double longitude,
+    bool requestPermission = false,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!(prefs.getBool('reminder_item_405') ?? false)) return;
+    await initialise(requestPermission: requestPermission);
+    const baseId = 5000;
+    for (var day = 0; day < 30; day++) {
+      for (var prayer = 0; prayer < 5; prayer++) {
+        await _plugin.cancel(baseId + day * 5 + prayer);
+      }
+    }
+    final now = DateTime.now();
+    for (var day = 0; day < 30; day++) {
+      final date = now.add(Duration(days: day));
+      final prayerTimes = AwwabPrayerSchedule.obligatoryPrayerTimesForDate(
+        latitude: latitude,
+        longitude: longitude,
+        date: date,
+      );
+      for (var prayer = 0; prayer < prayerTimes.length; prayer++) {
+        await scheduleAt(
+          id: baseId + day * 5 + prayer,
+          time: prayerTimes[prayer].add(const Duration(minutes: 2)),
+          title: 'لا تنسَ آية الكرسي',
+          body: 'تذكير بقراءة آية الكرسي بعد الصلاة المكتوبة.',
+        );
+      }
+    }
   }
 
   Future<void> cancel(int id) async {
