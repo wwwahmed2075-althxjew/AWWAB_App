@@ -71,6 +71,7 @@ class AwwabHomePage extends StatefulWidget {
 
 class _AwwabHomePageState extends State<AwwabHomePage> with WidgetsBindingObserver {
   final _location = AwwabLocationService();
+  Position? _position;
   AwwabPrayerSchedule? _schedule;
   bool _loading = true;
   Timer? _ticker;
@@ -257,7 +258,6 @@ class AwwabPrayerPage extends StatefulWidget {
 }
 class _AwwabPrayerPageState extends State<AwwabPrayerPage> {
   final _location = AwwabLocationService();
-  Position? _position;
   AwwabPrayerSchedule? _schedule;
   bool _loading = true;
   @override
