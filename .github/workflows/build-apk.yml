@@ -47,22 +47,23 @@ jobs:
           from pathlib import Path
           import re
           manifest = Path("android/app/src/main/AndroidManifest.xml")
-          s = manifest.read_text(encoding="utf-8")
-          s, n = re.subn(r'android:label="[^"]*"', 'android:label="ملاذ"', s, count=1)
-          if n != 1:
+          content = manifest.read_text(encoding="utf-8")
+          content, count = re.subn(r'android:label="[^"]*"', 'android:label="ملاذ"', content, count=1)
+          if count != 1:
               raise SystemExit("Could not set Arabic app label")
-          manifest.write_text(s, encoding="utf-8")
+          manifest.write_text(content, encoding="utf-8")
+
           gradle = Path("android/app/build.gradle.kts")
           if gradle.exists():
-              s = gradle.read_text(encoding="utf-8")
-              s = re.sub(r'applicationId = "[^"]+"', 'applicationId = "com.malaz.app"', s)
-                            gradle.write_text(s, encoding="utf-8")
+              content = gradle.read_text(encoding="utf-8")
+              content = re.sub(r'applicationId = "[^"]+"', 'applicationId = "com.malaz.app"', content)
+              gradle.write_text(content, encoding="utf-8")
           else:
               gradle = Path("android/app/build.gradle")
               if gradle.exists():
-                  s = gradle.read_text(encoding="utf-8")
-                  s = re.sub(r'applicationId "[^"]+"', 'applicationId "com.malaz.app"', s)
-                                    gradle.write_text(s, encoding="utf-8")
+                  content = gradle.read_text(encoding="utf-8")
+                  content = re.sub(r'applicationId "[^"]+"', 'applicationId "com.malaz.app"', content)
+                  gradle.write_text(content, encoding="utf-8")
           PY
       - name: Install dependencies
         run: flutter pub get
