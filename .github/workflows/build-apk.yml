@@ -117,6 +117,35 @@ jobs:
                   content = re.sub(r'applicationId "[^"]+"', 'applicationId "com.mishkat.app"', content)
                   gradle.write_text(content, encoding="utf-8")
           PY
+      - name: Enable Android core library desugaring for scheduled notifications
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("android/app/build.gradle.kts")
+          if not p.exists():
+              raise SystemExit("Generated Android app Gradle Kotlin file not found")
+          content = p.read_text(encoding="utf-8")
+          android_block = """
+          
+          android {
+              compileOptions {
+                  isCoreLibraryDesugaringEnabled = true
+              }
+          }
+          """
+          dependency_block = """
+          
+          dependencies {
+              coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+          }
+          """
+          if "isCoreLibraryDesugaringEnabled = true" not in content:
+              content += android_block
+          if 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:' not in content:
+              content += dependency_block
+          p.write_text(content, encoding="utf-8")
+          print("Core library desugaring enabled for flutter_local_notifications")
+          PY
       - name: Align Kotlin JVM target with Java 17
         run: |
           python3 - <<'PY'
