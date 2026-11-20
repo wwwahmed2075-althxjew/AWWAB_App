@@ -146,19 +146,19 @@ jobs:
           p.write_text(content, encoding="utf-8")
           print("Core library desugaring enabled for flutter_local_notifications")
           PY
-      - name: Align Kotlin JVM target with Java 17
+      - name: Align Kotlin JVM target with Android Java compatibility
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path("android/build.gradle.kts")
           content = p.read_text(encoding="utf-8")
-          marker = "compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)"
+          marker = "compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)"
           if marker not in content:
               content += '''
 
           subprojects {
               tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-                  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+                  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
               }
               tasks.withType<org.gradle.api.tasks.compile.JavaCompile>().configureEach {
                   sourceCompatibility = "17"
@@ -167,7 +167,7 @@ jobs:
           }
           '''
               p.write_text(content, encoding="utf-8")
-          print("All Kotlin and Java compile tasks now target JVM 17")
+          print("All Kotlin compile tasks target JVM 11 to match Android Java defaults")
           PY
       - name: Install dependencies
         run: flutter pub get
