@@ -1,4 +1,4 @@
-name: Build Malaz Android APK
+name: Build Mishkat Android APK
 
 on:
   workflow_dispatch:
@@ -40,7 +40,7 @@ jobs:
           print("Manifest structure OK: 604 page hashes")
           PY
       - name: Generate Android platform
-        run: flutter create . --platforms=android --org com.malaz
+        run: flutter create . --platforms=android --org com.mishkat
       - name: Set Arabic app label and stable package id
         run: |
           python3 - <<'PY'
@@ -48,7 +48,7 @@ jobs:
           import re
           manifest = Path("android/app/src/main/AndroidManifest.xml")
           content = manifest.read_text(encoding="utf-8")
-          content, count = re.subn(r'android:label="[^"]*"', 'android:label="ملاذ"', content, count=1)
+          content, count = re.subn(r'android:label="[^"]*"', 'android:label="مشكاة"', content, count=1)
           if count != 1:
               raise SystemExit("Could not set Arabic app label")
           permissions = [
@@ -63,13 +63,13 @@ jobs:
           gradle = Path("android/app/build.gradle.kts")
           if gradle.exists():
               content = gradle.read_text(encoding="utf-8")
-              content = re.sub(r'applicationId = "[^"]+"', 'applicationId = "com.malaz.app"', content)
+              content = re.sub(r'applicationId = "[^"]+"', 'applicationId = "com.mishkat.app"', content)
               gradle.write_text(content, encoding="utf-8")
           else:
               gradle = Path("android/app/build.gradle")
               if gradle.exists():
                   content = gradle.read_text(encoding="utf-8")
-                  content = re.sub(r'applicationId "[^"]+"', 'applicationId "com.malaz.app"', content)
+                  content = re.sub(r'applicationId "[^"]+"', 'applicationId "com.mishkat.app"', content)
                   gradle.write_text(content, encoding="utf-8")
           PY
       - name: Install dependencies
@@ -83,21 +83,21 @@ jobs:
       - name: Build one optimized APK for Samsung A16 (ARM64)
         run: |
           flutter build apk --release --target-platform android-arm64 --obfuscate --split-debug-info=build/symbols
-          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Malaz.apk
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Mishkat.apk
       - name: Report APK size
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path("build/app/outputs/flutter-apk/Malaz.apk")
+          p = Path("build/app/outputs/flutter-apk/Mishkat.apk")
           if not p.is_file():
-              raise SystemExit("Malaz.apk was not generated")
+              raise SystemExit("Mishkat.apk was not generated")
           print(f"{p.name}: {p.stat().st_size / 1024 / 1024:.2f} MiB")
           PY
       - name: Upload single release APK
         uses: actions/upload-artifact@v4
         with:
-          name: Malaz-Android-APK
-          path: build/app/outputs/flutter-apk/Malaz.apk
+          name: Mishkat-Android-APK
+          path: build/app/outputs/flutter-apk/Mishkat.apk
           if-no-files-found: error
           retention-days: 14
       - name: Publish direct APK download for browser
@@ -105,9 +105,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if gh release view malaz-latest >/dev/null 2>&1; then
-            gh release upload malaz-latest build/app/outputs/flutter-apk/Malaz.apk --clobber
+            gh release upload malaz-latest build/app/outputs/flutter-apk/Mishkat.apk --clobber
           else
-            gh release create malaz-latest build/app/outputs/flutter-apk/Malaz.apk \\
-              --title "ملاذ - أحدث نسخة" \\
-              --notes "ملف APK مباشر لتطبيق ملاذ (ARM64)."
+            gh release create malaz-latest build/app/outputs/flutter-apk/Mishkat.apk \\
+              --title "مشكاة - أحدث نسخة" \\
+              --notes "ملف APK مباشر لتطبيق مشكاة (ARM64)."
           fi
