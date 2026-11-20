@@ -10,8 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'madinah_mushaf_reader_page.dart';
+import 'notification_service.dart';
+import 'notifications_page.dart';
 
-void main() => runApp(const MishkatApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await MishkatNotificationService.initialize();
+  runApp(const MishkatApp());
+}
 
 const ink = Color(0xFF081629);
 const panel = Color(0xFF14243A);
@@ -558,6 +564,10 @@ class _PrayerPageState extends State<PrayerPage> {
       final values = <String, String>{};
       final raw = [prayers.fajr, prayers.sunrise, prayers.dhuhr, prayers.asr, prayers.maghrib, prayers.isha];
       for (var i=0;i<_keys.length;i++) { values[_keys[i]] = TimeOfDay.fromDateTime(raw[i].toLocal()).format(context); }
+      await MishkatNotificationService.scheduleAyatAfterPrayer({
+        'الفجر': raw[0], 'الظهر': raw[2], 'العصر': raw[3],
+        'المغرب': raw[4], 'العشاء': raw[5],
+      });
       final p = await SharedPreferences.getInstance();
       await p.setString('malaz_prayer_times', jsonEncode(values));
       await p.setString('malaz_prayer_date', '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}');
