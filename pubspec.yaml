@@ -17,6 +17,7 @@ dependencies:
   flutter_compass: ^0.8.1
   flutter_local_notifications: ^17.2.4
   timezone: ^0.9.4
+  flutter_timezone: ^3.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -26,13 +27,13 @@ flutter:
   uses-material-design: true
   assets:
     - assets/mushaf/madinah_hafs_v4_manifest.json
-    - assets/branding/mishkat_icon.jpg
+    - assets/branding/malaz_icon.jpg
 
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: assets/branding/mishkat_icon.jpg
+  image_path: assets/branding/malaz_icon.jpg
   adaptive_icon_background: '#050505'
-  adaptive_icon_foreground: assets/branding/mishkat_icon.jpg
+  adaptive_icon_foreground: assets/branding/malaz_icon.jpg
   min_sdk_android: 21
 
