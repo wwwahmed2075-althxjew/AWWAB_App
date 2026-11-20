@@ -32,11 +32,93 @@ class MishkatApp extends StatelessWidget {
     debugShowCheckedModeBanner: false,
     title: 'مشكاة',
     theme: ThemeData(
+      useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: ink,
-      colorScheme: const ColorScheme.dark(primary: white, surface: panel),
+      canvasColor: ink,
       fontFamily: 'NotoNaskhArabic',
-      useMaterial3: true,
+      colorScheme: const ColorScheme(
+        brightness: Brightness.dark,
+        primary: gold,
+        onPrimary: ink,
+        secondary: white,
+        onSecondary: ink,
+        error: Color(0xFFE58C83),
+        onError: ink,
+        surface: panel,
+        onSurface: white,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: ink,
+        foregroundColor: white,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          color: white, fontSize: 20, fontWeight: FontWeight.w800,
+          fontFamily: 'NotoNaskhArabic',
+        ),
+      ),
+      cardTheme: CardThemeData(
+        color: const Color(0xB8182B43),
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22),
+          side: BorderSide(color: gold.withOpacity(.32)),
+        ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: gold.withOpacity(.22), thickness: 0.7, space: 18,
+      ),
+      iconTheme: const IconThemeData(color: gold),
+      listTileTheme: const ListTileThemeData(
+        iconColor: gold,
+        textColor: white,
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) =>
+          states.contains(WidgetState.selected) ? ink : muted),
+        trackColor: WidgetStateProperty.resolveWith((states) =>
+          states.contains(WidgetState.selected) ? gold : panel),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: const Color(0xAA14243A),
+        labelStyle: const TextStyle(color: muted),
+        hintStyle: const TextStyle(color: muted),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: gold.withOpacity(.25)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: gold, width: 1.3),
+        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: gold,
+          foregroundColor: ink,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          textStyle: const TextStyle(fontWeight: FontWeight.w800),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(foregroundColor: gold),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: panel,
+        contentTextStyle: const TextStyle(color: white),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: gold, linearTrackColor: panel,
+      ),
     ),
     home: const MainShell(),
   );
