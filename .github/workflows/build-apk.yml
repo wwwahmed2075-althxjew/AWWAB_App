@@ -160,10 +160,14 @@ jobs:
               tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
                   compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
               }
+              tasks.withType<org.gradle.api.tasks.compile.JavaCompile>().configureEach {
+                  sourceCompatibility = "17"
+                  targetCompatibility = "17"
+              }
           }
           '''
               p.write_text(content, encoding="utf-8")
-          print("All Kotlin compile tasks now target JVM 17 using compilerOptions")
+          print("All Kotlin and Java compile tasks now target JVM 17")
           PY
       - name: Install dependencies
         run: flutter pub get
