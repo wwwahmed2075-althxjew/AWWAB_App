@@ -117,6 +117,25 @@ jobs:
                   content = re.sub(r'applicationId "[^"]+"', 'applicationId "com.mishkat.app"', content)
                   gradle.write_text(content, encoding="utf-8")
           PY
+      - name: Align Kotlin JVM target with Java 11
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("android/build.gradle.kts")
+          content = p.read_text(encoding="utf-8")
+          marker = "tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()"
+          if marker not in content:
+              content += '''
+
+          subprojects {
+              tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+                  kotlinOptions.jvmTarget = "11"
+              }
+          }
+          '''
+              p.write_text(content, encoding="utf-8")
+          print("All Kotlin compile tasks now target JVM 11 to match Java")
+          PY
       - name: Install dependencies
         run: flutter pub get
       - name: Generate Android launcher icons from approved artwork
