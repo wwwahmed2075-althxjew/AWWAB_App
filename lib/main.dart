@@ -11,19 +11,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'madinah_mushaf_reader_page.dart';
 
-void main() => runApp(const MalazApp());
+void main() => runApp(const MishkatApp());
 
-const ink = Color(0xFF07080B);
-const panel = Color(0xFF15171C);
-const white = Color(0xFFF5F5F7);
-const muted = Color(0xFF9A9CA5);
+const ink = Color(0xFF081629);
+const panel = Color(0xFF14243A);
+const white = Color(0xFFF7E9C8);
+const muted = Color(0xFFB7B9C2);
+const gold = Color(0xFFD9BD82);
 
-class MalazApp extends StatelessWidget {
-  const MalazApp({super.key});
+class MishkatApp extends StatelessWidget {
+  const MishkatApp({super.key});
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'ملاذ',
+    title: 'مشكاة',
     theme: ThemeData(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: ink,
@@ -60,9 +61,9 @@ class _MainShellState extends State<MainShell> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xD91B1D22),
+              color: const Color(0xD916263C),
               borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: Colors.white.withOpacity(.16), width: 1),
+              border: Border.all(color: gold.withOpacity(.42), width: 1),
               boxShadow: [BoxShadow(color: Colors.black.withOpacity(.45), blurRadius: 28, offset: const Offset(0, 10))],
             ),
             child: Row(
@@ -74,11 +75,11 @@ class _MainShellState extends State<MainShell> {
                     duration: const Duration(milliseconds: 220),
                     padding: const EdgeInsets.symmetric(vertical: 7),
                     decoration: BoxDecoration(
-                      color: tab == i ? Colors.white.withOpacity(.12) : Colors.transparent,
+                      color: tab == i ? gold.withOpacity(.22) : Colors.transparent,
                       borderRadius: BorderRadius.circular(19),
                     ),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(icons[i], size: 20, color: tab == i ? white : muted),
+                      Icon(icons[i], size: 20, color: tab == i ? gold : muted),
                       const SizedBox(height: 4),
                       Text(labels[i], style: TextStyle(fontSize: 9.5, fontWeight: tab == i ? FontWeight.w700 : FontWeight.w400, color: tab == i ? white : muted)),
                     ]),
@@ -121,9 +122,9 @@ class GlassCard extends StatelessWidget {
     child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16), child: Container(
       width: double.infinity, padding: padding,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.055),
+        color: const Color(0xB8182B43),
         borderRadius: BorderRadius.circular(23),
-        border: Border.all(color: Colors.white.withOpacity(.105)),
+        border: Border.all(color: gold.withOpacity(.32)),
       ),
       child: child,
     )),
@@ -135,8 +136,8 @@ class GlassIcon extends StatelessWidget {
   const GlassIcon({super.key, required this.icon});
   @override
   Widget build(BuildContext context) => Container(
-    width: 40, height: 40, decoration: BoxDecoration(color: Colors.white.withOpacity(.06), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(.12))),
-    child: Icon(icon, size: 19, color: white),
+    width: 40, height: 40, decoration: BoxDecoration(color: const Color(0xAA1B304B), shape: BoxShape.circle, border: Border.all(color: gold.withOpacity(.38))),
+    child: Icon(icon, size: 19, color: gold),
   );
 }
 
@@ -543,7 +544,7 @@ class _PrayerPageState extends State<PrayerPage> {
       if (!service) throw Exception('فعّل خدمة الموقع في الهاتف أولًا.');
       var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) throw Exception('اسمح لملاذ بالوصول إلى الموقع لحساب المواقيت.');
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) throw Exception('اسمح لمشكاة بالوصول إلى الموقع لحساب المواقيت.');
       final position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 20)));
       final now = DateTime.now();
       final coordinates = Coordinates(position.latitude, position.longitude);
@@ -586,7 +587,7 @@ class _PrayerPageState extends State<PrayerPage> {
     ])),
     const SizedBox(height: 12),
     for (var i=0;i<_names.length;i++) Padding(padding: const EdgeInsets.only(bottom:8), child: GlassCard(padding: const EdgeInsets.symmetric(horizontal:16,vertical:14), child: Row(children: [const Icon(Icons.access_time_rounded,size:18,color:muted),const SizedBox(width:12),Expanded(child:Text(_names[i])),Text(_times?[_keys[i]] ?? '--:--',style: const TextStyle(color:white,fontWeight:FontWeight.w700))]))),
-    GlassCard(child: const Text('الأذان والتنبيهات والقبلة ستظهر هنا بعد تفعيل إعداداتها. لا يتم تشغيل صوت أو إرسال تنبيه دون اختيارك.', style: TextStyle(color:muted,fontSize:11,height:1.7))),
+    GlassCard(child: const Text('يمكنك ضبط تنبيهات الصلاة والأذكار من قسم التنبيهات. لا يتم إرسال تنبيه أو تشغيل صوت دون اختيارك.', style: TextStyle(color:muted,fontSize:11,height:1.7))),
   ]));
 }
 
@@ -657,14 +658,14 @@ class _QiblaPageState extends State<QiblaPage> {
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات ملاذ', child: Column(children: [
+  Widget build(BuildContext context) => PageFrame(title: 'المزيد', subtitle: 'أدواتك وإعدادات مشكاة', child: Column(children: [
     _MoreTile(icon: Icons.touch_app_rounded, title: 'السبحة الإلكترونية', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbeehPage()))),
     _MoreTile(icon: Icons.flag_outlined, title: 'الختمة والورد اليومي', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const KhatmaPage()))),
     _MoreTile(icon: Icons.explore_outlined, title: 'اتجاه القبلة', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QiblaPage()))),
-    _MoreTile(icon: Icons.notifications_none_rounded, title: 'التنبيهات والأذان'),
+    _MoreTile(icon: Icons.notifications_none_rounded, title: 'التنبيهات والأذان', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsPage()))),
     _MoreTile(icon: Icons.language_rounded, title: 'اللغة'),
     _MoreTile(icon: Icons.text_fields_rounded, title: 'الخط والمظهر'),
-    _MoreTile(icon: Icons.info_outline_rounded, title: 'عن ملاذ'),
+    _MoreTile(icon: Icons.info_outline_rounded, title: 'عن مشكاة'),
   ]));
 }
 
