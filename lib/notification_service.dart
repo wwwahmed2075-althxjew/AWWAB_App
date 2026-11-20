@@ -64,6 +64,7 @@ class MishkatNotificationService {
     await _plugin.zonedSchedule(
       id, title, body, scheduled, _details,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -93,6 +94,7 @@ class MishkatNotificationService {
         when,
         _details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }
