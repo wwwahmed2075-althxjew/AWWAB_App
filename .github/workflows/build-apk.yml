@@ -48,11 +48,11 @@ jobs:
           import re
           p = Path("android/settings.gradle.kts")
           content = p.read_text(encoding="utf-8")
-          match = re.search(r'pluginManagement\\s*\\{', content)
+          match = re.search(r'pluginManagement\s*\{', content)
           if not match:
               raise SystemExit("pluginManagement block not found in generated settings.gradle.kts")
           start = match.end()
-          repos = re.search(r'repositories\\s*\\{', content[start:])
+          repos = re.search(r'repositories\s*\{', content[start:])
           if not repos:
               raise SystemExit("pluginManagement repositories block not found")
           insert_at = start + repos.end()
@@ -61,12 +61,12 @@ jobs:
               raise SystemExit("Could not locate plugin repositories block end")
           block = content[insert_at:block_end]
           additions = []
-          if not re.search(r'(?m)^\\s*google\\(\\)', block):
+          if not re.search(r'(?m)^\s*google\(\)', block):
               additions.append("        google()")
-          if not re.search(r'(?m)^\\s*mavenCentral\\(\\)', block):
+          if not re.search(r'(?m)^\s*mavenCentral\(\)', block):
               additions.append("        mavenCentral()")
           if additions:
-              content = content[:insert_at] + "\\n" + "\\n".join(additions) + content[insert_at:]
+              content = content[:insert_at] + "\n" + "\n".join(additions) + content[insert_at:]
               p.write_text(content, encoding="utf-8")
           print("Gradle plugin repositories include Google Maven Central and Plugin Portal")
           PY
