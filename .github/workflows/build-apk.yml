@@ -89,7 +89,7 @@ jobs:
           ]
           for permission in permissions:
               if permission not in content:
-                  content = content.replace('<application', permission + '\\n    <application', 1)
+                  content = content.replace('<application', permission + '\n    <application', 1)
           receiver = '''
               <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
               <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
@@ -102,7 +102,7 @@ jobs:
               </receiver>
           '''
           if 'ScheduledNotificationReceiver' not in content:
-              content = content.replace('</application>', receiver + '\\n</application>', 1)
+              content = content.replace('</application>', receiver + '\n</application>', 1)
           manifest.write_text(content, encoding="utf-8")
 
           gradle = Path("android/app/build.gradle.kts")
