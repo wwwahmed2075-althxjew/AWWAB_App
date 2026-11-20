@@ -123,6 +123,7 @@ class MishkatNotificationService {
         tz.TZDateTime.from(reminder, tz.local),
         _details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }
