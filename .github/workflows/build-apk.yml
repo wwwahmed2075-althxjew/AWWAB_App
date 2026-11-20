@@ -117,24 +117,24 @@ jobs:
                   content = re.sub(r'applicationId "[^"]+"', 'applicationId "com.mishkat.app"', content)
                   gradle.write_text(content, encoding="utf-8")
           PY
-      - name: Align Kotlin JVM target with Java 11
+      - name: Align Kotlin JVM target with Java 17
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path("android/build.gradle.kts")
           content = p.read_text(encoding="utf-8")
-          marker = "compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)"
+          marker = "compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)"
           if marker not in content:
               content += '''
 
           subprojects {
               tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-                  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+                  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
               }
           }
           '''
               p.write_text(content, encoding="utf-8")
-          print("All Kotlin compile tasks now target JVM 11 using compilerOptions")
+          print("All Kotlin compile tasks now target JVM 17 using compilerOptions")
           PY
       - name: Install dependencies
         run: flutter pub get
