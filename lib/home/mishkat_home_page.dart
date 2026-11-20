@@ -69,6 +69,8 @@ class MishkatHomePage extends StatelessWidget {
                 delegate: SliverChildListDelegate([
                   _buildHeader(),
                   const SizedBox(height: 18),
+                  _buildDateLocation(),
+                  const SizedBox(height: 14),
                   _buildGreeting(),
                   const SizedBox(height: 22),
                   _sectionTitle('مواقيت الصلاة', Icons.access_time_rounded),
@@ -128,7 +130,7 @@ class MishkatHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildGreeting() {
+  Widget _buildDateLocation() {
     return Row(
       children: [
         Expanded(
