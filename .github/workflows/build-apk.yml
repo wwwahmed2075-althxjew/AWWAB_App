@@ -158,17 +158,21 @@ jobs:
           content += '''
 
           subprojects {
-              tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-                  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-              }
-              tasks.withType<org.gradle.api.tasks.compile.JavaCompile>().configureEach {
-                  sourceCompatibility = "11"
-                  targetCompatibility = "11"
+              // Override Android plugin defaults after each plugin has configured compile options.
+              afterEvaluate {
+                  tasks.withType<org.gradle.api.tasks.compile.JavaCompile>().configureEach {
+                      sourceCompatibility = "17"
+                      targetCompatibility = "17"
+                      options.release.set(17)
+                  }
+                  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+                      compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+                  }
               }
           }
           '''
           p.write_text(content, encoding="utf-8")
-          print("All Android plugin Java and Kotlin compile tasks target JVM 11 consistently")
+          print("All Android plugin Java and Kotlin compile tasks target JVM 17 after plugin configuration")
           PY
       - name: Install dependencies
         run: flutter pub get
