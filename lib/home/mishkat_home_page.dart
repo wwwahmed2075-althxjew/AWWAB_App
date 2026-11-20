@@ -60,38 +60,35 @@ class MishkatHomePage extends StatelessWidget {
             colors: [Color(0xFF34304B), _ink, Color(0xFF101B30)],
           ),
         ),
-        child: CustomScrollView(
+        child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 112),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  _buildHeader(),
-                  const SizedBox(height: 18),
-                  _buildDateLocation(),
-                  const SizedBox(height: 14),
-                  _buildGreeting(),
-                  const SizedBox(height: 22),
-                  _sectionTitle('مواقيت الصلاة', Icons.access_time_rounded),
-                  const SizedBox(height: 12),
-                  _buildPrayerGrid(),
-                  const SizedBox(height: 22),
-                  _sectionTitle('من نور الوحي', Icons.auto_awesome_rounded),
-                  const SizedBox(height: 12),
-                  _buildDailyItems(),
-                  const SizedBox(height: 22),
-                  _sectionTitle('الاختصارات السريعة', Icons.bolt_rounded),
-                  const SizedBox(height: 12),
-                  _buildShortcuts(),
-                  if (quranProgress != null && quranProgressLabel != null) ...[
-                    const SizedBox(height: 22),
-                    _buildQuranProgress(),
-                  ],
-                ]),
-              ),
-            ),
-          ],
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 112),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 18),
+              _buildDateLocation(),
+              const SizedBox(height: 14),
+              _buildGreeting(),
+              const SizedBox(height: 22),
+              _sectionTitle('مواقيت الصلاة', Icons.access_time_rounded),
+              const SizedBox(height: 12),
+              _buildPrayerGrid(),
+              const SizedBox(height: 22),
+              _sectionTitle('من نور الوحي', Icons.auto_awesome_rounded),
+              const SizedBox(height: 12),
+              _buildDailyItems(),
+              const SizedBox(height: 22),
+              _sectionTitle('الاختصارات السريعة', Icons.bolt_rounded),
+              const SizedBox(height: 12),
+              _buildShortcuts(),
+              if (quranProgress != null && quranProgressLabel != null) ...[
+                const SizedBox(height: 22),
+                _buildQuranProgress(),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -197,19 +194,18 @@ class MishkatHomePage extends StatelessWidget {
   );
 
   Widget _buildPrayerGrid() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: prayerTimes.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 9,
-        crossAxisSpacing: 9,
-        mainAxisExtent: 116,
-      ),
-      itemBuilder: (context, index) {
-        final item = prayerTimes[index];
-        return _PrayerGlassCard(item: item);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = (constraints.maxWidth - 18) / 3;
+        return Wrap(
+          spacing: 9,
+          runSpacing: 9,
+          children: prayerTimes.map((item) => SizedBox(
+            width: cardWidth,
+            height: 116,
+            child: _PrayerGlassCard(item: item),
+          )).toList(),
+        );
       },
     );
   }
