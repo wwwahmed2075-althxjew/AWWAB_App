@@ -123,18 +123,18 @@ jobs:
           from pathlib import Path
           p = Path("android/build.gradle.kts")
           content = p.read_text(encoding="utf-8")
-          marker = "tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()"
+          marker = "compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)"
           if marker not in content:
               content += '''
 
           subprojects {
               tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-                  kotlinOptions.jvmTarget = "11"
+                  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
               }
           }
           '''
               p.write_text(content, encoding="utf-8")
-          print("All Kotlin compile tasks now target JVM 11 to match Java")
+          print("All Kotlin compile tasks now target JVM 11 using compilerOptions")
           PY
       - name: Install dependencies
         run: flutter pub get
