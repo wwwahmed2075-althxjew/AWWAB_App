@@ -212,7 +212,7 @@ class MishkatHomePage extends StatelessWidget {
 
   Widget _buildDailyItems() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: dailyItems.map((item) => Expanded(
         child: Padding(
           padding: EdgeInsets.only(left: item == dailyItems.last ? 0 : 8),
