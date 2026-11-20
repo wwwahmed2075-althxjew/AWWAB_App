@@ -41,6 +41,35 @@ jobs:
           PY
       - name: Generate Android platform
         run: flutter create . --platforms=android --org com.mishkat
+      - name: Ensure Gradle plugin repositories are configured
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path("android/settings.gradle.kts")
+          content = p.read_text(encoding="utf-8")
+          match = re.search(r'pluginManagement\\s*\\{', content)
+          if not match:
+              raise SystemExit("pluginManagement block not found in generated settings.gradle.kts")
+          start = match.end()
+          repos = re.search(r'repositories\\s*\\{', content[start:])
+          if not repos:
+              raise SystemExit("pluginManagement repositories block not found")
+          insert_at = start + repos.end()
+          block_end = content.find("}", insert_at)
+          if block_end < 0:
+              raise SystemExit("Could not locate plugin repositories block end")
+          block = content[insert_at:block_end]
+          additions = []
+          if not re.search(r'(?m)^\\s*google\\(\\)', block):
+              additions.append("        google()")
+          if not re.search(r'(?m)^\\s*mavenCentral\\(\\)', block):
+              additions.append("        mavenCentral()")
+          if additions:
+              content = content[:insert_at] + "\\n" + "\\n".join(additions) + content[insert_at:]
+              p.write_text(content, encoding="utf-8")
+          print("Gradle plugin repositories include Google Maven Central and Plugin Portal")
+          PY
       - name: Set Arabic app label and stable package id
         run: |
           python3 - <<'PY'
